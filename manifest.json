@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "test",
+    "description": "Base Level Extension",
+    "version": "1.0",
+    "action": {
+      "default_popup": "main.html",
+      "default_icon": "icon1.png"
+    },
+    "permissions": [
+        "activeTab"
+    ]
+  }
