@@ -4,10 +4,11 @@
     "description": "Base Level Extension",
     "version": "1.0",
     "action": {
-      "default_popup": "main.html",
-      "default_icon": "icon1.png"
+      "default_icon": "icon1.png",
+      "default_popup": "main.html"
     },
     "permissions": [
+        "storage",
         "activeTab"
     ]
   }
