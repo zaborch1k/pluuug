@@ -1,7 +1,7 @@
 document.getElementById("button").addEventListener("click", buttonClicked);
 
 function buttonClicked() {
-    window.location.href = "active.html";
+    window.location.href = "../windows/active.html";
 }
 
 function activate() {
