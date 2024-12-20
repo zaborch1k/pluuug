@@ -1,1 +1,3 @@
-alert("sdsdf");
+function doAlert(url) {
+    alert(url);
+}

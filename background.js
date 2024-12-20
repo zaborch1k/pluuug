@@ -1,13 +1,33 @@
 // вариант 1 -> через скрипт-инъекцию
 
 function injectScript(tabId) {
-    chrome.scripting.executeScript(
-        {
-            target: {tabId: tabId},
-            files: ['inject.js'],
-        }
-    );
+    chrome.tabs.query({lastFocusedWindow: true, active: true},function(tab){
+        let url = tab[0].url;
+        let msg;
 
+        if (checkURL(url)) {
+            msg = "good site";
+        } else {
+            msg = "bad site";
+        }
+
+        chrome.scripting.executeScript({target: {tabId}, files: ['inject.js']}, () => {
+            chrome.scripting.executeScript({
+              target: {tabId},
+              args: [msg],
+              func: (...args) => doAlert(...args),
+            });
+        });
+    });
+}
+
+function checkURL(url) {
+    // жесткая проверка url
+    let flag = Math.trunc(Math.random() * (1 - 0 + 1) + 0);
+    if (flag == 0) {
+        return false;
+    } 
+    return true;
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { 
