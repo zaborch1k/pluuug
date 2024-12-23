@@ -8,13 +8,15 @@
       "default_popup": "windows/popup.html"
     },
     "background" : {
-      "service_worker" : "background.js"
+      "service_worker" : "background.js",
+      "type" : "module"
     },
     "permissions": [
         "storage",
         "tabs", 
         "activeTab",
-        "scripting"
+        "scripting",
+        "webRequest"
     ],
     
     "host_permissions" : [

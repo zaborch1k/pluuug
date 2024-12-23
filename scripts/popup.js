@@ -1,14 +1,19 @@
+function changeButtonsText(flag) {
+    if (flag) {
+        document.getElementById("actButton").textContent = "отключить защиту";
+        document.getElementById("extButton").style.visibility = 'visible';
+
+    } else {
+        document.getElementById("actButton").textContent = "включить защиту";
+        document.getElementById("extButton").style.visibility = 'hidden';
+    }
+}
+
 chrome.storage.local.get("flagAct", function(result) {
     let flagAct = result.flagAct;
     if (flagAct !== undefined) {
-        if (flagAct) {
-            document.getElementById("actButton").textContent = "отключить защиту";
-            document.getElementById("extButton").style.visibility = 'visible';
-    
-        } else {
-            document.getElementById("actButton").textContent = "включить защиту";
-            document.getElementById("extButton").style.visibility = 'hidden';
-        }
+        changeButtonsText(flagAct);
+        
     } else {
         chrome.storage.local.set({"flagAct" : false}, function(result) {});
     }
@@ -19,17 +24,10 @@ document.getElementById("actButton").addEventListener("click", actButtonClicked)
 function actButtonClicked() {
     chrome.storage.local.get("flagAct", function(result) {
         let flagAct = result.flagAct;
+
         if (flagAct !== undefined) {
             chrome.storage.local.set({"flagAct" : !flagAct}, function(result) {});
-
-            if (flagAct) {
-                document.getElementById("actButton").textContent = "включить защиту";
-                document.getElementById("extButton").style.visibility = 'hidden';
-        
-            } else {
-                document.getElementById("actButton").textContent = "отключить защиту";
-                document.getElementById("extButton").style.visibility = 'visible';
-            }
+            changeButtonsText(!flagAct);
         } 
     });
 }
