@@ -57,7 +57,7 @@ function canonizeURL(url) {
     urlNoSearch = urlNoSearch.replace(/\/*/, '/');
     strUrl = urlNoSearch + search + end;
 
-    // [?] percent-escape if <= ASCII 32, >= 127, #, %. The escapes should use uppercase hex characters
+    // percent-escape if <= ASCII 32, >= 127, #, %. The escapes should use uppercase hex characters
     let oldStrUrl = strUrl;
     strUrl = '';
     for (const char of oldStrUrl) {
