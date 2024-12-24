@@ -1,85 +1,97 @@
-function canonizeURL(url) {
-    // 1. canonize url ----------------------------------------------------------------------
-    let strUrl = encodeURI(url);
-    url = new URL(strUrl);
+function canonize(url) {
+    url = canonizeURL(url);
 
-    let re = /[\x00-\x7F]+/;
+    url.hostname = canonizeHost(url.hostname);
+    url.pathname = canonizePath(url.pathname);
+    url.href = percentEscape(url.href)
 
-    if (re.test(url)) {
-        // [?] add punycode package
-        //url = punycode.encode(url);
-    }
-    let hostname = url.hostname;
+    return url.href;
+}
 
-    re = new RegExp(toString(hostname) + '$');
+// percent-escape if <= ASCII 32, >= 127, #, %. The escapes should use uppercase hex characters
 
-    if (re.test(strUrl)) {
-        strUrl += '/';
-        url = new URL(strUrl);
-    } 
-
-    strUrl = strUrl.replace("0x09", '');
-    strUrl = strUrl.replace("0x0d", '');
-    strUrl = strUrl.replace("0x0a", '');
-    strUrl = strUrl.replace(/#frag$/, '');
-
-    strUrl = decodeURIComponent(url);
-    url = new URL(strUrl);
-
-    // 2. canonize host ----------------------------------------------------------------------
-    hostname = url.hostname;
-    let [pt1, pt2] = strUrl.split(hostname);
-
-    hostname = hostname.replace(/^\.*/, '');
-    hostname = hostname.replace(/\.*$/, '');
-
-    // [?] Ipv4/ipv6/no 
-
-    hostname = hostname.toLowerCase();
-
-    strUrl = pt1 + hostname + pt2;
-    url = new URL(strUrl);
-
-    // 3. canonize path  ----------------------------------------------------------------------
-    let search = url.search;
-    let urlNoSearch = strUrl;
-    let end = '';
-
-    if (search != '') {
-        [urlNoSearch, end] = strUrl.split(search);
-        console.log(urlNoSearch);
-    }
-
-    urlNoSearch = urlNoSearch.replace('/./', '/');
-
-    // [?] del all `/../` and previous path element
-
-    urlNoSearch = urlNoSearch.replace(/\/*/, '/');
-    strUrl = urlNoSearch + search + end;
-
-    // percent-escape if <= ASCII 32, >= 127, #, %. The escapes should use uppercase hex characters
-    let oldStrUrl = strUrl;
-    strUrl = '';
-    for (const char of oldStrUrl) {
+function percentEscape(strUrl) {
+    let newStrUrl = '';
+    for (const char of strUrl) {
         let asciiCode = char.charCodeAt(0);
 
         if (asciiCode <= 32 || asciiCode >= 127 || char == '#' || char == '%') {
-            strUrl += encodeURIComponent(char);
+            newStrUrl += encodeURIComponent(char);
 
         } else {
-            strUrl += char;
+            newStrUrl += char;
         }
     }
     return strUrl;
 }
 
+function canonizePath(path) {
+    path = path.replace('/./', '/');
+    path = path.replace(/\/[^\/]*\/\.\.\//g, '/');
+    path = path.replace(/\/+/g, '/');
+
+    return path;
+}
+
+
+function canonizeHost(hostname) {
+    // remove unnecessary .
+
+    hostname = hostname.replace(/^\.*/, '');
+    hostname = hostname.replace(/\.*$/, '');
+    hostname = hostname.replace(/\.+/g, '.');
+
+    // [?] check if ipv4/ipv6
+
+    hostname = hostname.toLowerCase();
+    return hostname;
+}
+
+function canonizeURL(url) {
+    let re, strUrl;
+    strUrl = encodeURI(url);
+
+    // check if ascii only
+
+    re = /^[\x00-\x7F]*$/;
+    
+    if (!re.test(url)) {  
+        // if not ascii -> do punycode 
+        // [?] add punycode package
+        //url = punycode.encode(url);
+        console.log("do punycode");
+    }
+
+    url = new URL(strUrl);
+
+    strUrl = strUrl.replace("0x09", '');
+    strUrl = strUrl.replace("0x0d", '');
+    strUrl = strUrl.replace("0x0a", '');
+    strUrl = strUrl.replace(/#frag$/, '');
+    url = new URL(strUrl);
+
+    // check '/' at the end
+
+    if (strUrl[strUrl.length - 1] != '/') {
+        strUrl += '/';
+        url = new URL(strUrl);
+    }
+
+    // percent unescape
+
+    strUrl = decodeURI(url);
+    url = new URL(strUrl);
+    return url;
+}
+
 function injectScriptWithAlert(tabId) {
     chrome.tabs.query({lastFocusedWindow: true, active: true},function(tab){
-        let url = canonizeURL(tab[0].url);
-        let msg;
+        let url, msg;
+        url = canonize(tab[0].url);
 
         if (checkURL(url)) {
             msg = "good site";
+
         } else {
             msg = "bad site";
         }
@@ -115,3 +127,28 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         });
     }
 });
+
+
+//  ---------------------------------------------------------------- debug only ----------------------------------------------------------------
+
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { 
+//     chrome.storage.local.get("flagAct", function(result) {
+//         const arr = [ 
+//             "https://ароарваорар.com",
+//             "https://test1.com/zaborch1k0x09/./pluu0x0dug///blob/mai0x0an/bin/../ext_wdw.html#frag", //err
+//             "https://.......tes..t1.com......../....dsffssdf..../",
+//             "https://sfKdgfjJDkdlvjkL",
+//             "https://sf...Kdg................fjJDk...dlvjkL....com..././/.././",
+//             "https://sfKdgfjJDkdlvjkL/../gfffgd/../gff.../",
+//             "https://sfKdgfj///////JDkdlvjkL/////////////////", //err
+//         ]; 
+
+//         for (let i = 0; i < arr.length; i++) {
+//             console.log('');
+//             console.log("---------new----------");
+//             console.log(arr[i]);
+//             console.log(canonize(arr[i]));
+//         }
+    
+//     });
+// });
