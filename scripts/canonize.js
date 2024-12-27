@@ -13,15 +13,7 @@ function funCanonize(url) {
 
 function canonizeURL(url) {
     let strUrl = encodeURI(url);
-
-    let re = /^[\x00-\x7F]*$/; // check if ascii only
     
-    if (!re.test(url)) {  
-        // [?] add punycode package
-        //url = punycode.encode(url);
-        console.log("do punycode");
-    }
-
     strUrl = strUrl.replace("0x09", '');
     strUrl = strUrl.replace("0x0d", '');
     strUrl = strUrl.replace("0x0a", '');

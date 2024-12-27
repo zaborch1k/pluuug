@@ -56,5 +56,6 @@ function checkIPV4(str) {
 }
 
 function checkIPV6(str) {
+    
     return str;
 }
