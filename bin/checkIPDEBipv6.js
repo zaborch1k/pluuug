@@ -129,3 +129,41 @@ function IPV6regularForm(str) {
 function IPV6mixedForm(str) {
     return str;
 }
+
+function checker() {
+    let arr = [
+        // not an ipv6 format
+        "[34gs:dlld:0x:asd:3]",
+        "3FFE:FFFF:7654:FEDA:1245:BA98:3210:4562",
+
+        // wrong : seq
+        "[3FFE:FFFF::7654:FEDA::3210:4562]",
+        "[3FFE:FFFF:::7654:FEDA:3210:4562]",
+        "[3FFE:FFFF:::::FEDA:3210:4562]",
+        
+        // wrong size
+        "[3FFE:FFFF::7654:FEDA::3210:4562:3]",
+        "[3FFE:FFFF:4]",
+
+        // arr[i].length > 4
+        "[3FFE:FFFFF:7654:FEDA:1245:BA98:3210:4562]",
+        "[FFED::BA98:3210:4562555555555555444444444]",
+
+        // compressing
+        "[2001:0db8:0000::1]",
+        "[0:0:0:0:0:0:0:0]",
+        "[3FFE:0FFFF:0000:FEDA:01245:BA98:3210:04562]",
+        "[00:0:5:00:0:44:66:33]",
+        "[8:7:5:00:0:44:66:33]",
+        "[8:7:5:99:7:44:00:0]",
+        "[8:7:5:99:7:0:8:8]",
+        "[0:7:5:99:7:44:00:0]",
+    ];
+
+    for (let i = 0; i < arr.length; i++) {
+        console.log("");
+        console.log("------------------------- new -----------------------");
+        console.log(arr[i]);
+        console.log(checkIPV6(arr[i]));
+    }
+}
