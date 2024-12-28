@@ -1,7 +1,6 @@
 export const checkIP = (hostname) => {
     hostname = checkIPV4(hostname);
     hostname = checkIPV6(hostname);
-    checker();
     return hostname;
 };
 
@@ -70,7 +69,7 @@ function checkIPV6(str) {
     str = IPV6regularForm(str);
     str = IPV6mixedForm(str);
 
-    return str;
+    return "[" + str + "]";
 }
 
 function IPV6regularForm(str) {
