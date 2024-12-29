@@ -1,3 +1,9 @@
+import { getFlagAct } from "./storageWorker.js"
+import { pushFlagAct } from "./storageWorker.js"
+
+
+// ---------------------------------- every window opening ----------------------------------
+
 function changeButtonsText(flag) {
     if (flag) {
         document.getElementById("actButton").textContent = "отключить защиту";
@@ -9,52 +15,55 @@ function changeButtonsText(flag) {
     }
 }
 
-chrome.storage.local.get("flagAct", function(result) {
-    let flagAct = result.flagAct;
+getFlagAct(function(flagAct) {
     if (flagAct !== undefined) {
         changeButtonsText(flagAct);
         
     } else {
-        chrome.storage.local.set({"flagAct" : false}, function(result) {});
+        pushFlagAct(false, function(result){});
     }
 });
+
+// ----------------------------------------------------------------------------------------
+
 
 document.getElementById("actButton").addEventListener("click", actButtonClicked);
 
 function actButtonClicked() {
-    chrome.storage.local.get("flagAct", function(result) {
-        let flagAct = result.flagAct;
-
+    getFlagAct(function(flagAct) {
         if (flagAct !== undefined) {
-            chrome.storage.local.set({"flagAct" : !flagAct}, function(result) {});
+            pushFlagAct(!flagAct, function(result){});
             changeButtonsText(!flagAct);
         } 
     });
 }
 
-document.getElementById("extButton").addEventListener("click", extButtonClicked);
 
-function extButtonClicked() {
-    chrome.tabs.query({url : chrome.runtime.getURL("/windows/extWdw.html")}, function (tabs) {
-        let extUrl = chrome.runtime.getURL("../windows/extWdw.html");
+// open window by name || create new window if it doesnt exists
+function openWindow(win) {
+    let path = "/windows/" + win + ".html";
+    let url = chrome.runtime.getURL(path);
+
+    chrome.tabs.query({url : url}, function (tabs) {
         if (tabs.length >= 1) {
             chrome.tabs.update(tabs[0].id,{"active":true, "highlighted":true});
         } else {
-            chrome.tabs.create({url : chrome.runtime.getURL("../windows/extWdw.html")});
+            url = chrome.runtime.getURL(".." + path);
+            chrome.tabs.create({url : url});
         }
     });
 }
+
+
+document.getElementById("extButton").addEventListener("click", extButtonClicked);
+
+function extButtonClicked() {
+    openWindow("extWdw");
+}
+
 
 document.getElementById("faqButton").addEventListener("click", faqButtonClicked);
 
 function faqButtonClicked() {
-    chrome.tabs.query({url : chrome.runtime.getURL("/windows/faq.html")}, function (tabs) {
-        let extUrl = chrome.runtime.getURL("../windows/faq.html");
-        if (tabs.length >= 1) {
-            chrome.tabs.update(tabs[0].id,{"active":true, "highlighted":true});
-        } else {
-            chrome.tabs.create({url : chrome.runtime.getURL("../windows/faq.html")});
-        }
-    });
+    openWindow("faq");
 }
-

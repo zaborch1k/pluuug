@@ -1,15 +1,4 @@
-import { checkIP } from "../scripts/checkIP.js"
-export const canonize = (url) => funCanonize(url);
-
-function funCanonize(url) {
-    url = canonizeURL(url);
-
-    url.hostname = canonizeHost(url.hostname);
-    url.pathname = canonizePath(url.pathname);
-    url.href = percentEscape(url.href)
-
-    return url.href;
-}
+import { translateToIP } from "./translateToIP.js"
 
 function canonizeURL(url) {
     let strUrl = encodeURI(url);
@@ -30,18 +19,17 @@ function canonizeURL(url) {
     return url;
 }
 
-
 function canonizeHost(hostname) {
     hostname = hostname.replace(/^\.*/, '');
     hostname = hostname.replace(/\.*$/, '');
     hostname = hostname.replace(/\.+/g, '.');
 
-    hostname = checkIP(hostname);
+    let typeIP = -1;
+    [hostname, typeIP] = translateToIP(hostname);
 
     hostname = hostname.toLowerCase();
-    return hostname;
+    return [hostname, typeIP];
 }
-
 
 function canonizePath(path) {
     path = path.replace('/./', '/');
@@ -49,9 +37,6 @@ function canonizePath(path) {
     path = path.replace(/\/+/g, '/');
     return path;
 }
-
-
-// percent-escape if <= ASCII 32, >= 127, #, %. The escapes should use uppercase hex characters
 
 function percentEscape(strUrl) {
     let newStrUrl = '';
@@ -66,4 +51,16 @@ function percentEscape(strUrl) {
         }
     }
     return strUrl;
+}
+
+
+export function canonize(url) {
+    url = canonizeURL(url);
+
+    let typeIP = -1;
+    [url.hostname, typeIP] = canonizeHost(url.hostname);
+    url.pathname = canonizePath(url.pathname);
+    url.href = percentEscape(url.href)
+
+    return url.href;
 }

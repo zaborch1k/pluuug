@@ -1,3 +1,3 @@
-function doAlert(url) {
-    alert(url);
+function showNotification(msg) {
+    alert(msg);
 }
