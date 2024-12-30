@@ -287,5 +287,5 @@ export const translateToIP = (hostname) => {
     if (typeIP == -1) {
         [hostname, typeIP] = checkIPV6(hostname);
     }
-    return [hostname, typeIP];
+    return hostname;
 };
