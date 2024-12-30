@@ -2,7 +2,7 @@ import { getFlagAct } from "./storageWorker.js"
 import { pushFlagAct } from "./storageWorker.js"
 
 
-// ---------------------------------- every window opening ----------------------------------
+// ------------------------------------ when opening  ------------------------------------
 
 function changeButtonsText(flag) {
     if (flag) {
