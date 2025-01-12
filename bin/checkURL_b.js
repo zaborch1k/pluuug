@@ -4,9 +4,6 @@ import { getList } from "./storageWorker.js"
 import { updateList } from "./storageWorker.js"
 
 
-// ------------------------------------------------ doesnt work yet ------------------------------------------------
-
-
 function truncate(arr, bytes) {
     let truncArr = [];
 
@@ -22,7 +19,7 @@ async function realTimeCheckMode(expressionHashes) {
     let gc = await getList("gc");
     console.log(gc);
 
-    for (let hash of expressionHashes) { 
+    for (let hash of expressionHashes) {
         for (let elem of gc) {
             if (elem == hash) {
                 console.log("expressionHash in gc");
@@ -31,15 +28,11 @@ async function realTimeCheckMode(expressionHashes) {
         }
     }
 
-    // let expressionHashPrefixes = truncate(expressionHashes, 4);
-    // let lc = await getList("lc"); // = local cache; [[expiration_1, fullHash_1], [expiration_2, fullHash_2], ... ]
-    let expressionHashPrefixes = ["a", "bc"]
-    expressionHashes = ["sdfsdg", "bcd"]
-    let lc = [[1, "abc"], [2, "bcd"]];
+    let expressionHashPrefixes = truncate(expressionHashes, 4);
+    let lc = await getList("lc"); // = local cache; [{expiration_1, fullHash_1}, {expiration_2, fullHash_2}, ... ]
     console.log(lc);
 
-    // let currentTime = new Date();
-    let currentTime = 1;
+    let currentTime = new Date();
     console.log(currentTime);
 
     for (let i = 0; i < expressionHashPrefixes.length; i++) {
@@ -52,19 +45,13 @@ async function realTimeCheckMode(expressionHashes) {
                 if (currentTime > arr[0]) { // <------------------------------ `expiration` may be in wrong format [!]
                     lc.splice(j, 1);
                     updateList("lc", lc);
-                    console.log("update lc :", lc);
 
                 } else {
                     expressionHashPrefixes.splice(i, 1);
-                    console.log(expressionHashPrefixes);
 
                     // [?] Check whether the corresponding full hash within expressionHashes is found in the cached entry:
                     for (let a of lc) { 
-                        console.log("asd");
-                        console.log(a[1]);
-                        console.log(expressionHashes[i]);
-                        if (a[1] == expressionHashes[i]) {
-                            console.log("hash in lc");
+                        if (a == expressionHashes[j]) {
                             return "UNSAFE";
                         }
                     }
@@ -188,7 +175,7 @@ export async function checkURL(url) {
     let u = canonize(url);
     let expressions = getSuffPref(u);
     let expressionHashes = [ // <---------------------------------------------------------- get it from `hashing` [!]
-        "bcd"
+        "jghgh"
     ];  
 
     let verdict = await realTimeCheckMode(expressionHashes);

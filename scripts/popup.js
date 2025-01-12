@@ -18,9 +18,6 @@ function changeButtonsText(flag) {
 getFlagAct(function(flagAct) {
     if (flagAct !== undefined) {
         changeButtonsText(flagAct);
-        
-    } else {
-        pushFlagAct(false, function(result){});
     }
 });
 

@@ -1,22 +1,45 @@
-import { translateToIP } from "./translateToIP.js"
-
 function canonizeURL(url) {
-    let strUrl = encodeURI(url);
+    let strUrl = url;
+    url = new URL(strUrl);
+
+    if (url == url.origin) {
+        strUrl += '/';
+    }
+
+    strUrl = encodeURI(url.href);
     
     strUrl = strUrl.replace("0x09", '');
     strUrl = strUrl.replace("0x0d", '');
     strUrl = strUrl.replace("0x0a", '');
     strUrl = strUrl.replace(/#.*/, '');
-    url = new URL(strUrl);
 
-    if (strUrl[strUrl.length - 1] != '/') {
-        strUrl += '/';
-        url = new URL(strUrl);
-    }
-
-    strUrl = decodeURI(url);
+    strUrl = decodeURI(strUrl);
     url = new URL(strUrl);
     return url;
+}
+
+function transformIfIP(str) {
+    let flag = false;
+
+    if (str.startsWith("[::ffff:")) {
+        str = str.substring(8, str.length - 1);
+        flag = true;
+
+    } else if (str.startsWith("[64:ff9b::")) {
+        str = str.substring(10, str.length - 1);
+        flag = true;
+    }
+
+    if (flag) {
+        let arr = str.split(':');
+
+        let pt1 = (parseInt(arr[0], 16).toString(2)).padStart(16, "0");
+        let pt2 = (parseInt(arr[1], 16).toString(2)).padStart(16, "0");
+
+        str = (parseInt(pt1.substring(0, 8), 2)).toString(10) + '.' + (parseInt(pt1.substring(8, 16), 2)).toString(10) + '.';
+        str += (parseInt(pt2.substring(0, 8), 2)).toString(10) +  '.' + (parseInt(pt2.substring(8, 16), 2)).toString(10);
+    }
+    return str; 
 }
 
 function canonizeHost(hostname) {
@@ -24,7 +47,7 @@ function canonizeHost(hostname) {
     hostname = hostname.replace(/\.*$/, '');
     hostname = hostname.replace(/\.+/g, '.');
 
-    hostname = translateToIP(hostname);
+    hostname = transformIfIP(hostname);
 
     hostname = hostname.toLowerCase();
     return hostname;
@@ -55,8 +78,7 @@ function percentEscape(strUrl) {
 
 export function canonize(url) {
     url = canonizeURL(url);
-
-    let typeIP = -1;
+    
     url.hostname = canonizeHost(url.hostname);
     url.pathname = canonizePath(url.pathname);
     url.href = percentEscape(url.href)

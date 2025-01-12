@@ -3,6 +3,7 @@
     "name": "test",
     "description": "Base Level Extension",
     "version": "1.0",
+
     "action": {
       "default_icon": "images/icon1.png",
       "default_popup": "windows/popup.html"
@@ -12,6 +13,7 @@
       "service_worker" : "background.js",
       "type" : "module"
     },
+
     "permissions": [
         "storage",
         "tabs", 
