@@ -12,6 +12,10 @@ export function pushFlagAct(value, callback) {
 
 // ------------------------------------ work with lists ------------------------------------
 
+export function getLocalThreatLists() {
+    return ["se", "mw", "uws", "uwsa", "pha"];
+}
+
 function get(key) {
     return new Promise(function(resolve, reject) {
         chrome.storage.local.get(key, function(result) {
@@ -42,7 +46,7 @@ export async function updateList(name, list) {
 function getThreatListsUpdates() {
     let url = new URL('https://safebrowsing.googleapis.com/v5alpha1/hashLists:batchGet')
     let API_KEY = "AIzaSyD7og67g_IRRPeByq-ZtJcp2O1rgcUk_Es";
-    let localThreatLists = ["se", "mw", "uws", "uwsa", "pha"];
+    let localThreatLists = getLocalThreatLists();
 
     url.searchParams.set('key', API_KEY);
 
@@ -79,27 +83,26 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 // -----------------------------------------------------------------------------------------
 
+async function initLTL() {
+    let localThreatLists = getLocalThreatLists();
+
+    for (let list of localThreatLists) {
+        chrome.storage.local.set({ [list] : []});
+    }
+}
+
 export function initDB() { 
     getFlagAct(async function (flagAct) {
         if (flagAct === undefined) {
-            console.log("oooooooooooops we need to init db")
-
+            console.log("initDB.....");
             await Promise.all([
                 pushFlagAct(false, function (d) {}),
 
-                chrome.storage.local.set({"gc" : ["its", "gc"]}, function (e) {}),
+                initLTL(),
 
-                chrome.storage.local.set({"lc" : []}, function (r) {}),
+                chrome.storage.local.set({ ["lc"] : []})
 
-                chrome.storage.local.set({"se" : ["1", "2"]}, function (r) {}),
-
-                chrome.storage.local.set({"mw" : ["3", "4"]}, function (r) {}),
-
-                chrome.storage.local.set({"uws" : ["5", "6", "b"]}, function (r) {}),
-
-                chrome.storage.local.set({"uwsa" : ["7", "8"]}, function (r) {}),
-
-                chrome.storage.local.set({"pha" : ["9", "10"]}, function (r) {})
+                // other lists
             ])
 
             setAlarm("updateLTL", 0);

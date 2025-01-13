@@ -2,10 +2,10 @@ import { canonize } from "./canonize.js"
 import { getSuffPref } from "./getSuffPref.js";
 import { getList } from "./storageWorker.js"
 import { updateList } from "./storageWorker.js"
-import { setAlarm } from "./storageWorker.js"
+import { getLocalThreatLists } from "./storageWorker.js"
 
 
-// ---------------------------------------------- better, but still doesnt work ----------------------------------------------
+// ---------------------------------------------- almost works ----------------------------------------------
 
 
 function truncate(arr, bytes) {
@@ -121,7 +121,7 @@ async function localThreatListMode(expressionHashes) {
 
     for (let i = 0; i < expressionHashPrefixes.length; i++) {
         let expressionHashPrefix = expressionHashPrefixes[i];
-        let localThreatLists = ["se", "mw", "uws", "uwsa", "pha"];
+        let localThreatLists = getLocalThreatLists();
         let flagFound = false;
 
         for (let name of localThreatLists) {
