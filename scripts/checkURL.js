@@ -2,6 +2,7 @@ import { canonize } from "./canonize.js"
 import { getSuffPref } from "./getSuffPref.js";
 import { getList } from "./storageWorker.js"
 import { updateList } from "./storageWorker.js"
+import { setAlarm } from "./storageWorker.js"
 
 
 // ---------------------------------------------- better, but still doesnt work ----------------------------------------------
@@ -68,8 +69,6 @@ async function realTimeCheckMode(expressionHashes) {
     }
 
     let response = []; // = response received from the SB server
-
-    // [!] set an alarm for `expiration time` from response
 
     for (let [expiration, fullHash] of response) { // <----------------------------------------------------------------------- [!]
         lc.push([expiration, fullHash]);
@@ -155,8 +154,6 @@ async function localThreatListMode(expressionHashes) {
     */
 
     let response = []; // = response received from the SB server
-
-    // [!] set an alarm for `expiration time` from response
 
     for (let [expiration, fullHash] of response) { // <--------------------------------------------------------------------- [!]
         lc.push([expiration, fullHash]);

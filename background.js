@@ -1,6 +1,5 @@
 import { initDB } from "./scripts/storageWorker.js"
 import { getFlagAct } from "./scripts/storageWorker.js"
-import { updateList } from "./scripts/storageWorker.js"
 import { notify } from "./scripts/notify.js"
 import { checkURL } from "./scripts/checkURL.js"
 
