@@ -4,7 +4,7 @@ import { getList } from "./storageWorker.js"
 import { updateList } from "./storageWorker.js"
 
 
-// ------------------------------------------------ doesnt work yet ------------------------------------------------
+// ---------------------------------------------- better, but still doesnt work ----------------------------------------------
 
 
 function truncate(arr, bytes) {
@@ -20,27 +20,19 @@ async function realTimeCheckMode(expressionHashes) {
     // [!] add a reason for each `UNSAFE` verdict
 
     let gc = await getList("gc");
-    console.log(gc);
 
     for (let hash of expressionHashes) { 
         for (let elem of gc) {
             if (elem == hash) {
-                console.log("expressionHash in gc");
                 return "UNSURE";
             }
         }
     }
 
-    // let expressionHashPrefixes = truncate(expressionHashes, 4);
-    // let lc = await getList("lc"); // = local cache; [[expiration_1, fullHash_1], [expiration_2, fullHash_2], ... ]
-    let expressionHashPrefixes = ["a", "bc"]
-    expressionHashes = ["sdfsdg", "bcd"]
-    let lc = [[1, "abc"], [2, "bcd"]];
-    console.log(lc);
+    let expressionHashPrefixes = truncate(expressionHashes, 4);
+    let lc = await getList("lc"); // = local cache; [[expiration_1, fullHash_1], [expiration_2, fullHash_2], ... ]
 
-    // let currentTime = new Date();
-    let currentTime = 1;
-    console.log(currentTime);
+    let currentTime = new Date();
 
     for (let i = 0; i < expressionHashPrefixes.length; i++) {
         let expressionHashPrefix = expressionHashPrefixes[i];
@@ -52,19 +44,13 @@ async function realTimeCheckMode(expressionHashes) {
                 if (currentTime > arr[0]) { // <------------------------------ `expiration` may be in wrong format [!]
                     lc.splice(j, 1);
                     updateList("lc", lc);
-                    console.log("update lc :", lc);
 
                 } else {
                     expressionHashPrefixes.splice(i, 1);
-                    console.log(expressionHashPrefixes);
 
                     // [?] Check whether the corresponding full hash within expressionHashes is found in the cached entry:
                     for (let a of lc) { 
-                        console.log("asd");
-                        console.log(a[1]);
-                        console.log(expressionHashes[i]);
                         if (a[1] == expressionHashes[i]) {
-                            console.log("hash in lc");
                             return "UNSAFE";
                         }
                     }
@@ -85,11 +71,13 @@ async function realTimeCheckMode(expressionHashes) {
 
     // [!] set an alarm for `expiration time` from response
 
-    for (let fullHash of response) { // <----------------------------------------------------------------------- [!]
-        lc.push(["myExpirationTime", fullHash]);
+    for (let [expiration, fullHash] of response) { // <----------------------------------------------------------------------- [!]
+        lc.push([expiration, fullHash]);
     }
 
-    for (let fullHash of response) { 
+    updateList("lc", lc);
+
+    for (let [expiration, fullHash] of response) { 
         for (let hash of expressionHashes) {
             if (hash == fullHash) {
                 return "UNSAFE";
@@ -103,11 +91,13 @@ async function realTimeCheckMode(expressionHashes) {
 
 async function localThreatListMode(expressionHashes) {
     let expressionHashPrefixes = truncate(expressionHashes, 4);
+    let lc = await getList("lc"); // = local cache; [[expiration_1, fullHash_1], [expiration_2, fullHash_2], ... ]
 
-    let lc = await getList("lc"); // = local cache; [{expiration_1, fullHash_1}, {expiration_2, fullHash_2}, ... ]
-    console.log(lc);
+    let currentTime = new Date();
 
-    for (let expressionHashPrefix of expressionHashPrefixes) {
+    for (let i = 0; i < expressionHashPrefixes.length; i++) {
+        let expressionHashPrefix = expressionHashPrefixes[i];
+
         for (let j = 0; j < lc.length; j++) {
             let arr = lc[j];
 
@@ -121,7 +111,7 @@ async function localThreatListMode(expressionHashes) {
 
                     // [?] Check whether the corresponding full hash within expressionHashes is found in the cached entry:
                     for (let a of lc) { 
-                        if (a == expressionHashes[j]) {
+                        if (a[1] == expressionHashes[i]) {
                             return "UNSAFE";
                         }
                     }
@@ -164,16 +154,17 @@ async function localThreatListMode(expressionHashes) {
     [!] If an error occurred (including network errors, HTTP errors, etc), return UNSURE
     */
 
-
-    let response = [];
+    let response = []; // = response received from the SB server
 
     // [!] set an alarm for `expiration time` from response
 
-    for (let fullHash of response) { // <----------------------------------------------------------------------- [!]
-        lc.push(["myExpirationTime", fullHash]);
+    for (let [expiration, fullHash] of response) { // <--------------------------------------------------------------------- [!]
+        lc.push([expiration, fullHash]);
     }
 
-    for (let fullHash of response) { 
+    updateList("lc", lc);
+
+    for (let [expiration, fullHash] of response) { 
         for (let hash of expressionHashes) {
             if (hash == fullHash) {
                 return "UNSAFE";
@@ -187,13 +178,9 @@ async function localThreatListMode(expressionHashes) {
 export async function checkURL(url) {
     let u = canonize(url);
     let expressions = getSuffPref(u);
-    let expressionHashes = [ // <---------------------------------------------------------- get it from `hashing` [!]
-        "bcd"
-    ];  
+    let expressionHashes = []; // <---------------------------------------------------------- get it from `hashing` [!]
 
     let verdict = await realTimeCheckMode(expressionHashes);
-
-    console.log(verdict);
 
     if (verdict == "UNSURE") {
         verdict = await localThreatListMode(expressionHashes);

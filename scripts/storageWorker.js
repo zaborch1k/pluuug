@@ -24,13 +24,13 @@ export function initDB() {
 
                 chrome.storage.local.set({"gc" : ["its", "gc"]}, function (e) {}),
 
-                chrome.storage.local.set({"lc" : []}, function (r) {}), // = local cache; [{expiration_1, fullHash_1}, {expiration_2, fullHash_2}, ... ]
+                chrome.storage.local.set({"lc" : []}, function (r) {}),
 
                 chrome.storage.local.set({"se" : ["1", "2"]}, function (r) {}),
 
                 chrome.storage.local.set({"mw" : ["3", "4"]}, function (r) {}),
 
-                chrome.storage.local.set({"uws" : ["5", "6"]}, function (r) {}),
+                chrome.storage.local.set({"uws" : ["5", "6", "b"]}, function (r) {}),
 
                 chrome.storage.local.set({"uwsa" : ["7", "8"]}, function (r) {}),
 
@@ -59,12 +59,12 @@ export async function getList(name) {
     return list;
 }
 
-export function updateList(name, list) {
-    chrome.storage.local.set({name : list});
+export async function updateList(name, list) {
+    await chrome.storage.local.set({ [name] : list});
 }
 
 // works when alarms
-export function updateAllListsOrSomething() { // <---------------------------------------- change my name [!]
+export function updateAllListsOrSomething() { // <-------------------------------------- change my name [!]
     let API_KEY = "AIzaSyD7og67g_IRRPeByq-ZtJcp2O1rgcUk_Es";
     let url = new URL('https://safebrowsing.googleapis.com/v5alpha1/hashLists:batchGet')
 
