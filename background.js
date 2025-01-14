@@ -6,17 +6,20 @@ import { checkURL } from "./scripts/checkURL.js"
 initDB();
 
 function processNewURL(tabId, flagAct) {
-    if (flagAct !== undefined) {
-        if (flagAct == true) {
-            chrome.tabs.query({lastFocusedWindow: true, active: true}, async function(tab){
-                let url = tab[0].url;
-
-                let verdict = await checkURL(url);
-    
-                notify(tabId, verdict);
-            });
-        } 
+    if (flagAct === undefined) {
+        return;
     }
+    if (!flagAct) {
+        return;
+    }
+
+    chrome.tabs.query({lastFocusedWindow: true, active: true}, async function(tab){
+        let url = tab[0].url;
+
+        let verdict = await checkURL(url);
+
+        notify(tabId, verdict);
+    });
 }
 
 
