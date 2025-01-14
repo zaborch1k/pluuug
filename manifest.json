@@ -19,7 +19,6 @@
         "tabs", 
         "activeTab",
         "scripting",
-        "alarms",
         "declarativeNetRequest"
     ],
     
