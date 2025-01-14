@@ -1,5 +1,5 @@
 function getMSG(verdict) {
-    return (verdict == "SAFE") ? "good site" : "bad site";
+    return (verdict === "SAFE") ? "good site" : "bad site";
 }
 
 export function notify(tabId, verdict) {

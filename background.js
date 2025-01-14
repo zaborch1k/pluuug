@@ -22,7 +22,6 @@ function processNewURL(tabId, flagAct) {
     });
 }
 
-
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => { 
     if (changeInfo.url) {
         getFlagAct(function(flagAct) {
@@ -30,3 +29,24 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         });
     }
 });
+
+function redirectBadSite(tab, flagAct) {
+    if (flagAct === undefined) 
+        return
+    if (!flagAct)
+        return
+
+    // Uncomment this when the Google API is completed.
+    // if (checkURL(tab.url) !== "UNSAFE")
+    //     return
+
+    chrome.tabs.update(tab.tabId, { url: "https://www.evil.com/" })
+}
+
+chrome.webRequest.onBeforeRequest.addListener((details) => {
+        getFlagAct((flagAct) => {
+            redirectBadSite(details, flagAct);
+        });
+    },
+    { urls: ["https://google.com/"] } // Replace google with <all_urls> when the Google API is completed.
+);

@@ -20,22 +20,12 @@
         "activeTab",
         "scripting",
         "alarms",
-        "declarativeNetRequest"
+        "webRequest"
     ],
     
     "host_permissions" : [
       "http://*/*", 
       "https://*/*"
-    ],
-
-    "declarative_net_request" : {
-      "rule_resources" : [
-        {
-          "id": "ruleset_1",
-          "enabled": true,
-          "path": "rules/rules_1.json"
-        }
-      ]
-    }
+    ]
 
   }
