@@ -1,3 +1,5 @@
+// ------------------------------------ flag access logic ------------------------------------
+
 export function getFlagAct(callback) {
     chrome.storage.local.get("flagAct", function (result) {
         let flagAct = result.flagAct;
@@ -9,6 +11,36 @@ export function pushFlagAct(value, callback) {
     chrome.storage.local.set({"flagAct" : value}, callback);
 }
 
+// ------------------------------------ reset all cached URLs ------------------------------------
+
+export function resetAllUrls() {
+    setPrevUrl("")
+    setPendingUrl("")
+}
+
+// ------------------------------------ prevUrl access logic ------------------------------------
+
+export function setPrevUrl(url, callback) {
+    chrome.storage.local.set({"prevUrl": url}, callback);
+}
+
+export function getPrevUrl(callback) {
+    chrome.storage.local.get("prevUrl", (result) => {
+        callback(result.prevUrl)
+    })
+}
+
+// ------------------------------------ pendingUrl access logic ------------------------------------
+
+export function setPendingUrl(url, callback) {
+    chrome.storage.local.set({"pendingUrl": url}, callback);
+}
+
+export function getPendingUrl(callback) {
+    chrome.storage.local.get("pendingUrl", (result) => {
+        callback(result.pendingUrl)
+    })
+}
 
 // ------------------------------------ work with lists ------------------------------------
 
@@ -52,6 +84,8 @@ export function initDB() {
             console.log("initDB.....");
             await Promise.all([
                 pushFlagAct(false, function (d) {}),
+                setPendingUrl(""),
+                setPrevUrl(""),
 
                 chrome.storage.local.set({ ["lc"] : []})
 
