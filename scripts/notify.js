@@ -13,3 +13,13 @@ export function notify(tabId, verdict) {
         });
     });
 }
+
+export function traceHosts(tabId, from, to) { // Temp for debug.
+    chrome.scripting.executeScript({target: { tabId }, files: ['inject.js']}, () => {
+        chrome.scripting.executeScript({
+          target: { tabId },
+          args: [`Going from ${from} to ${to}.`],
+          func: (...args) => showNotification(...args)
+        })
+    })
+}

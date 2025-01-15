@@ -25,9 +25,7 @@
     
     "host_permissions" : [
       "http://*/*", 
-      "https://*/*",
-      "<all_urls>",
-      "file://*/*"
+      "https://*/*"
     ]
 
   }

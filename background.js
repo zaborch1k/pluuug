@@ -1,8 +1,9 @@
 import { initDB } from "./scripts/storageWorker.js"
 import { getFlagAct } from "./scripts/storageWorker.js"
 import { setPendingUrl, setPrevUrl, getPendingUrl } from "./scripts/storageWorker.js"
-import { notify } from "./scripts/notify.js"
+import { notify, traceHosts } from "./scripts/notify.js"
 import { checkURL } from "./scripts/checkURL.js"
+import { hostFromUrl } from "./scripts/utility.js"
 
 initDB();
 
@@ -33,25 +34,35 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     });
 });
 
-function redirectBadSite(details, flagAct) {
-    if (flagAct === undefined) 
+function redirectBadSite(pendingDetails, flagAct) {
+    if (flagAct === undefined)
         return
     if (!flagAct)
         return
+
+    if (pendingDetails.tabId === -1)
+        return
     
-    getPendingUrl((url) => {
-        if (url === details.url)
+    // Uncomment this when the Google API is completed.
+    // if (checkURL(pendingDetails.url) !== "UNSAFE")
+    //     return
+
+    getPendingUrl((previousPendingUrl) => {
+        let pendingHost = hostFromUrl(pendingDetails.url)
+
+        if (pendingHost === "")
             return
 
-        // Uncomment this when the Google API is completed.
-        // if (checkURL(tab.url) !== "UNSAFE")
-        //     return
+        if (hostFromUrl(previousPendingUrl) === pendingHost)
+            return
 
-        setPendingUrl(details.url, () => {})
-
-        chrome.tabs.update(details.tabId, { url: chrome.runtime.getURL("windows/tempRedirect.html") }, (tab) => {
+        setPendingUrl(pendingDetails.url, () => {})
+        
+        chrome.tabs.update(pendingDetails.tabId, { url: chrome.runtime.getURL("windows/tempRedirect.html") }, (tab) => {
             setPrevUrl(tab.url)
         })
+
+        traceHosts(pendingDetails.tabId, hostFromUrl(previousPendingUrl), pendingHost)
     })
 }
 
@@ -60,5 +71,8 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
             redirectBadSite(details, flagAct);
         });
     },
-    { urls: ["https://google.com/", "https://ya.ru/"] } // Replace google with <all_urls> when the Google API is completed.
+    {
+        urls: ["https://*/*", "http://*/*"],
+        types: ["main_frame"]
+    }
 );

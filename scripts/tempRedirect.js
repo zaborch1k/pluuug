@@ -1,4 +1,5 @@
 import { getPrevUrl, getPendingUrl } from "./storageWorker.js"
+import { hostFromUrl } from "./utility.js"
 
 initPageContent()
 
@@ -24,8 +25,8 @@ document.getElementById("proceedButton").onclick = () => {
 
 function initPageContent() {
     getPendingUrl((pendingUrl) => { getPrevUrl((prevUrl) => {
-        document.getElementById("header").textContent = `Are you sure you want to visit ${pendingUrl}?`
-        document.getElementById("returnButton").textContent = `Return to ${prevUrl}`
-        document.getElementById("proceedButton").textContent = `Proceed to ${pendingUrl}`
+        document.getElementById("header").textContent = `Are you sure you want to visit ${hostFromUrl(pendingUrl)}?`
+        document.getElementById("returnButton").textContent = `Return to ${hostFromUrl(prevUrl)}`
+        document.getElementById("proceedButton").textContent = `Proceed to ${hostFromUrl(pendingUrl)}`
     })})
 }
