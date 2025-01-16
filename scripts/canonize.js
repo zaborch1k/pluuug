@@ -2,7 +2,7 @@ function canonizeURL(url) {
     let strUrl = url;
     url = new URL(strUrl);
 
-    if (url == url.origin) {
+    if (strUrl == url.origin) { // It gave a type error ¯\_(ツ)_/¯
         strUrl += '/';
     }
 

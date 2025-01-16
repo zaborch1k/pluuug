@@ -1,6 +1,10 @@
 import { initDB } from "./scripts/storageWorker.js"
 import { getFlagAct } from "./scripts/storageWorker.js"
-import { setPendingUrl, setPrevUrl, getPendingUrl } from "./scripts/storageWorker.js"
+import { 
+    setPrevTabUrl, setPendingTabUrl,
+    getPrevTabUrl, getPendingTabUrl,
+    removeTabUrls
+} from "./scripts/storageWorker.js"
 import { notify, traceHosts } from "./scripts/notify.js"
 import { checkURL } from "./scripts/checkURL.js"
 import { hostFromUrl } from "./scripts/utility.js"
@@ -47,7 +51,7 @@ function redirectBadSite(pendingDetails, flagAct) {
     // if (checkURL(pendingDetails.url) !== "UNSAFE")
     //     return
 
-    getPendingUrl((previousPendingUrl) => {
+    getPendingTabUrl(pendingDetails.tabId, (previousPendingUrl) => {
         let pendingHost = hostFromUrl(pendingDetails.url)
 
         if (pendingHost === "")
@@ -56,10 +60,10 @@ function redirectBadSite(pendingDetails, flagAct) {
         if (hostFromUrl(previousPendingUrl) === pendingHost)
             return
 
-        setPendingUrl(pendingDetails.url, () => {})
+        setPendingTabUrl(pendingDetails.tabId, pendingDetails.url)
         
         chrome.tabs.update(pendingDetails.tabId, { url: chrome.runtime.getURL("windows/tempRedirect.html") }, (tab) => {
-            setPrevUrl(tab.url)
+            setPrevTabUrl(pendingDetails.tabId, tab.url)
         })
 
         traceHosts(pendingDetails.tabId, hostFromUrl(previousPendingUrl), pendingHost)
@@ -76,3 +80,11 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
         types: ["main_frame"]
     }
 );
+
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+    removeTabUrls(tabId, () => {})
+})
+
+chrome.tabs.onCreated.addListener((tab) => {
+    setPrevTabUrl(tab.id, tab.url)
+})

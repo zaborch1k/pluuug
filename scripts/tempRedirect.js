@@ -1,32 +1,39 @@
-import { getPrevUrl, getPendingUrl } from "./storageWorker.js"
+import {
+    getPendingTabUrl, getPrevTabUrl,
+    makeProceedWork, makeReturnWork
+} from "./storageWorker.js"
 import { hostFromUrl } from "./utility.js"
 
 initPageContent()
 
 document.getElementById("returnButton").onclick = () => {
     chrome.tabs.query({ lastFocusedWindow: true, active: true }, (tabs) => {
-        getPrevUrl((url) => {
-            chrome.tabs.update(tabs[0].tabId, { url: url })
+        makeReturnWork(tabs[0].id)
+        
+        getPrevTabUrl(tabs[0].id, (url) => {
+            chrome.tabs.update(tabs[0].id, { url: url })
         })
     })
-
-    // resetAllUrls()
 }
 
 document.getElementById("proceedButton").onclick = () => {
     chrome.tabs.query({ lastFocusedWindow: true, active: true }, (tabs) => {
-        getPendingUrl((url) => {
-            chrome.tabs.update(tabs[0].tabId, { url: url })
+        makeProceedWork(tabs[0].id)
+
+        getPendingTabUrl(tabs[0].id, (url) => {
+            chrome.tabs.update(tabs[0].id, { url: url })
         })
     })
 
-    // resetAllUrls()
+
 }
 
 function initPageContent() {
-    getPendingUrl((pendingUrl) => { getPrevUrl((prevUrl) => {
-        document.getElementById("header").textContent = `Are you sure you want to visit ${hostFromUrl(pendingUrl)}?`
-        document.getElementById("returnButton").textContent = `Return to ${hostFromUrl(prevUrl)}`
-        document.getElementById("proceedButton").textContent = `Proceed to ${hostFromUrl(pendingUrl)}`
-    })})
+    chrome.tabs.query({ "lastFocusedWindow": true, active: true }, (tabs) => {
+        getPendingTabUrl(tabs[0].id, (pendingUrl) => { getPrevTabUrl(tabs[0].id, (prevUrl) => {
+            document.getElementById("header").textContent = `Are you sure you want to visit ${hostFromUrl(pendingUrl)}?`
+            document.getElementById("returnButton").textContent = `Return to ${hostFromUrl(prevUrl)}`
+            document.getElementById("proceedButton").textContent = `Proceed to ${hostFromUrl(pendingUrl)}`
+        })})
+    })
 }

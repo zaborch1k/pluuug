@@ -7,38 +7,55 @@ export function getFlagAct(callback) {
     });
 }
 
-export function pushFlagAct(value, callback) {
+export function pushFlagAct(value, callback = () => {}) {
     chrome.storage.local.set({"flagAct" : value}, callback);
 }
 
-// ------------------------------------ reset all cached URLs ------------------------------------
+// ------------------------------------ Cut the memory of a deleted tab ------------------------------------
 
-export function resetAllUrls() {
-    setPrevUrl("")
-    setPendingUrl("")
+export function removeTabUrls(tabId, callback = () => {}) {
+    chrome.storage.session.remove([`${tabId}pendingUrl`, `${tabId}prevUrl`], callback)
 }
 
-// ------------------------------------ prevUrl access logic ------------------------------------
+// ------------------------------------ Work with pending urls for a specified tab ------------------------------------
 
-export function setPrevUrl(url, callback) {
-    chrome.storage.local.set({"prevUrl": url}, callback);
-}
-
-export function getPrevUrl(callback) {
-    chrome.storage.local.get("prevUrl", (result) => {
-        callback(result.prevUrl)
+export function getPendingTabUrl(tabId, callback) {
+    chrome.storage.session.get(`${tabId}pendingUrl`, (result) => {
+        callback(result[`${tabId}pendingUrl`])
     })
 }
 
-// ------------------------------------ pendingUrl access logic ------------------------------------
-
-export function setPendingUrl(url, callback) {
-    chrome.storage.local.set({"pendingUrl": url}, callback);
+export function setPendingTabUrl(tabId, url, callback = () => {}) {
+    let key = `${tabId}pendingUrl`
+    chrome.storage.session.set({ [key]: url }, callback)
 }
 
-export function getPendingUrl(callback) {
-    chrome.storage.local.get("pendingUrl", (result) => {
-        callback(result.pendingUrl)
+// ------------------------------------ Work with previous urls for a specified tab ------------------------------------
+
+export function getPrevTabUrl(tabId, callback) {
+    chrome.storage.session.get(`${tabId}prevUrl`, (result) => {
+        callback(result[`${tabId}prevUrl`])
+    })
+}
+
+export function setPrevTabUrl(tabId, url, callback = () => {}) {
+    if (url.substring(0, 16) === "chrome-extension")
+        return
+    let key = `${tabId}prevUrl`
+    chrome.storage.session.set({ [key]: url }, callback)
+}
+
+// ------------------------------------ Logic to be executed after either proceeding or returning ------------------------------------
+
+export function makeProceedWork(tabId, callback = () => {}) {
+    getPendingTabUrl(tabId, (url) => {
+        setPrevTabUrl(tabId, url, callback)
+    })
+}
+
+export function makeReturnWork(tabId, callback = () => {}) {
+    getPrevTabUrl(tabId, (url) => {
+        setPendingTabUrl(tabId, url, callback)
     })
 }
 
@@ -84,8 +101,6 @@ export function initDB() {
             console.log("initDB.....");
             await Promise.all([
                 pushFlagAct(false, function (d) {}),
-                setPendingUrl(""),
-                setPrevUrl(""),
 
                 chrome.storage.local.set({ ["lc"] : []})
 
