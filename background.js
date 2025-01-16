@@ -2,8 +2,8 @@ import { initDB } from "./scripts/storageWorker.js"
 import { getFlagAct } from "./scripts/storageWorker.js"
 import { 
     setPrevTabUrl, setPendingTabUrl,
-    getPrevTabUrl, getPendingTabUrl,
-    removeTabUrls
+    getPendingTabUrl, removeTabUrls,
+    isHostInWhiteList
 } from "./scripts/storageWorker.js"
 import { notify, traceHosts } from "./scripts/notify.js"
 import { checkURL } from "./scripts/checkURL.js"
@@ -51,7 +51,10 @@ function redirectBadSite(pendingDetails, flagAct) {
     // if (checkURL(pendingDetails.url) !== "UNSAFE")
     //     return
 
-    getPendingTabUrl(pendingDetails.tabId, (previousPendingUrl) => {
+    getPendingTabUrl(pendingDetails.tabId, (previousPendingUrl) => { isHostInWhiteList(hostFromUrl(pendingDetails.url), (hostInWhiteList) => {
+        if (hostInWhiteList)
+            return
+
         let pendingHost = hostFromUrl(pendingDetails.url)
 
         if (pendingHost === "")
@@ -67,7 +70,7 @@ function redirectBadSite(pendingDetails, flagAct) {
         })
 
         traceHosts(pendingDetails.tabId, hostFromUrl(previousPendingUrl), pendingHost)
-    })
+    })})
 }
 
 chrome.webRequest.onBeforeRequest.addListener((details) => {

@@ -1,5 +1,6 @@
 ### Todo
 
+- [ ] Draw UI in the extension html (popup.html) that would allow the user to view and delete whitelist entries.
 - [ ] Introduced a bug - it seems verdict is either incorrect or it does not equate to "SAFE" ever. (checkURL.js -> notify.js)
 - [ ] Create or snatch a neural network capable of predicting current site's safety based on URL, HTML, et cetera.
 

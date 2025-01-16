@@ -1,6 +1,7 @@
 import {
     getPendingTabUrl, getPrevTabUrl,
-    makeProceedWork, makeReturnWork
+    makeProceedWork, makeReturnWork,
+    pushHostToWhiteList
 } from "./storageWorker.js"
 import { hostFromUrl } from "./utility.js"
 
@@ -24,9 +25,19 @@ document.getElementById("proceedButton").onclick = () => {
             chrome.tabs.update(tabs[0].id, { url: url })
         })
     })
-
-
 }
+
+document.getElementById("whiteListButton").onclick = () => {
+    chrome.tabs.query({ lastFocusedWindow: true, active: true }, (tabs) => {
+        makeProceedWork(tabs[0].id)
+
+        getPendingTabUrl(tabs[0].id, (url) => {
+            pushHostToWhiteList(hostFromUrl(url))
+            chrome.tabs.update(tabs[0].id, { url: url })
+        })
+    })
+}
+
 
 function initPageContent() {
     chrome.tabs.query({ "lastFocusedWindow": true, active: true }, (tabs) => {
@@ -34,6 +45,7 @@ function initPageContent() {
             document.getElementById("header").textContent = `Are you sure you want to visit ${hostFromUrl(pendingUrl)}?`
             document.getElementById("returnButton").textContent = `Return to ${hostFromUrl(prevUrl)}`
             document.getElementById("proceedButton").textContent = `Proceed to ${hostFromUrl(pendingUrl)}`
+            document.getElementById("whiteListButton").textContent = `Add ${hostFromUrl(pendingUrl)} to whitelist`
         })})
     })
 }

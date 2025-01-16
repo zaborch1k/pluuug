@@ -11,6 +11,31 @@ export function pushFlagAct(value, callback = () => {}) {
     chrome.storage.local.set({"flagAct" : value}, callback);
 }
 
+// ------------------------------------ Whitelist logic ------------------------------------
+
+export function pushHostToWhiteList(host, callback = () => {}) {
+    chrome.storage.local.get("whiteList", (result) => {
+        let list = result.whiteList
+        list.push(host)
+
+        chrome.storage.local.set({ "whiteList": list }, callback)
+    })
+}
+
+export function getWhiteList(callback) {
+    chrome.storage.local.get("whiteList", (result) => {
+        callback(result.whiteList)
+    })
+}
+
+export function isHostInWhiteList(host, callback) {
+    chrome.storage.local.get("whiteList", (result) => {
+        let list = result.whiteList
+        
+        callback(list.includes(host))
+    })
+}
+
 // ------------------------------------ Cut the memory of a deleted tab ------------------------------------
 
 export function removeTabUrls(tabId, callback = () => {}) {
@@ -100,9 +125,11 @@ export function initDB() {
         if (flagAct === undefined) {
             console.log("initDB.....");
             await Promise.all([
-                pushFlagAct(false, function (d) {}),
+                pushFlagAct(false),
 
-                chrome.storage.local.set({ ["lc"] : []})
+                chrome.storage.local.set({ "whiteList" : []}),
+
+                chrome.storage.local.set({ "lc" : []})
 
                 // other lists
             ])
