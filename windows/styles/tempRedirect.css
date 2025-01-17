@@ -1,7 +1,3 @@
-html {
-  background-color: rgb(44, 44, 44);
-}
-
 .warning {
   display: block;
   margin: 20vh auto 0;
@@ -36,23 +32,14 @@ p {
 }
 
 button {
-  background-color: rgb(11, 84, 194);
   color: rgb(243, 243, 243);
   font-weight: bold;
   font-size: 1.05em;
-  border-radius: 2px;
+  border-radius: 3px;
   min-height: fit-content;
   min-width: fit-content;
   border: 0;
   padding: 8px 16px;
-}
-
-button:hover {
-  background-color: rgb(9, 73, 168);
-}
-
-button:active {
-  background-color: rgb(8, 56, 128);
 }
 
 img {
@@ -60,14 +47,71 @@ img {
   width: 15vh;
 }
 
-.returnbutton {
-  background-color: rgb(70, 70, 70);
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: rgb(44, 44, 44);
+  }
+  
+  h1 {
+    color: rgb(243, 243, 243);
+  }
+  
+  button {
+    background-color: rgb(11, 84, 194);
+  }
+
+  button:hover {
+    background-color: rgb(9, 73, 168);
+  }
+  
+  button:active {
+    background-color: rgb(8, 56, 128);
+  }
+
+  .returnbutton {
+    background-color: rgb(70, 70, 70);
+  }
+  
+  .returnbutton:hover {
+    background-color: rgb(62, 62, 62);
+  }
+  
+  .returnbutton:active {
+    background-color: rgb(48, 48, 48);
+  }
 }
 
-.returnbutton:hover {
-  background-color: rgb(62, 62, 62);
-}
+@media (prefers-color-scheme: light) {
+  html {
+    background-color: rgb(255, 255, 255);
+  }
 
-.returnbutton:active {
-  background-color: rgb(48, 48, 48);
+  h1 {
+    color: rgb(39, 39, 39);
+  }
+
+  button {
+    background-color: rgb(253, 126, 152);
+  }
+
+  button:hover {
+    background-color: rgb(253, 109, 138);
+  }
+
+  button:active {
+    background-color: rgb(255, 95, 127);
+  }
+
+  .returnbutton {
+    background-color: rgb(165, 165, 165);
+    color: rgb(255, 255, 255);
+  }
+  
+  .returnbutton:hover {
+    background-color: rgb(153, 153, 153);
+  }
+  
+  .returnbutton:active {
+    background-color: rgb(139, 139, 139);
+  }
 }

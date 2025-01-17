@@ -1,5 +1,6 @@
 ### Todo
 
+- [ ] Redirect UI looks like shit on IPad Pro...
 - [ ] Draw UI in the extension html (popup.html) that would allow the user to view and delete whitelist entries.
 - [ ] Introduced a bug - it seems verdict is either incorrect or it does not equate to "SAFE" ever. (checkURL.js -> notify.js)
 - [ ] Create or snatch a neural network capable of predicting current site's safety based on URL, HTML, et cetera.
@@ -11,6 +12,7 @@
 - [x] Discard the use of inject.js/alert() in favour of EITHER chrome.notifications OR separate .html with url saved in js.
 - [x] Create a webpage that would warn the user about potentially unwanted activity from the website and allow them to force access the website or return to the previous page.
 - [x] Different cache for different tabs. Also why the fuck does everyone call every other thing cache...?
+- [x] Make colors respond to browser theme.
 
 
 ### Expired -
