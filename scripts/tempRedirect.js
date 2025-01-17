@@ -42,10 +42,11 @@ document.getElementById("whiteListButton").onclick = () => {
 function initPageContent() {
     chrome.tabs.query({ "lastFocusedWindow": true, active: true }, (tabs) => {
         getPendingTabUrl(tabs[0].id, (pendingUrl) => { getPrevTabUrl(tabs[0].id, (prevUrl) => {
-            document.getElementById("header").textContent = `Are you sure you want to visit ${hostFromUrl(pendingUrl)}?`
-            document.getElementById("returnButton").textContent = `Return to ${hostFromUrl(prevUrl)}`
-            document.getElementById("proceedButton").textContent = `Proceed to ${hostFromUrl(pendingUrl)}`
-            document.getElementById("whiteListButton").textContent = `Add ${hostFromUrl(pendingUrl)} to whitelist`
+            document.getElementById("header").textContent = `"${hostFromUrl(pendingUrl)}" is known to be malicious. Do you still want to proceed?`
+            document.getElementById("reason").textContent = `Reason for suspicion: !TO BE AN INSERTED VARIABLE!`
+            document.getElementById("returnButton").textContent = `Return to "${hostFromUrl(prevUrl)}"`
+            document.getElementById("proceedButton").textContent = `Proceed to "${hostFromUrl(pendingUrl)}"`
+            document.getElementById("whiteListButton").textContent = `Add "${hostFromUrl(pendingUrl)}" to whitelist and proceed`
         })})
     })
 }
