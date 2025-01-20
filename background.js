@@ -66,7 +66,11 @@ function redirectBadSite(pendingDetails, flagAct) {
         setPendingTabUrl(pendingDetails.tabId, pendingDetails.url)
         
         chrome.tabs.update(pendingDetails.tabId, { url: chrome.runtime.getURL("windows/tempRedirect.html") }, (tab) => {
-            setPrevTabUrl(pendingDetails.tabId, tab.url)
+            // I SWORE ON DEVIL I WOULD NEVER COOPERATE WITH ANYTHING YANDEX
+            // YET HERE I AM
+            // IT IS BUT FATE HELEL PUNISHED ME FOR MY DISOBEDIENCE
+            // Fuck Yandex. Wicked monopolist wretches poisoning our economics.
+            setPrevTabUrl(pendingDetails.tabId, (tab.url === "") ? "https://www.google.com" : tab.url)
         })
 
         traceHosts(pendingDetails.tabId, hostFromUrl(previousPendingUrl), pendingHost)
