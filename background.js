@@ -3,7 +3,7 @@ import { getFlagAct } from "./scripts/storageWorker.js"
 import { 
     setPrevTabUrl, setPendingTabUrl,
     getPendingTabUrl, removeTabUrls,
-    isHostInWhiteList
+    isHostInWhiteList, setLang
 } from "./scripts/storageWorker.js"
 import { notify, traceHosts } from "./scripts/notify.js"
 import { checkURL } from "./scripts/checkURL.js"
@@ -89,9 +89,22 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
 );
 
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    removeTabUrls(tabId, () => {})
+    removeTabUrls(tabId)
 })
 
 chrome.tabs.onCreated.addListener((tab) => {
     setPrevTabUrl(tab.id, tab.url)
 })
+
+chrome.runtime.onStartup.addListener(() => getFlagAct(async (flagAct) => {
+    const extensionTabIds = (await chrome.tabs.query({ }))
+        .filter(tab => tab.url.includes("tempRedirect.html"))
+        .map(tab => tab.id)
+
+    chrome.tabs.remove(extensionTabIds)
+
+    if (flagAct === undefined)
+        return
+
+    setLang(chrome.i18n.getUILanguage())
+}))

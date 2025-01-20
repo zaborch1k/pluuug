@@ -36,6 +36,18 @@ export function isHostInWhiteList(host, callback) {
     })
 }
 
+// ------------------------------------ Language logic ------------------------------------
+
+export function setLang(lang, callback = () => {}) {
+    chrome.storage.local.set({ "lang": lang }, callback)
+}
+
+export function getLang(callback) {
+    chrome.storage.local.get("lang", (result) => {
+        callback(result.lang)
+    })
+}
+
 // ------------------------------------ Cut the memory of a deleted tab ------------------------------------
 
 export function removeTabUrls(tabId, callback = () => {}) {
@@ -122,17 +134,22 @@ export async function updateList(name, list) {
 
 export function initDB() { 
     getFlagAct(async function (flagAct) {
-        if (flagAct === undefined) {
-            console.log("initDB.....");
-            await Promise.all([
-                pushFlagAct(false),
-
-                chrome.storage.local.set({ "whiteList" : []}),
-
-                chrome.storage.local.set({ "lc" : []})
-
-                // other lists
-            ])
+        if (flagAct !== undefined) {
+            return
         }
+
+        console.log("initDB.....");
+        
+        await Promise.all([
+            pushFlagAct(false),
+            
+            setLang(chrome.i18n.getUILanguage()),
+
+            chrome.storage.local.set({ "whiteList" : []}),
+
+            chrome.storage.local.set({ "lc" : []})
+
+            // other lists
+        ])
     });
 }

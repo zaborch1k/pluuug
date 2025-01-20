@@ -1,7 +1,7 @@
 import {
     getPendingTabUrl, getPrevTabUrl,
     makeProceedWork, makeReturnWork,
-    pushHostToWhiteList
+    pushHostToWhiteList, getLang
 } from "./storageWorker.js"
 import { hostFromUrl } from "./utility.js"
 
@@ -41,12 +41,24 @@ document.getElementById("whiteListButton").onclick = () => {
 
 function initPageContent() {
     chrome.tabs.query({ "lastFocusedWindow": true, active: true }, (tabs) => {
-        getPendingTabUrl(tabs[0].id, (pendingUrl) => { getPrevTabUrl(tabs[0].id, (prevUrl) => {
-            document.getElementById("header").textContent = `"${hostFromUrl(pendingUrl)}" is known to be malicious. Do you still want to proceed?`
-            document.getElementById("reason").textContent = `Reason for suspicion: !TO BE AN INSERTED VARIABLE!`
-            document.getElementById("returnButton").textContent = `Return to "${hostFromUrl(prevUrl)}"`
-            document.getElementById("proceedButton").textContent = `Proceed to "${hostFromUrl(pendingUrl)}"`
-            document.getElementById("whiteListButton").textContent = `Add "${hostFromUrl(pendingUrl)}" to whitelist and proceed`
-        })})
+        getPendingTabUrl(tabs[0].id, (pendingUrl) => getPrevTabUrl(tabs[0].id, (prevUrl) => getLang((lang) => {
+            switch (lang) {
+                case "ru-RU":
+                case "ru":
+                    document.getElementById("header").textContent = `"${hostFromUrl(pendingUrl)}" небезопасен. Дальнейшее посещение может подвергнуть Вас риску.`
+                    document.getElementById("reason").textContent = `Причина недоверия: !TO BE AN INSERTED VARIABLE!`
+                    document.getElementById("returnButton").textContent = `Вернуться на "${hostFromUrl(prevUrl)}"`
+                    document.getElementById("proceedButton").textContent = `Продолжить в "${hostFromUrl(pendingUrl)}"`
+                    document.getElementById("whiteListButton").textContent = `Добавить "${hostFromUrl(pendingUrl)}" в исключения и продолжить`
+                    return
+                default:
+                    document.getElementById("header").textContent = `"${hostFromUrl(pendingUrl)}" is known to be malicious. Do you still want to proceed?`
+                    document.getElementById("reason").textContent = `Reason for suspicion: !TO BE AN INSERTED VARIABLE!`
+                    document.getElementById("returnButton").textContent = `Return to "${hostFromUrl(prevUrl)}"`
+                    document.getElementById("proceedButton").textContent = `Proceed to "${hostFromUrl(pendingUrl)}"`
+                    document.getElementById("whiteListButton").textContent = `Whitelist "${hostFromUrl(pendingUrl)}" and proceed`
+                    return
+            }
+        })))
     })
 }

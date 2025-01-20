@@ -25,6 +25,7 @@ p {
 
 .leftbuttons {
   float:left;
+  margin: auto auto 20px 8px;
 }
 
 .rightbuttons {
