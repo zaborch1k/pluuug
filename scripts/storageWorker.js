@@ -63,6 +63,9 @@ export function getPendingTabUrl(tabId, callback) {
 }
 
 export function setPendingTabUrl(tabId, url, callback = () => {}) {
+    if (url.startsWith("chrome-extension"))
+        return
+
     let key = `${tabId}pendingUrl`
     chrome.storage.session.set({ [key]: url }, callback)
 }
@@ -76,8 +79,9 @@ export function getPrevTabUrl(tabId, callback) {
 }
 
 export function setPrevTabUrl(tabId, url, callback = () => {}) {
-    if (url.substring(0, 16) === "chrome-extension")
+    if (url.startsWith("chrome-extension"))
         return
+
     let key = `${tabId}prevUrl`
     chrome.storage.session.set({ [key]: url }, callback)
 }

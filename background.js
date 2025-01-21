@@ -33,6 +33,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         return
     }
 
+    setPendingTabUrl(tabId, changeInfo.url)
+    setPrevTabUrl(tabId, changeInfo.url)
+
     getFlagAct(function(flagAct) {
         processNewURL(tabId, flagAct);
     });
@@ -51,7 +54,7 @@ function redirectBadSite(pendingDetails, flagAct) {
     // if (checkURL(pendingDetails.url) !== "UNSAFE")
     //     return
 
-    getPendingTabUrl(pendingDetails.tabId, (previousPendingUrl) => { isHostInWhiteList(hostFromUrl(pendingDetails.url), (hostInWhiteList) => {
+    getPendingTabUrl(pendingDetails.tabId, (previousPendingUrl) => isHostInWhiteList(hostFromUrl(pendingDetails.url), (hostInWhiteList) => {
         if (hostInWhiteList)
             return
 
@@ -66,21 +69,17 @@ function redirectBadSite(pendingDetails, flagAct) {
         setPendingTabUrl(pendingDetails.tabId, pendingDetails.url)
         
         chrome.tabs.update(pendingDetails.tabId, { url: chrome.runtime.getURL("windows/tempRedirect.html") }, (tab) => {
-            // I SWORE ON DEVIL I WOULD NEVER COOPERATE WITH ANYTHING YANDEX
-            // YET HERE I AM
-            // IT IS BUT FATE HELEL PUNISHED ME FOR MY DISOBEDIENCE
-            // Fuck Yandex. Wicked monopolist wretches poisoning our economics.
             setPrevTabUrl(pendingDetails.tabId, (tab.url === "") ? "https://www.google.com" : tab.url)
         })
 
         traceHosts(pendingDetails.tabId, hostFromUrl(previousPendingUrl), pendingHost)
-    })})
+    }))
 }
 
 chrome.webRequest.onBeforeRequest.addListener((details) => {
         getFlagAct((flagAct) => {
-            redirectBadSite(details, flagAct);
-        });
+            redirectBadSite(details, flagAct)
+        })
     },
     {
         urls: ["https://*/*", "http://*/*"],
@@ -108,3 +107,12 @@ chrome.runtime.onStartup.addListener(() => getFlagAct(async (flagAct) => {
 
     setLang(chrome.i18n.getUILanguage())
 }))
+
+chrome.webRequest.onCompleted.addListener((details) => {
+    chrome.history.deleteUrl({ url: chrome.runtime.getURL("windows/tempRedirect.html") })
+},
+{
+    urls: ["https://*/*", "http://*/*"],
+    types: ["main_frame"]
+}
+);

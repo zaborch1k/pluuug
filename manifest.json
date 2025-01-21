@@ -20,7 +20,8 @@
         "activeTab",
         "scripting",
         "alarms",
-        "webRequest"
+        "webRequest",
+        "history"
     ],
     
     "host_permissions" : [
