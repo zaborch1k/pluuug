@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "test",
+    "description": "Base Level Extension",
+    "version": "1.0",
+
+    "action": {
+      "default_icon": "images/icon1.png",
+      "default_popup": "windows/popup.html"
+    },
+    
+    "background" : {
+      "service_worker" : "dist/background.js",
+      "type" : "module"
+    },
+
+    "permissions": [
+        "storage",
+        "tabs", 
+        "activeTab",
+        "scripting",
+        "alarms",
+        "webRequest",
+        "history"
+    ],
+    
+    "host_permissions" : ["<all_urls>"]
+  }
