@@ -52,15 +52,8 @@ function openWindow(win) {
 }
 
 
-document.getElementById("extButton").addEventListener("click", extButtonClicked);
+document.getElementById("extButton").addEventListener("click", () => openWindow("extWdw"));
 
-function extButtonClicked() {
-    openWindow("extWdw");
-}
+document.getElementById("faqButton").addEventListener("click", () => openWindow("faq"));
 
-
-document.getElementById("faqButton").addEventListener("click", faqButtonClicked);
-
-function faqButtonClicked() {
-    openWindow("faq");
-}
+document.getElementById('optionsButton').addEventListener("click", () => openWindow("options"))

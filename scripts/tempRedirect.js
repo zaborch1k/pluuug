@@ -5,7 +5,7 @@ import {
 } from "./storageWorker.js"
 import { hostFromUrl } from "./utility.js"
 
-initPageContent()
+await initPageContent()
 
 document.getElementById("returnButton").onclick = () => {
     chrome.tabs.query({ lastFocusedWindow: true, active: true }, (tabs) => {
@@ -37,6 +37,7 @@ document.getElementById("whiteListButton").onclick = () => {
         })
     })
 }
+
 
 async function initPageContent() {
     const currentTab = await chrome.tabs.getCurrent()

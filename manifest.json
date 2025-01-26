@@ -10,7 +10,7 @@
     },
     
     "background" : {
-      "service_worker" : "background.js",
+      "service_worker" : "dist/background.js",
       "type" : "module"
     },
 
@@ -24,9 +24,5 @@
         "history"
     ],
     
-    "host_permissions" : [
-      "http://*/*", 
-      "https://*/*"
-    ]
-
+    "host_permissions" : ["<all_urls>"]
   }

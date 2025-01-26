@@ -41,11 +41,20 @@ export function isHostInWhiteList(host, callback) {
 export function setLang(lang, callback = () => {}) {
     chrome.storage.local.set({ "lang": lang }, callback)
 }
-
 export function getLang(callback) {
     chrome.storage.local.get("lang", (result) => {
         callback(result.lang)
     })
+}
+
+// ------------------------------------ mode logic -----------------------------------------------
+
+export async function setMode(num) {
+    await set({ "mode": num })
+}
+
+export async function getMode() {
+    return await get('mode')
 }
 
 // ------------------------------------ Cut the memory of a deleted tab ------------------------------------
@@ -81,7 +90,7 @@ export function getPrevTabUrl(tabId, callback) {
 export function setPrevTabUrl(tabId, url, callback = () => {}) {
     if (url.startsWith("chrome-extension"))
         return
-
+    
     let key = `${tabId}prevUrl`
     chrome.storage.session.set({ [key]: url }, callback)
 }
@@ -116,6 +125,20 @@ function get(key) {
     });
 }
 
+function set(obj) {
+    return new Promise(function(resolve, reject) {
+        chrome.storage.local.set(obj, () => {
+            if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message);
+                reject(chrome.runtime.lastError.message);
+
+            } else {
+                resolve();
+            }
+        });
+    });
+}
+
 export async function getList(name) {
     let list = await get(name);
     return list;
@@ -123,7 +146,7 @@ export async function getList(name) {
 
 
 export async function updateList(name, list) {
-    await chrome.storage.local.set({ [name] : list});
+    await chrome.storage.local.set({ [name] : list});  // set(obj) [!]
 }
 
 // -----------------------------------------------------------------------------------------
@@ -149,9 +172,11 @@ export function initDB() {
             
             setLang(chrome.i18n.getUILanguage()),
 
-            chrome.storage.local.set({ "whiteList" : []}),
+            chrome.storage.local.set({ "whiteList" : [] }),
 
-            chrome.storage.local.set({ "lc" : []})
+            chrome.storage.local.set({ "lc" : [] }),
+
+            chrome.storage.local.set({ "mode": 3 })
 
             // other lists
         ])
