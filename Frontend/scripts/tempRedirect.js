@@ -55,14 +55,14 @@ async function initPageContent() {
             case "ru-RU":
             case "ru":
                 document.getElementById("header").textContent = `"${hostFromUrl(pendingUrl)}" небезопасен. Дальнейшее посещение может подвергнуть Вас риску.`
-                document.getElementById("reason").textContent = `${await httpGet("http://192.168.1.100:5000/", pendingUrl)}` // Temporary
+                document.getElementById("reason").textContent = `Причина недоверия: !TO BE AN INSERTED VARIABLE!` // `${await httpGet("http://192.168.1.100:5000/", pendingUrl)}` // Temporary
                 document.getElementById("returnButton").textContent = `Вернуться на "${hostFromUrl(prevUrl)}"`
                 document.getElementById("proceedButton").textContent = `Продолжить в "${hostFromUrl(pendingUrl)}"`
                 document.getElementById("whiteListButton").textContent = `Добавить "${hostFromUrl(pendingUrl)}" в исключения и продолжить`
                 return
             default:
                 document.getElementById("header").textContent = `"${hostFromUrl(pendingUrl)}" is known to be malicious. Do you still want to proceed?`
-                document.getElementById("reason").textContent = `${await httpGet("http://192.168.1.100:5000/", pendingUrl)}`
+                document.getElementById("reason").textContent = `Reason for suspicion: !TO BE AN INSERTED VARIABLE!` // `${await httpGet("http://192.168.1.100:5000/", pendingUrl)}`
                 document.getElementById("returnButton").textContent = `Return to "${hostFromUrl(prevUrl)}"`
                 document.getElementById("proceedButton").textContent = `Proceed to "${hostFromUrl(pendingUrl)}"`
                 document.getElementById("whiteListButton").textContent = `Whitelist "${hostFromUrl(pendingUrl)}" and proceed`

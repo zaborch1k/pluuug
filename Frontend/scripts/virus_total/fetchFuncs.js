@@ -28,7 +28,6 @@ export async function scanURL(url) {
     })
 
     console.log('virustotal scaning status:', response.status)
-    console.log('virustotal scaning status data:', JSON.stringify(await response.json()))
     if (response.status !== 200) {
         return
     }
@@ -41,7 +40,7 @@ export async function scanURL(url) {
             return stats
         }
 
-        await new Promise(resolve => setTimeout(resolve, 300))
+        await new Promise(resolve => setTimeout(resolve, 1000))
         console.log('virustotal next iteration (scan)')
     }
 }
