@@ -1,16 +1,24 @@
 import { getFlagAct } from "./storageWorker.js"
-import { pushFlagAct } from "./storageWorker.js"
+import { pushFlagAct, getLang } from "./storageWorker.js"
+import { setTextPopup } from "./setText.js"
 
+let res = await getLang();
+const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
+setTextPopup(lang);
+//
 
 // ------------------------------------ when opening  ------------------------------------
 
 function changeButtonsText(flag) {
+    let text;
     if (flag) {
-        document.getElementById("actButton").textContent = "отключить защиту";
+        text = (lang == "ru") ? "отключить защиту" : "disable check";
+        document.getElementById("actButton").textContent = text;
         document.getElementById("extButton").style.visibility = 'visible';
 
     } else {
-        document.getElementById("actButton").textContent = "включить защиту";
+        text = (lang == "ru") ? "включить проверку" : "enable check";
+        document.getElementById("actButton").textContent = text;
         document.getElementById("extButton").style.visibility = 'hidden';
     }
 }
@@ -52,8 +60,9 @@ function openWindow(win) {
 }
 
 
-document.getElementById("extButton").addEventListener("click", () => openWindow("extWdw"));
+document.getElementById("extButton").addEventListener("click", () => openWindow("extWdw"))
 
-document.getElementById("faqButton").addEventListener("click", () => openWindow("faq"));
+
+document.getElementById("faqButton").addEventListener("click", () => openWindow("faq"))
 
 document.getElementById('optionsButton').addEventListener("click", () => openWindow("options"))

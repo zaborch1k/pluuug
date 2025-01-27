@@ -4,18 +4,18 @@ import { getMode } from "./storageWorker.js";
 
 
 export async function checkURL(url) {
-    let functions = {1: [checkSafebrowsing], 2: [checkVirustotal], 3: [checkSafebrowsing, checkVirustotal]}
+    let functions = {"1": [checkSafebrowsing], "2": [checkVirustotal], "3": [checkSafebrowsing, checkVirustotal]}
     let mode = await getMode()
     let modeFuncs = functions[mode]
     console.log('mode:', mode)
 
     for (let fn of modeFuncs) {
-        let res = await fn(url)
+        let [verdict, threatType] = await fn(url)
 
-        if (res == 'UNSAFE') {
-            return 'UNSAFE'
+        if (verdict == 'UNSAFE') {
+            return ['UNSAFE', threatType]
         }
     }
 
-    return 'SAFE' 
+    return ['SAFE', undefined]
 }

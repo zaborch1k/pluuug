@@ -1,18 +1,25 @@
-import { setMode } from "./storageWorker.js";
+import { setMode, getLang, getMode } from "./storageWorker.js"
+import { setTextOptions } from "./setText.js"
 
-let firstButton = document.getElementById('firstModeButton')
-let secondButton = document.getElementById('secondModeButton')
-let thirdButton = document.getElementById('thirdModeButton')
+// ----------------------- init page -----------------------
 
-firstButton.addEventListener('click', async () => {
-    await setMode(1)
-    console.log('Выбран первый режим')
-})
-secondButton.addEventListener('click', async () => {
-    await setMode(2)
-    console.log('Выбран второй режим')
-})
-thirdButton.addEventListener('click', async () => {
-    await setMode(3)
-    console.log('Выбран третий режим')
-})
+let res = await getLang();
+let mode = await getMode();
+
+const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
+
+setTextOptions(lang);
+
+document.getElementById(lang).setAttribute("selected", true);
+
+document.getElementById("lang-select").onchange = () => {
+    let select = document.getElementById("lang-select");
+    let selectedOption = select.options[select.selectedIndex].value;
+    chrome.storage.local.set({"lang" : selectedOption});
+};
+
+document.getElementById("choose-lang-mode" + mode).setAttribute("checked", true);
+
+document.querySelectorAll('input[type="radio"][name="choose-lang"]').forEach(radio => {
+    radio.addEventListener('change', () => setMode(radio.value));
+  });

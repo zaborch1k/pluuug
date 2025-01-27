@@ -2,12 +2,33 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>options</title>
+    <title id="title"></title>
 </head>
 <body>
-    <button id="firstModeButton">Первый режим (safebrowsing)</button>
-    <button id="secondModeButton">Второй режим (virustotal)</button>
-    <button id="thirdModeButton">Третий режим (safebrowsing + virustotal)</button>
+    <h1 id="header"></h1>
+
+    <h2 id="chooseLang"></h2>
+    <select id="lang-select">
+        <option id="ru">ru</option>
+        <option id="eng">eng</option>
+    </select>
+
+    <h2 id="choose-mode-header"></h2>
+    <div>
+        <input id="choose-lang-mode1" class="choose-lang-input" type="radio" name="choose-lang" value="1"/>
+        <label id="label1"></label>
+    </div>
+
+    <div>
+        <input id="choose-lang-mode2" class="choose-lang-input" type="radio" name="choose-lang" value="2"/>
+        <label id="label2"></label>
+    </div>
+
+    <div>
+        <input id="choose-lang-mode3" class="choose-lang-input" type="radio" name="choose-lang" value="3"/>
+        <label id="label3"></label>
+    </div>
+
 
     <script src="../scripts/options.js" type="module"></script>
 </body>

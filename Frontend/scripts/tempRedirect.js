@@ -4,14 +4,16 @@ import {
     pushHostToWhiteList, getLang
 } from "./storageWorker.js"
 import { hostFromUrl } from "./utility.js"
+import { getPrettyThreatType } from "./prettyData.js"
+import { setTextTempRedirect } from "./setText.js"
 
 await initPageContent()
 
-async function httpGet(server, urlToCheck) {
-    const response = await fetch(`${server}/neuralnetwork?url=${urlToCheck}`)
-    const data = await response.text()
-    return data
-}
+// async function httpGet(server, urlToCheck) {
+//     const response = await fetch(`${server}/neuralnetwork?url=${urlToCheck}`)
+//     const data = await response.text()
+//     return data
+// }
 
 document.getElementById("returnButton").onclick = () => {
     chrome.tabs.query({ lastFocusedWindow: true, active: true }, (tabs) => {
@@ -47,26 +49,15 @@ document.getElementById("whiteListButton").onclick = () => {
 
 async function initPageContent() {
     const currentTab = await chrome.tabs.getCurrent()
+    let lang = await getLang();
 
-    getPendingTabUrl(currentTab.id, (pendingUrl) => getPrevTabUrl(currentTab.id, (prevUrl) => getLang(async (lang) => {
+    let searchParams = new URLSearchParams(document.location.search);
+    let threatType = searchParams.get("threatType");
+    threatType = getPrettyThreatType(threatType, lang); // [!] add description for all threat types
+
+    getPendingTabUrl(currentTab.id, (pendingUrl) => getPrevTabUrl(currentTab.id, (prevUrl) => {
         prevUrl = (prevUrl === pendingUrl) ? "https://www.google.com" : prevUrl
         
-        switch (lang) {
-            case "ru-RU":
-            case "ru":
-                document.getElementById("header").textContent = `"${hostFromUrl(pendingUrl)}" небезопасен. Дальнейшее посещение может подвергнуть Вас риску.`
-                document.getElementById("reason").textContent = `${await httpGet("http://192.168.1.100:5000/", pendingUrl)}` // Temporary
-                document.getElementById("returnButton").textContent = `Вернуться на "${hostFromUrl(prevUrl)}"`
-                document.getElementById("proceedButton").textContent = `Продолжить в "${hostFromUrl(pendingUrl)}"`
-                document.getElementById("whiteListButton").textContent = `Добавить "${hostFromUrl(pendingUrl)}" в исключения и продолжить`
-                return
-            default:
-                document.getElementById("header").textContent = `"${hostFromUrl(pendingUrl)}" is known to be malicious. Do you still want to proceed?`
-                document.getElementById("reason").textContent = `${await httpGet("http://192.168.1.100:5000/", pendingUrl)}`
-                document.getElementById("returnButton").textContent = `Return to "${hostFromUrl(prevUrl)}"`
-                document.getElementById("proceedButton").textContent = `Proceed to "${hostFromUrl(pendingUrl)}"`
-                document.getElementById("whiteListButton").textContent = `Whitelist "${hostFromUrl(pendingUrl)}" and proceed`
-                return
-        }
-    })))
+        setTextTempRedirect(lang, hostFromUrl(pendingUrl), threatType, hostFromUrl(prevUrl));
+    }))
 }

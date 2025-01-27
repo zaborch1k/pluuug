@@ -10,12 +10,12 @@ export async function checkVirustotal(url) {
     console.log(`virustotal scan completed: ${JSON.stringify(stats)}`);
 
     if (!stats) {
-        return 'SAFE'
+        return ['SAFE', undefined]
     }
 
     if (stats.malicious + stats.suspicious >= 3) {
         console.log('stats: ', stats.malicious, stats.suspicious, stats.malicious + stats.suspicious >= 3);
-        return 'UNSAFE';
+        return ['UNSAFE', undefined];
     }
-    return 'SAFE';
+    return ['SAFE', undefined];
 }

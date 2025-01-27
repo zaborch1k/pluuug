@@ -5,13 +5,9 @@ import { updateList } from "../storageWorker.js"
 import { getSHA256, getShortenHash, convertToEncoding } from "./getHash.js";
 import { searchHashes } from "./fetchFuncs.js";
 
-
-// ---------------------------------------------- almost works ----------------------------------------------
-
-
 async function realTimeCheckWithoutLTL(expressionHashes) {
     let expressionHashPrefixes = expressionHashes.map((hash) => getShortenHash(hash, 'hex'));
-    let lc = await getList("lc"); // = local cache; [[expiration_1, fullHash_1], [expiration_2, fullHash_2], ... ] fullHash_n: a sha256 hash encoded in HEX
+    let lc = await getList("lc"); // = local cache; [[expiration_1, fullHash_1, reason_1], , ... ] fullHash_n: a sha256 hash encoded in HEX
 
     let currentTime = new Date();
 
@@ -24,7 +20,8 @@ async function realTimeCheckWithoutLTL(expressionHashes) {
             let arr = lc[j];
 
             if (arr[1].startsWith(expressionHashPrefix)) {
-                if (currentTime > arr[0]) {
+                let expiration = new Date(arr[0]);
+                if (currentTime > expiration) {
                     lc.splice(j, 1);
                     updateList("lc", lc);
                     
@@ -35,7 +32,7 @@ async function realTimeCheckWithoutLTL(expressionHashes) {
 
                     for (let a of lc) { 
                         if (a[1] == expressionHash) {
-                            return "UNSAFE";
+                            return ["UNSAFE", a[2]];
                         }
                     }
                 }
@@ -57,29 +54,34 @@ async function realTimeCheckWithoutLTL(expressionHashes) {
     console.log(`safebrowsing expiration ${JSON.stringify(expiration)}`, expiration)
     for (let fullHashObj of fullHashes) {
         console.log(`safebrowsing fullHash ${JSON.stringify(fullHashObj.fullHash)}`)
-                
-        let date = new Date();
-        date.setSeconds(date.getSeconds() + expiration.seconds);
+
+        let threatType = fullHashObj.fullHashDetails[0].threatType;
+
+        let dt = new Date();
+        dt.setSeconds(expiration.seconds);
+        dt = dt.toString();
                 
         let hexHash = convertToEncoding(fullHashObj.fullHash, 'base64', 'hex');
 
-        lc.push([date, hexHash]);
+        lc.push([dt, hexHash, threatType]);
     }
         
     updateList("lc", lc);
         
     for (let fullHashObj of fullHashes) { 
+        let threatType = fullHashObj.fullHashDetails[0].threatType;
         let hexHash = convertToEncoding(fullHashObj.fullHash, 'base64', 'hex');
+
         for (let hash of expressionHashes) {
             console.log('safebrowsing comparing hashes:')
             console.log(hexHash, hash)
             if (hash == hexHash) {
-                return "UNSAFE";
+                return ["UNSAFE", threatType];
             }
         }
     }
 
-    return "SAFE";
+    return ["SAFE", undefined];
 }
 
 
@@ -87,11 +89,10 @@ export async function checkSafebrowsing(url) {
     console.log('safebrowsing start scanning')
     let u = canonize(url);
     let expressions = getSuffPref(u);
-    let expressionHashes = expressions.map(item => getSHA256(item, 'hex'));
+    let expressionHashes = expressions.map(item => getSHA256(item, 'hex')); // [verdict, threatType]
 
-    let verdict = await realTimeCheckWithoutLTL(expressionHashes);
-    console.log('safebrowsing scanning completed', verdict)
+    let res = await realTimeCheckWithoutLTL(expressionHashes);
+    console.log('safebrowsing scanning completed', res)
 
-    return verdict;
+    return res;
 }
-

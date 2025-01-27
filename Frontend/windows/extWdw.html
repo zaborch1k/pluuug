@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" />
+    <title id="title"></title>
+    <!-- <link rel="stylesheet" href="styles/extWdw.css"> -->
+    <script src="../scripts/extWdw.js" type="module" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1 id="header"></h1>
+    </header>
+
+    <main>
+        <section class="access-tabs">
+            <ul class="access-tabs-list">
+                <li class="access-tabs-list-item">
+                    <button id="white-list-btn" class="active tab-button"></button>
+                </li>
+                <li class="access-tabs-list-item">
+                    <button class="tab-button" id="history-btn"></button>
+                </li>
+            </ul>
+        </section>
+
+        <div id="div-white-list">
+            <ul id="white-list" class="url-list">
+            </ul>
+            <input type="text" id="white-list-finder" autocomplete="off">
+            <input type="text" id="white-list-adder" autocomplete="off">
+            <button id="white-list-adder-save-btn"></button>
+        </div>
+
+        <div id="history" style="display: none;">
+            <div id="history-elements">
+                <select name="sort" id="history-sort">
+                    <option value="newer-date" selected="selected"></option>
+                    <option value="older-date"></option>
+                </select>
+
+                <select name="history-reason" id="history-reason-sort">
+                    <option id="reason0"></option>
+                    <option id="reason1"></option>
+                    <option id="reason2"></option>
+                    <option id="reason3"></option>
+                    <option id="reason4"></option>
+                </select>
+
+                <select name="download-selection" id="download-selection-sort">
+                    <option id="csv">.csv</option>
+                    <option id="json">.json</option>
+                </select>
+
+                <input type="text" id="history-search" autocomplete="off">
+                <button id="history-clear-btn"></button>
+                <button id="history-donload-btn"></button>
+            </div>
+
+            <table id="history-table" class="history-table">
+                <thead>
+                    <tr>
+                        <th id="th-Date"></th>
+                        <th id="th-URL"></th>
+                        <th id="th-reason"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+
+</html>

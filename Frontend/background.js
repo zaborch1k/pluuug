@@ -3,14 +3,21 @@ import { getFlagAct } from "./scripts/storageWorker.js"
 import { 
     setPrevTabUrl, setPendingTabUrl,
     getPendingTabUrl, removeTabUrls,
-    isHostInWhiteList, setLang
+    isHostInWhiteList, setLang, updateBlockHistory
 } from "./scripts/storageWorker.js"
-import { notify, traceHosts } from "./scripts/notify.js"
 import { checkURL } from "./scripts/checkURL.js"
+import { notify, traceHosts } from "./scripts/notify.js"
 import { hostFromUrl } from "./scripts/utility.js"
 
 initDB();
 
+// ----------------- debug only -----------------
+function randomThreatType() {
+    let rawThreatTypes = ["MALWARE", "UNWANTED_SOFTWARE", "POTENTIALLY_HARMFUL_APPLICATION", "SOCIAL_ENGINEERING", "VIRUSTOTAL"];
+    let ind = Math.floor(Math.random() * (3 - 0 + 1))
+    return rawThreatTypes[ind];
+}
+// ------------------------------------------------
 
 function redirectBadSite(pendingDetails, flagAct) {
     console.log('checking...', pendingDetails.url)
@@ -21,9 +28,13 @@ function redirectBadSite(pendingDetails, flagAct) {
 
     if (pendingDetails.tabId === -1)
         return
-    
-    // Uncomment this when the Google API is completed.
-    checkURL(pendingDetails.url).then(verdict => {
+
+    checkURL(pendingDetails.url).then(res => {
+        let [verdict, threatType] = res;
+        console.log(res);
+        
+        // threatType = randomThreatType(); // debug only
+
         if (verdict !== "UNSAFE")
             return
 
@@ -40,6 +51,11 @@ function redirectBadSite(pendingDetails, flagAct) {
                 return
     
             setPendingTabUrl(pendingDetails.tabId, pendingDetails.url)
+
+            updateBlockHistory(pendingDetails.url, threatType); 
+
+            let redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
+            redirectPageURL.searchParams.set("threatType", threatType);
             
             chrome.tabs.update(pendingDetails.tabId, { url: chrome.runtime.getURL("windows/tempRedirect.html") }, (tab) => {
                 setPrevTabUrl(pendingDetails.tabId, (tab.url === "") ? "https://www.google.com" : tab.url)

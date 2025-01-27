@@ -36,15 +36,28 @@ export function isHostInWhiteList(host, callback) {
     })
 }
 
+// ------------------------------------ BlockHistory logic ------------------------------------
+
+export async function updateBlockHistory(url, reason) {
+    let date = new Date();
+    date = date.toISOString();
+
+    getList("blockHistory").then((blockHistory) => {
+        date = date.toString();
+
+        blockHistory.push([date.toString(), url, reason]);
+        updateList("blockHistory", blockHistory);
+    });
+}
+
 // ------------------------------------ Language logic ------------------------------------
 
 export function setLang(lang, callback = () => {}) {
     chrome.storage.local.set({ "lang": lang }, callback)
 }
-export function getLang(callback) {
-    chrome.storage.local.get("lang", (result) => {
-        callback(result.lang)
-    })
+export async function getLang() {
+    let res = await chrome.storage.local.get("lang");
+    return res.lang;
 }
 
 // ------------------------------------ mode logic -----------------------------------------------
@@ -172,11 +185,15 @@ export function initDB() {
             
             setLang(chrome.i18n.getUILanguage()),
 
+            setMode("1"),
+
             chrome.storage.local.set({ "whiteList" : [] }),
 
             chrome.storage.local.set({ "lc" : [] }),
 
-            chrome.storage.local.set({ "mode": 3 })
+            chrome.storage.local.set({ "mode": "3" }),
+
+            chrome.storage.local.set({ "blockHistory" : []})
 
             // other lists
         ])
