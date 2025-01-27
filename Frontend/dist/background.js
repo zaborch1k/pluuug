@@ -39446,51 +39446,43 @@ function _scanURL() {
         case 2:
           response = _context2.sent;
           console.log('virustotal scaning status:', response.status);
-          _context2.t0 = console;
-          _context2.t1 = JSON;
-          _context2.next = 8;
-          return response.json();
-        case 8:
-          _context2.t2 = _context2.sent;
-          _context2.t3 = _context2.t1.stringify.call(_context2.t1, _context2.t2);
-          _context2.t0.log.call(_context2.t0, 'virustotal scaning status data:', _context2.t3);
           if (!(response.status !== 200)) {
-            _context2.next = 13;
+            _context2.next = 6;
             break;
           }
           return _context2.abrupt("return");
-        case 13:
-          _context2.next = 15;
+        case 6:
+          _context2.next = 8;
           return response.json();
-        case 15:
+        case 8:
           data = _context2.sent;
-        case 16:
+        case 9:
           if (!true) {
-            _context2.next = 30;
+            _context2.next = 23;
             break;
           }
-          _context2.next = 19;
+          _context2.next = 12;
           return getURLReport(data);
-        case 19:
+        case 12:
           _yield$getURLReport = _context2.sent;
           _yield$getURLReport2 = _slicedToArray(_yield$getURLReport, 2);
           status = _yield$getURLReport2[0];
           stats = _yield$getURLReport2[1];
           if (!(status == 'completed')) {
-            _context2.next = 25;
+            _context2.next = 18;
             break;
           }
           return _context2.abrupt("return", stats);
-        case 25:
-          _context2.next = 27;
+        case 18:
+          _context2.next = 20;
           return new Promise(function (resolve) {
-            return setTimeout(resolve, 300);
+            return setTimeout(resolve, 1000);
           });
-        case 27:
+        case 20:
           console.log('virustotal next iteration (scan)');
-          _context2.next = 16;
+          _context2.next = 9;
           break;
-        case 30:
+        case 23:
         case "end":
           return _context2.stop();
       }
