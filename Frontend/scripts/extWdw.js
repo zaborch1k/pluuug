@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             div.style.display = "block"
             history.style.display = "none";
 
-            whiteListBtn.style.border = "3px solid black";
-            historyBtn.style.border = "3px solid white"
+            whiteListBtn.style.border = "3px solid white";
+            historyBtn.style.border = "3px solid #334251"
 
             whiteListBtn.classList.add("active");
             historyBtn.classList.remove("active");
@@ -31,8 +31,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             div.style.display = "none"
             whiteList.style.display = "none";
 
-            whiteListBtn.style.border = "3px solid white";
-            historyBtn.style.border = "3px solid black"
+            whiteListBtn.style.border = "3px solid #334251";
+            historyBtn.style.border = "3px solid white"
 
             historyBtn.classList.add("active");
             whiteListBtn.classList.remove("active");

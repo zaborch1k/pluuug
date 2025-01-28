@@ -135,3 +135,22 @@ export function setTextOptions(lang) { // [!] change this text
         document.getElementById(id).textContent = setTextContent[id][ind];
     }
 }
+
+export function setTextFaq(lang) {
+    let ind = (lang == "ru" || lang == "ru-RU") ? 0 : 1;
+
+    let setTextContent = {
+        "header1" : ["Вопрос1", "Вопрос1, но на английском"],
+        "text1" : ["Куча текста", "Куча текста на английском"],
+
+        "header2" : ["Вопрос2", "Вопрос2, но на английском"],
+        "text2" : ["Очееееееееееееееееееееееееееееееееееееень много текста", "Очееееееееееееееееееееееееееееееееееееень много текста, но на английском"],
+
+        "header3" : ["Вопрос3", "Впрос3, но на английском"],
+        "text3" : ["Текст", "Текст, но на английском"]
+    }
+
+    for (let id in setTextContent) {
+        document.getElementById(id).textContent = setTextContent[id][ind];
+    }
+}

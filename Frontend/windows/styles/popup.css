@@ -1,0 +1,231 @@
+@font-face {
+    font-family: 'Roboto';
+    font-weight: 700;
+    src: url("../../fonts/Roboto-Bold.woff2");
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-weight: 500;
+    src: url("../../fonts/Roboto-Medium.woff2");
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-weight: 400;
+    src: url("../../fonts/Roboto-Regular.woff2");
+    font-display: swap;
+    font-style: normal;
+}
+
+/*reset styles*/
+* {
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+aside,
+nav,
+footer,
+header,
+section,
+main {
+    display: block;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+ul,
+ul li {
+    list-style: none;
+}
+
+img {
+    vertical-align: top;
+}
+
+img,
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
+address {
+    font-style: normal;
+}
+
+input,
+textarea,
+button,
+select {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background-color: transparent;
+}
+
+input::-ms-clear {
+    display: none;
+}
+
+button,
+input[type="submit"] {
+    display: inline-block;
+    box-shadow: none;
+    background: transparent none;
+    cursor: pointer;
+}
+
+input:focus,
+input:active,
+button:focus,
+button:active {
+    outline: none;
+}
+
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+}
+
+label {
+    cursor: pointer;
+}
+
+legend {
+    display: block;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1b1c25;
+    height: 100vh;
+    font-family: Roboto, sans-serif;
+    color: #ffffff;
+    font-weight: 500px;
+    text-transform: uppercase;
+}
+
+#optionsButton {
+    display: flex;
+    position: absolute;
+    left: 15px;
+    /* right: 35px; */
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ffffff;   
+    align-items: center;
+    justify-content: center;
+    transition-duration: 0.3s;
+}
+
+#optionsButtonIcon {
+    width: 20px;
+    height: 20px;
+    background-size: 17px 17px;
+    background-image: url(../../images/options_icon.svg);
+    background-repeat:no-repeat;
+    background-position: center center;
+    
+}
+
+header {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    padding: 8px;
+    font-size: 15px;
+    /* border-bottom: 2px solid #6d6866; */
+    top: 0;
+    left: 0;
+}
+
+.faq-icon {
+    position: absolute;
+    right: 15px;
+    color: #1b1c25;
+    background-color: #ffffff;
+    width: 20px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-duration: 0.3s;
+}
+
+.container {
+    background-color: #4f745e;
+    width: 300px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#name {
+    text-shadow: -0.4vw 0.4vh #1b1c25;
+}
+
+.btn {
+    display: flex;
+    text-transform: uppercase;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500px;
+    width: 50vw;
+    height: 15vh;
+    transition-duration: 0.3;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    background-color: #818656;
+    border: 0.3vh solid #334251;
+    text-shadow: -0.1vw 0.1vh #1b1c25;
+    box-shadow: -0.4vw 0.8vh #1b1c25;
+}
+
+.btn:hover {
+    color: #6d6866
+}
+
+.faq-icon:hover, #optionsButton:hover {
+    background-color: #6d6866;
+}

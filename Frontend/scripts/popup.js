@@ -12,7 +12,7 @@ setTextPopup(lang);
 function changeButtonsText(flag) {
     let text;
     if (flag) {
-        text = (lang == "ru") ? "отключить защиту" : "disable check";
+        text = (lang == "ru") ? "отключить проверку" : "disable check";
         document.getElementById("actButton").textContent = text;
         document.getElementById("extButton").style.visibility = 'visible';
 
