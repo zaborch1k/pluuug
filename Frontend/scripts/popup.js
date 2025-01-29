@@ -1,13 +1,7 @@
 import { getFlagAct } from "./storageWorker.js"
 import { pushFlagAct, getLang } from "./storageWorker.js"
 import { setTextPopup } from "./setText.js"
-
-let res = await getLang();
-const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
-setTextPopup(lang);
-//
-
-// ------------------------------------ when opening  ------------------------------------
+import { openWindow } from "./utility.js";
 
 function changeButtonsText(flag) {
     let text;
@@ -23,6 +17,13 @@ function changeButtonsText(flag) {
     }
 }
 
+// ------------------------------------ init page  ------------------------------------
+
+let res = await getLang();
+const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
+
+setTextPopup(lang);
+
 getFlagAct(function(flagAct) {
     if (flagAct !== undefined) {
         changeButtonsText(flagAct);
@@ -31,10 +32,7 @@ getFlagAct(function(flagAct) {
 
 // ----------------------------------------------------------------------------------------
 
-
-document.getElementById("actButton").addEventListener("click", actButtonClicked);
-
-function actButtonClicked() {
+document.getElementById("actButton").onclick = () => {
     getFlagAct(function(flagAct) {
         if (flagAct !== undefined) {
             pushFlagAct(!flagAct, function(result){});
@@ -43,25 +41,7 @@ function actButtonClicked() {
     });
 }
 
-
-// open window by name || create new window if it doesnt exists
-function openWindow(win) {
-    let path = "/windows/" + win + ".html";
-    let url = chrome.runtime.getURL(path);
-
-    chrome.tabs.query({url : url}, function (tabs) {
-        if (tabs.length >= 1) {
-            chrome.tabs.update(tabs[0].id,{"active":true, "highlighted":true});
-        } else {
-            url = chrome.runtime.getURL(".." + path);
-            chrome.tabs.create({url : url});
-        }
-    });
-}
-
-
 document.getElementById("extButton").addEventListener("click", () => openWindow("extWdw"))
-
 
 document.getElementById("faqButton").addEventListener("click", () => openWindow("faq"))
 

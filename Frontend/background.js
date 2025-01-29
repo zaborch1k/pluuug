@@ -8,6 +8,7 @@ import {
 import { checkURL } from "./scripts/checkURL.js"
 import { notify, traceHosts } from "./scripts/notify.js"
 import { hostFromUrl } from "./scripts/utility.js"
+import { openWindow } from "./scripts/utility.js"
 
 initDB();
 
@@ -66,6 +67,12 @@ function redirectBadSite(pendingDetails, flagAct) {
     });
 }
 
+
+chrome.runtime.onInstalled.addListener(function (object) {
+    if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+        openWindow("faq");
+    }
+});
 
 chrome.webRequest.onBeforeRequest.addListener((details) => {
         getFlagAct((flagAct) => {

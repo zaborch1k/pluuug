@@ -59,6 +59,11 @@ function redirectBadSite(pendingDetails, flagAct) {
     });
   });
 }
+chrome.runtime.onInstalled.addListener(function (object) {
+  if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    (0, _utility.openWindow)("faq");
+  }
+});
 chrome.webRequest.onBeforeRequest.addListener(function (details) {
   (0, _storageWorker.getFlagAct)(function (flagAct) {
     redirectBadSite(details, flagAct);
@@ -39305,6 +39310,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.hostFromUrl = hostFromUrl;
+exports.openWindow = openWindow;
 function hostFromUrl(url) {
   // No you're lazy!
   try {
@@ -39313,6 +39319,27 @@ function hostFromUrl(url) {
   } catch (_unused) {
     return "";
   }
+}
+
+// open window by name || create new window if it doesnt exists
+function openWindow(win) {
+  var path = "/windows/" + win + ".html";
+  var url = chrome.runtime.getURL(path);
+  chrome.tabs.query({
+    url: url
+  }, function (tabs) {
+    if (tabs.length >= 1) {
+      chrome.tabs.update(tabs[0].id, {
+        "active": true,
+        "highlighted": true
+      });
+    } else {
+      url = chrome.runtime.getURL(".." + path);
+      chrome.tabs.create({
+        url: url
+      });
+    }
+  });
 }
 
 },{}],227:[function(require,module,exports){
@@ -39354,7 +39381,7 @@ function _checkVirustotal() {
             break;
           }
           console.log('stats: ', stats.malicious, stats.suspicious, stats.malicious + stats.suspicious >= 3);
-          return _context.abrupt("return", ['UNSAFE', undefined]);
+          return _context.abrupt("return", ['UNSAFE', "SOCIAL_ENGINEERING"]);
         case 10:
           return _context.abrupt("return", ['SAFE', undefined]);
         case 11:

@@ -1,7 +1,7 @@
 import { setMode, getLang, getMode } from "./storageWorker.js"
 import { setTextOptions } from "./setText.js"
 
-// ----------------------- init page -----------------------
+// ------------------------------------ init page  ------------------------------------
 
 let res = await getLang();
 let mode = await getMode();
@@ -11,6 +11,8 @@ const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
 setTextOptions(lang);
 
 document.getElementById(lang).setAttribute("selected", true);
+
+// ----------------------------------------------------------------------------------------
 
 document.getElementById("lang-select").onchange = () => {
     let select = document.getElementById("lang-select");

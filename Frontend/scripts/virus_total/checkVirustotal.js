@@ -15,7 +15,7 @@ export async function checkVirustotal(url) {
 
     if (stats.malicious + stats.suspicious >= 3) {
         console.log('stats: ', stats.malicious, stats.suspicious, stats.malicious + stats.suspicious >= 3);
-        return ['UNSAFE', undefined];
+        return ['UNSAFE', "SOCIAL_ENGINEERING"];
     }
     return ['SAFE', undefined];
 }
