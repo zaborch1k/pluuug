@@ -1,4 +1,4 @@
-import { setMode, getLang, getMode } from "./storageWorker.js"
+import { setMode, getLang, setLang, getMode } from "./storageWorker.js"
 import { setTextOptions } from "./setText.js"
 
 // ------------------------------------ init page  ------------------------------------
@@ -14,14 +14,14 @@ document.getElementById(lang).setAttribute("selected", true);
 
 // ----------------------------------------------------------------------------------------
 
-document.getElementById("lang-select").onchange = () => {
+document.getElementById("lang-select").onchange = async () => {
     let select = document.getElementById("lang-select");
     let selectedOption = select.options[select.selectedIndex].value;
-    chrome.storage.local.set({"lang" : selectedOption});
+    await setLang(selectedOption);
 };
 
 document.getElementById("choose-lang-mode" + mode).setAttribute("checked", true);
 
 document.querySelectorAll('input[type="radio"][name="choose-lang"]').forEach(radio => {
-    radio.addEventListener('change', () => setMode(radio.value));
-  });
+    radio.addEventListener('change', async () => await setMode(radio.value));
+});

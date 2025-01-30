@@ -19,7 +19,7 @@ export function getPrettyThreatType(threatType, lang) {
     }
 }
 
-export function getPrettyDate(date) {
+export function getPrettyDate(date) { // npm moment.js
     date = new Date(date);
 
     let day = (date.getDate()).toString().padStart(2, "0");

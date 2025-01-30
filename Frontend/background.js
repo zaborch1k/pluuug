@@ -3,14 +3,14 @@ import { getFlagAct } from "./scripts/storageWorker.js"
 import { 
     setPrevTabUrl, setPendingTabUrl,
     getPendingTabUrl, removeTabUrls,
-    isHostInWhiteList, setLang, updateBlockHistory
+    getWhiteList, setLang, updateBlockHistory
 } from "./scripts/storageWorker.js"
 import { checkURL } from "./scripts/checkURL.js"
-import { notify, traceHosts } from "./scripts/notify.js"
+// import { notify, traceHosts } from "./scripts/notify.js"
 import { hostFromUrl } from "./scripts/utility.js"
 import { openWindow } from "./scripts/utility.js"
 
-initDB();
+(async () => {await initDB()})()
 
 // ----------------- debug only -----------------
 function randomThreatType() {
@@ -20,9 +20,10 @@ function randomThreatType() {
 }
 // ------------------------------------------------
 
-function redirectBadSite(pendingDetails, flagAct) {
-    console.log('checking...', pendingDetails.url)
-    if (flagAct === undefined)
+
+async function redirectBadSite(pendingDetails, flagAct) {
+    console.log('checking...', pendingDetails.url, pendingDetails.tabId)
+    if (flagAct === undefined) // ???
         return
     if (!flagAct)
         return
@@ -30,54 +31,50 @@ function redirectBadSite(pendingDetails, flagAct) {
     if (pendingDetails.tabId === -1)
         return
 
-    checkURL(pendingDetails.url).then(res => {
-        let [verdict, threatType] = res;
-        console.log(res);
+    let hostInWhiteList = (await getWhiteList()).includes(hostFromUrl(pendingDetails.url))
+    if (hostInWhiteList)
+        return
+
+    let res = await checkURL(pendingDetails.url)
+    let [verdict, threatType] = res;
         
         // threatType = randomThreatType(); // debug only
 
-        if (verdict !== "UNSAFE")
-            return
+    if (verdict !== "UNSAFE")
+        return
+    
+    let previousPendingUrl = await getPendingTabUrl(pendingDetails.tabId)
+    let pendingHost = hostFromUrl(pendingDetails.url)
+    
+    if (pendingHost === "")
+        return
+    
+    if (hostFromUrl(previousPendingUrl) === pendingHost)
+        return
+    
+    await setPendingTabUrl(pendingDetails.tabId, pendingDetails.url)
 
-        getPendingTabUrl(pendingDetails.tabId, (previousPendingUrl) => isHostInWhiteList(hostFromUrl(pendingDetails.url), (hostInWhiteList) => {
-            if (hostInWhiteList)
-                return
-    
-            let pendingHost = hostFromUrl(pendingDetails.url)
-    
-            if (pendingHost === "")
-                return
-    
-            if (hostFromUrl(previousPendingUrl) === pendingHost)
-                return
-    
-            setPendingTabUrl(pendingDetails.tabId, pendingDetails.url)
+    await updateBlockHistory(pendingDetails.url, threatType);
 
-            updateBlockHistory(pendingDetails.url, threatType); 
-
-            let redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
-            redirectPageURL.searchParams.set("threatType", threatType);
+    let redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
+    redirectPageURL.searchParams.set("threatType", threatType);
             
-            chrome.tabs.update(pendingDetails.tabId, { url: chrome.runtime.getURL("windows/tempRedirect.html") }, (tab) => {
-                setPrevTabUrl(pendingDetails.tabId, (tab.url === "") ? "https://www.google.com" : tab.url)
-            })
+    let tab = await chrome.tabs.update(pendingDetails.tabId, { url: redirectPageURL.href })
+    await setPrevTabUrl(pendingDetails.tabId, (tab.url === "") ? "https://www.google.com" : tab.url)
     
-            traceHosts(pendingDetails.tabId, hostFromUrl(previousPendingUrl), pendingHost)
-        }))
-    });
+    // traceHosts(pendingDetails.tabId, hostFromUrl(previousPendingUrl), pendingHost)
 }
 
 
-chrome.runtime.onInstalled.addListener(function (object) {
+chrome.runtime.onInstalled.addListener(async (object) => {
     if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
-        openWindow("faq");
+        await openWindow("faq");
     }
 });
 
-chrome.webRequest.onBeforeRequest.addListener((details) => {
-        getFlagAct((flagAct) => {
-            redirectBadSite(details, flagAct);
-        });
+chrome.webRequest.onBeforeRequest.addListener(async (details) => {
+        let flagAct = await getFlagAct()
+        await redirectBadSite(details, flagAct);
     },
     {
         urls: ["https://*/*", "http://*/*"],
@@ -85,26 +82,22 @@ chrome.webRequest.onBeforeRequest.addListener((details) => {
     }
 );
 
-chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
-    removeTabUrls(tabId)
+chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
+    await removeTabUrls(tabId)
 })
 
-chrome.tabs.onCreated.addListener((tab) => {
-    setPrevTabUrl(tab.id, tab.url)
-})
-
-chrome.runtime.onStartup.addListener(() => getFlagAct(async (flagAct) => {
-    const extensionTabIds = (await chrome.tabs.query({ }))
+chrome.runtime.onStartup.addListener(async () => {
+    const extensionTabIds = (await chrome.tabs.query({}))
         .filter(tab => tab.url.includes("tempRedirect.html"))
         .map(tab => tab.id)
-    chrome.tabs.remove(extensionTabIds)
-    if (flagAct === undefined)
+    await chrome.tabs.remove(extensionTabIds)
+    if ((await getFlagAct()) === undefined)
         return
-    setLang(chrome.i18n.getUILanguage())
-}))
+    await setLang(chrome.i18n.getUILanguage())
+})
 
-chrome.webRequest.onCompleted.addListener((details) => {
-    chrome.history.deleteUrl({ url: chrome.runtime.getURL("windows/tempRedirect.html") })
+chrome.webRequest.onCompleted.addListener(async (details) => {
+    await chrome.history.deleteUrl({ url: chrome.runtime.getURL("windows/tempRedirect.html") })
 },
 {
     urls: ["https://*/*", "http://*/*"],

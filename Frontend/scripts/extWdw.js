@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const historyTable = document.getElementById("history-table");
     const div = document.getElementById("div-white-list");
 
-    const switchToTab = (windowName) => {
+    function switchToTab(windowName) {
         if (windowName === "white-list") {
             whiteList.style.display = "block";
             div.style.display = "block"
@@ -68,9 +68,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    getList("whiteList").then((list) => {
-        displayWhiteList(list);
-    });
+    let list = await getList("whiteList")
+    displayWhiteList(list)
 
     // ------------------------------------------ add ------------------------------------------
 

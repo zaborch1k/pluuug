@@ -4,6 +4,7 @@ import { scanURL } from "./fetchFuncs.js";
 // ---------------------------------------------- almost works ----------------------------------------------
 
 
+// TODO: add cashing to Virustotal
 export async function checkVirustotal(url) {
     console.log('virustotal start scanning');
     let stats = await scanURL(url);

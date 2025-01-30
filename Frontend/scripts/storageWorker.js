@@ -1,63 +1,54 @@
-// ------------------------------------ flag access logic ------------------------------------
+// ------------------------------------ helper funcs ------------------------------------
 
-export function getFlagAct(callback) {
-    chrome.storage.local.get("flagAct", function (result) {
-        let flagAct = result.flagAct;
-        callback(flagAct);
-    });
+async function get(key, st='local') {
+    return (await chrome.storage[st].get(key))[key]
 }
 
-export function pushFlagAct(value, callback = () => {}) {
-    chrome.storage.local.set({"flagAct" : value}, callback);
+async function set(obj, st='local') {
+    await chrome.storage[st].set(obj)
+}
+
+// ------------------------------------ flag access logic ------------------------------------
+
+export async function getFlagAct() {
+    return await get("flagAct")
+}
+
+export async function setFlagAct(value) {
+    await set({"flagAct" : value});
 }
 
 // ------------------------------------ Whitelist logic ------------------------------------
 
-export function pushHostToWhiteList(host, callback = () => {}) {
-    chrome.storage.local.get("whiteList", (result) => {
-        let list = result.whiteList
-        list.push(host)
-
-        chrome.storage.local.set({ "whiteList": list }, callback)
-    })
+export async function pushHostToWhiteList(host) {
+    let list = await get("whiteList")
+    list.push(host)
+    await set({ "whiteList": list })
 }
 
-export function getWhiteList(callback) {
-    chrome.storage.local.get("whiteList", (result) => {
-        callback(result.whiteList)
-    })
-}
-
-export function isHostInWhiteList(host, callback) {
-    chrome.storage.local.get("whiteList", (result) => {
-        let list = result.whiteList
-        
-        callback(list.includes(host))
-    })
+export async function getWhiteList() {
+    return await get("whiteList")
 }
 
 // ------------------------------------ BlockHistory logic ------------------------------------
 
 export async function updateBlockHistory(url, reason) {
-    let date = new Date();
-    date = date.toISOString();
+    let date = (new Date()).toISOString().toString(); // ???
 
-    getList("blockHistory").then((blockHistory) => {
-        date = date.toString();
+    let blockHistory = await getList("blockHistory")
 
-        blockHistory.push([date.toString(), url, reason]);
-        updateList("blockHistory", blockHistory);
-    });
+    blockHistory.push([date, url, reason]);
+    await updateList("blockHistory", blockHistory);
 }
 
 // ------------------------------------ Language logic ------------------------------------
 
-export function setLang(lang, callback = () => {}) {
-    chrome.storage.local.set({ "lang": lang }, callback)
+export async function setLang(lang) {
+    await set({ lang })
 }
+
 export async function getLang() {
-    let res = await chrome.storage.local.get("lang");
-    return res.lang;
+    return await get("lang")
 }
 
 // ------------------------------------ mode logic -----------------------------------------------
@@ -72,97 +63,63 @@ export async function getMode() {
 
 // ------------------------------------ Cut the memory of a deleted tab ------------------------------------
 
-export function removeTabUrls(tabId, callback = () => {}) {
-    chrome.storage.session.remove([`${tabId}pendingUrl`, `${tabId}prevUrl`], callback)
+export async function removeTabUrls(tabId) {
+    await chrome.storage.session.remove(
+        [
+            `${tabId}pendingUrl`,
+            `${tabId}prevUrl`
+        ]
+    )
 }
 
 // ------------------------------------ Work with pending urls for a specified tab ------------------------------------
 
-export function getPendingTabUrl(tabId, callback) {
-    chrome.storage.session.get(`${tabId}pendingUrl`, (result) => {
-        callback(result[`${tabId}pendingUrl`])
-    })
+export async function getPendingTabUrl(tabId) {
+    return await get(`${tabId}pendingUrl`, 'session')
 }
 
-export function setPendingTabUrl(tabId, url, callback = () => {}) {
+export async function setPendingTabUrl(tabId, url) {
     if (url.startsWith("chrome-extension"))
         return
-
-    let key = `${tabId}pendingUrl`
-    chrome.storage.session.set({ [key]: url }, callback)
+    
+    await set({ [`${tabId}pendingUrl`]: url }, 'session')
 }
 
 // ------------------------------------ Work with previous urls for a specified tab ------------------------------------
 
-export function getPrevTabUrl(tabId, callback) {
-    chrome.storage.session.get(`${tabId}prevUrl`, (result) => {
-        callback(result[`${tabId}prevUrl`])
-    })
+export async function getPrevTabUrl(tabId) {
+    return await get(`${tabId}prevUrl`, 'session')
 }
 
-export function setPrevTabUrl(tabId, url, callback = () => {}) {
+export async function setPrevTabUrl(tabId, url) {
     if (url.startsWith("chrome-extension"))
         return
     
-    let key = `${tabId}prevUrl`
-    chrome.storage.session.set({ [key]: url }, callback)
+    await set({ [`${tabId}prevUrl`]: url }, 'session')
 }
 
 // ------------------------------------ Logic to be executed after either proceeding or returning ------------------------------------
 
-export function makeProceedWork(tabId, callback = () => {}) {
-    getPendingTabUrl(tabId, (url) => {
-        setPrevTabUrl(tabId, url, callback)
-    })
+export async function makeProceedWork(tabId) {
+    let url = await getPendingTabUrl(tabId)
+    await setPrevTabUrl(tabId, url)
 }
 
-export function makeReturnWork(tabId, callback = () => {}) {
-    getPrevTabUrl(tabId, (url) => {
-        setPendingTabUrl(tabId, url, callback)
-    })
+export async function makeReturnWork(tabId) {
+    let url = await getPrevTabUrl(tabId)
+    await setPendingTabUrl(tabId, url)
 }
 
 // ------------------------------------ work with lists ------------------------------------
 
-function get(key) {
-    return new Promise(function(resolve, reject) {
-        chrome.storage.local.get(key, function(result) {
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
-                reject(chrome.runtime.lastError.message);
-
-            } else {
-                resolve(result[key]);
-            }
-        });
-    });
-}
-
-function set(obj) {
-    return new Promise(function(resolve, reject) {
-        chrome.storage.local.set(obj, () => {
-            if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message);
-                reject(chrome.runtime.lastError.message);
-
-            } else {
-                resolve();
-            }
-        });
-    });
-}
-
 export async function getList(name) {
-    let list = await get(name);
-    return list;
+    return await get(name);
 }
 
 
 export async function updateList(name, list) {
-    await chrome.storage.local.set({ [name] : list});  // set(obj) [!]
+    await set({ [name] : list}); 
 }
-
-// -----------------------------------------------------------------------------------------
 
 
 // ----------------------------------------- DEBUG -----------------------------------------
@@ -172,30 +129,28 @@ export async function updateList(name, list) {
 // -----------------------------------------------------------------------------------------
 
 
-export function initDB() { 
-    getFlagAct(async function (flagAct) {
-        if (flagAct !== undefined) {
-            return
-        }
+export async function initDB() { 
+    let flagAct = await getFlagAct()
 
-        console.log("initDB.....");
+    if (flagAct !== undefined) {
+        return
+    }
+
+    console.log("initDB.....");
         
-        await Promise.all([
-            pushFlagAct(false),
+    await Promise.all([
+        setFlagAct(false),
             
-            setLang(chrome.i18n.getUILanguage()),
+        setLang(chrome.i18n.getUILanguage()),
 
-            setMode("1"),
+        setMode("1"), // ???
 
-            chrome.storage.local.set({ "whiteList" : [] }),
+        set({ "whiteList": [] }),
 
-            chrome.storage.local.set({ "lc" : [] }),
+        set({ "lc": [] }),
 
-            chrome.storage.local.set({ "mode": "3" }),
+        set({ "mode": "3" }),
 
-            chrome.storage.local.set({ "blockHistory" : []})
-
-            // other lists
-        ])
-    });
+        set({ "blockHistory": [] })
+    ])
 }

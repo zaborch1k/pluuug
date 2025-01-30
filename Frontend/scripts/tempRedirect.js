@@ -15,49 +15,52 @@ await initPageContent()
 //     return data
 // }
 
-document.getElementById("returnButton").onclick = () => {
-    chrome.tabs.query({ lastFocusedWindow: true, active: true }, (tabs) => {
-        makeReturnWork(tabs[0].id)
-        
-        getPrevTabUrl(tabs[0].id, (url) => {
-            chrome.tabs.update(tabs[0].id, { url: url })
-        })
-    })
+async function getActiveTab() {
+    return await chrome.tabs.query({ lastFocusedWindow: true, active: true })
 }
 
-document.getElementById("proceedButton").onclick = () => {
-    chrome.tabs.query({ lastFocusedWindow: true, active: true }, (tabs) => {
-        makeProceedWork(tabs[0].id)
 
-        getPendingTabUrl(tabs[0].id, (url) => {
-            chrome.tabs.update(tabs[0].id, { url: url })
-        })
-    })
+document.getElementById("returnButton").onclick = async () => {
+    let tabs = await getActiveTab()
+    await makeReturnWork(tabs[0].id)
+
+    let url = await getPrevTabUrl(tabs[0].id)
+    await chrome.tabs.update(tabs[0].id, { url })
 }
 
-document.getElementById("whiteListButton").onclick = () => {
-    chrome.tabs.query({ lastFocusedWindow: true, active: true }, (tabs) => {
-        makeProceedWork(tabs[0].id)
+document.getElementById("proceedButton").onclick = async () => {
+    let tabs = await getActiveTab()
+    await makeProceedWork(tabs[0].id)
 
-        getPendingTabUrl(tabs[0].id, (url) => {
-            pushHostToWhiteList(hostFromUrl(url))
-            chrome.tabs.update(tabs[0].id, { url: url })
-        })
-    })
+    let url = await getPendingTabUrl(tabs[0].id)
+    await chrome.tabs.update(tabs[0].id, { url })
+}
+
+document.getElementById("whiteListButton").onclick = async () => {
+    let tabs = await getActiveTab()
+    await makeProceedWork(tabs[0].id)
+
+    let url = await getPendingTabUrl(tabs[0].id)
+    await pushHostToWhiteList(hostFromUrl(url))
+    await chrome.tabs.update(tabs[0].id, { url })
 }
 
 
 async function initPageContent() {
     const currentTab = await chrome.tabs.getCurrent()
+    console.log('currentTab:', currentTab)
     let lang = await getLang();
 
     let searchParams = new URLSearchParams(document.location.search);
     let threatType = searchParams.get("threatType");
+    console.log('threatType:', threatType)
     threatType = getPrettyThreatType(threatType, lang); // [!] add description for all threat types
 
-    getPendingTabUrl(currentTab.id, (pendingUrl) => getPrevTabUrl(currentTab.id, (prevUrl) => {
-        prevUrl = (prevUrl === pendingUrl) ? "https://www.google.com" : prevUrl
-        
-        setTextTempRedirect(lang, hostFromUrl(pendingUrl), threatType, hostFromUrl(prevUrl));
-    }))
+    let pendingUrl = await getPendingTabUrl(currentTab.id)
+    let prevUrl = await getPrevTabUrl(currentTab.id)
+
+    console.log(pendingUrl, prevUrl)
+    prevUrl = (prevUrl === pendingUrl) ? "https://www.google.com" : prevUrl
+
+    setTextTempRedirect(lang, hostFromUrl(pendingUrl), threatType, hostFromUrl(prevUrl));
 }
