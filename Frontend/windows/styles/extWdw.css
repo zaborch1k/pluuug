@@ -198,12 +198,12 @@ section button:hover {
 
 /* Раздел белый список */
 
-#div-white-list {
+/* #div-white-list {
     width: 100px;
     height: 100px;
     overflow: auto;
     box-sizing: border-box
-}
+} */
 
 .url-list {
     position: fixed;
@@ -218,6 +218,8 @@ section button:hover {
     border: 5px solid #b7a56c;
     background-color: #818656;
     box-shadow: -0.4vw 0.8vh #1b1c25;
+    border-radius: 5px;
+    max-width: 90vw;
 }
 
 #white-list-finder {
@@ -234,6 +236,7 @@ section button:hover {
     border: 0.3vh solid #334251;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.12vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 #white-list-adder {
@@ -250,19 +253,7 @@ section button:hover {
     border: 0.3vh solid #334251;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.12vw 0.1vh #1b1c25;
-}
-
-#white-list-finder-btn {
-    position: absolute;
-    display: flex;
-    padding: 1vh 2vw 1vh 2vw;
-    margin-left: 42vw;
-    margin-top: 70vh;
-    font-size: 2vh;
-    background-color: #6d6866;
-    border: 0.3vh solid #334251;
-    box-shadow: -0.2vw 0.6vh #1b1c25;
-    text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 #white-list-adder-save-btn {
@@ -276,9 +267,11 @@ section button:hover {
     border: 0.3vh solid #334251;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 .white-list-item {
+    justify-content: space-between;
     display: flex;
     height: 2vh;
     padding: 4vh;
@@ -288,6 +281,9 @@ section button:hover {
     font-size: 2.4vh;
     border: 3px solid #b7a56c;
     box-shadow: -0.2vw 0.6vh #1b1c25;
+    border-radius: 5px;
+    max-width: 100%;
+    min-width: 90%;
 }
 
 .white-list-item-text {
@@ -298,15 +294,13 @@ section button:hover {
 }
 
 .delete-btn {
-    position: absolute;
+    position: relative;
     display: flex;
-    /* align-items: center; */
     padding: 2vh;
     background-color: #6d6866;
     border: 0.3vh solid #334251;
-    margin-left: 77vw;
     text-shadow: -0.12vw 0.1vh #1b1c25;
-    /* box-shadow: -0.1vw 0.2vh #1b1c25; */
+    border-radius: 5px;
 }
 
 /* Кнопки Белый лист и истроия блокировок */
@@ -319,6 +313,7 @@ section button:hover {
     border: 3px solid #C2C3C5;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 #history-btn {
@@ -328,6 +323,7 @@ section button:hover {
     background-color: #b7a56c;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 /* Раздел истории блокировок */
@@ -340,63 +336,54 @@ section button:hover {
     padding: 0.1vw;
     margin: 10px;
     font-size: 2vh;
-    border: 2px solid white;
     cursor: pointer;
     background-color: #6d6866;
     border: 0.3vh solid #334251;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 #history-reason-sort {
     padding: 0.1vw;
     margin: 10px;
     font-size: 2vh;
-    border: 2px solid white;
     cursor: pointer;
     background-color: #6d6866;
     border: 0.3vh solid #334251;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
-#download-selection-sort {
+#donload-selection-sort {
     position: absolute;
     display: flex;
     padding: 0.1vw;
     margin-top: 68vh;
     margin-left: 51vw;
     font-size: 3vh;
-    border: 2px solid white;
     cursor: pointer;
     background-color: #818656;
     border: 0.3vh solid #334251;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 #history-search {
     /* display: flex; */
     align-items: flex-start;
     padding-left: 0.5vw;
-    margin-left: 48vw;
-    width: 20vw;
+    margin-left: 59vw;
+    width: 22vw;
     height: 4.31vh;
     font-size: 2vh;
     background-color: #6d6866;
     border: 0.3vh solid #334251;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
-}
-
-#h-btn {
-    font-size: 2vh;
-    padding: 1vh 1.45vw 1vh 1.45vw;
-    margin-left: 1vw;
-    background-color: #6d6866;
-    border: 0.3vh solid #334251;
-    box-shadow: -0.2vw 0.6vh #1b1c25;
-    text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 #history-clear-btn {
@@ -409,6 +396,8 @@ section button:hover {
     border: 0.3vh solid #334251;
     background-color: #6d6866;
     box-shadow: -0.2vw 0.6vh #1b1c25;
+    text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 #history-donload-btn {
@@ -421,11 +410,14 @@ section button:hover {
     border: 0.3vh solid #334251;
     background-color: #818656;
     box-shadow: -0.2vw 0.6vh #1b1c25;
+    text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 .history-table {
     position: fixed;
     display: flex;
+    /* justify-content: center; */
     align-items: center;
     flex-direction: column;
     box-sizing: border-box;
@@ -433,8 +425,10 @@ section button:hover {
     width: 100vw;
     height: 65vh;
     font-size: 3vh;
-    border: 3px solid white;
+    border: 3px solid #b7a56c;
     background-color: #818656;
+    text-shadow: -0.1vw 0.1vh #1b1c25;
+    border-radius: 5px;
 }
 
 .history-table thead {

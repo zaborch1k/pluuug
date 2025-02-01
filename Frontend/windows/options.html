@@ -1,37 +1,49 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title id="title"></title>
     <link rel="stylesheet" href="styles/options.css">
 </head>
+
 <body>
     <header>
         <h1 id="header"></h1>
     </header>
 
-    <h2 id="chooseLang"></h2>
-    <select id="lang-select">
-        <option id="ru">ru</option>
-        <option id="eng">eng</option>
-    </select>
-
-    <h2 id="choose-mode-header"></h2>
-    <div>
-        <input id="choose-lang-mode1" class="choose-lang-input" type="radio" name="choose-lang" value="1"/>
-        <label id="label1"></label>
+    <div id="lang-div">
+        <h2 id="chooseLang"></h2>
+        <select id="lang-select">
+            <option id="ru">ru</option>
+            <option id="eng">eng</option>
+        </select>
     </div>
 
-    <div>
-        <input id="choose-lang-mode2" class="choose-lang-input" type="radio" name="choose-lang" value="2"/>
-        <label id="label2"></label>
-    </div>
+    <div id="choose-div">
+        <div id="choose-mode-header-div">
+            <h2 id="choose-mode-header"></h2>
+        </div>
 
-    <div>
-        <input id="choose-lang-mode3" class="choose-lang-input" type="radio" name="choose-lang" value="3"/>
-        <label id="label3"></label>
+        <div id="choose-options-div">
+            <div class="choose">
+                <input id="choose-lang-mode1" class="choose-lang-input" type="radio" name="choose-lang" value="1" />
+                <label class="labels" id="label1"></label>
+            </div>
+
+            <div class="choose">
+                <input id="choose-lang-mode2" class="choose-lang-input" type="radio" name="choose-lang" value="2" />
+                <label class="labels" id="label2"></label>
+            </div>
+
+            <div class="choose">
+                <input id="choose-lang-mode3" class="choose-lang-input" type="radio" name="choose-lang" value="3" />
+                <label class="labels" id="label3"></label>
+            </div>
+        </div>
     </div>
 
     <script src="../scripts/options.js" type="module"></script>
 </body>
+
 </html>

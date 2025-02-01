@@ -8,7 +8,7 @@ html {
 }
 
 h1 {
-    font-size: 2.5vw;
+    font-size: 3vw;
     margin-left: 1vw;
     padding: 1vw;
     box-sizing: border-box;
@@ -20,7 +20,7 @@ h1 {
 }
 
 h2 {
-    font-size: 1.5vw;
+    font-size: 2vw;
     margin-left: 1vw;
     padding: 1vw;
     box-sizing: border-box;
@@ -32,9 +32,9 @@ h2 {
 }
 
 h3 {
-    font-size: 0.8vw;
+    font-size: 1vw;
     margin-left: 1vw;
-    padding: 0.02vw;
+    padding: 0.5vw;
 }
 
 .header-h2 {
@@ -44,7 +44,7 @@ h3 {
 .text-h3 {
     width: 50vw;
     margin-left: 4vw;
-    margin-bottom: 5vh;
+    margin-bottom: 10vh;
     box-sizing: border-box;
     background-color: #b7a56c;
     border: 0.3vh solid #334251;
