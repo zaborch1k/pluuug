@@ -1,0 +1,82 @@
+html {
+    background-color: #4f745e;
+}
+
+body {
+    margin: auto;
+    box-sizing: border-box;
+    margin-top: 5vh;
+    height: 80vh;
+    width: 60vw;
+    background-color: #b7a56c;
+    border: 0.3vh solid #334251;
+    border-radius: 5px;
+    box-shadow: -0.2vw 0.6vh #1b1c25;
+}
+
+#header {
+    text-align: center;
+    font-size: 4vh;
+}
+
+#lang-div {
+    box-sizing: border-box;
+    text-align: center;
+    margin: auto;
+    width: 50vw;
+    height: 30vh;
+    padding: 0.2rem;
+    background-color: #6d6866;
+    border: 0.3vh solid #334251;
+    border-radius: 5px;
+    box-shadow: -0.2vw 0.6vh #1b1c25;
+}
+
+#choose-div {
+    box-sizing: border-box;
+    text-align: left;
+    margin: auto;
+    width: 50vw;
+    height: 30vh;
+    margin-top: 2vh;
+    background-color: #6d6866;
+    border: 0.3vh solid #334251;
+    border-radius: 5px;
+    box-shadow: -0.2vw 0.6vh #1b1c25;
+}
+
+#choose-mode-header-div {
+    text-align: center;
+}
+
+#chooseLang {
+    text-align: center;
+    font-size: 1.5vw;
+}
+
+#choose-mode-header {
+    font-size: 1.5vw;
+}
+
+#lang-select {
+    margin: auto;
+    margin-top: 5vh;
+    font-size: 1.5vw;
+    background-color: #818656;
+    border: 0.3vh solid #334251;
+    border-radius: 5px;
+    box-shadow: -0.1vw 0.3vh #1b1c25;
+}
+
+.choose {
+    position: relative;
+    height: 5vh;
+    width: auto;
+    font-size: 1vw;
+    font-weight: 400;
+}
+
+.choose-lang-input {
+    width: 2vh;
+    height: 2vh;
+}
