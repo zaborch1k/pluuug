@@ -1,6 +1,6 @@
 import { getSuffPref } from './getSuffPref.js';
 import { canonize } from './canonize.js';
-import { safe_browsing } from '../../search_hashes_proto.js'  // <------------------ static code (https://github.com/protobufjs/protobuf.js/tree/master/cli)
+import { safe_browsing } from './search_hashes_proto.js'  // <------------------ static code (https://github.com/protobufjs/protobuf.js/tree/master/cli)
 import { getSHA256, getShortenHash } from './getHash.js';
 
 

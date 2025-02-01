@@ -7,7 +7,7 @@ import { searchHashes } from "./fetchFuncs.js";
 
 async function realTimeCheckWithoutLTL(expressionHashes) {
     let expressionHashPrefixes = expressionHashes.map((hash) => getShortenHash(hash, 'hex'));
-    let lc = await getList("lc"); // = local cache; [[expiration_1, fullHash_1, reason_1], , ... ] fullHash_n: a sha256 hash encoded in HEX
+    let lc = await getList("lc"); // = local cache; [[expiration_1, fullHash_1, reason_1], ... ] fullHash_n: a sha256 hash encoded in HEX
 
     let currentTime = new Date();
 
@@ -72,8 +72,8 @@ async function realTimeCheckWithoutLTL(expressionHashes) {
         let threatType = fullHashObj.fullHashDetails[0].threatType;
         let hexHash = convertToEncoding(fullHashObj.fullHash, 'base64', 'hex');
 
+        console.log('safebrowsing comparing hashes:')
         for (let hash of expressionHashes) {
-            console.log('safebrowsing comparing hashes:')
             console.log(hexHash, hash)
             if (hash == hexHash) {
                 return ["UNSAFE", threatType];

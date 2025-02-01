@@ -20,10 +20,9 @@ function changeButtonsText(flag) {
 
 let res = await getLang();
 const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
-
 setTextPopup(lang);
-let flagAct = await getFlagAct()
 
+let flagAct = await getFlagAct()
 if (flagAct !== undefined) {
     changeButtonsText(flagAct);
 }

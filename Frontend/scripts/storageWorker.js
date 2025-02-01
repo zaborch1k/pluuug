@@ -135,15 +135,11 @@ export async function initDB() {
     if (flagAct !== undefined) {
         return
     }
-
-    console.log("initDB.....");
         
     await Promise.all([
         setFlagAct(false),
             
         setLang(chrome.i18n.getUILanguage()),
-
-        setMode("1"), // ???
 
         set({ "whiteList": [] }),
 
@@ -153,4 +149,6 @@ export async function initDB() {
 
         set({ "blockHistory": [] })
     ])
+
+    console.log("initDB completed!");
 }

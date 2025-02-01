@@ -48,14 +48,15 @@ document.getElementById("whiteListButton").onclick = async () => {
 
 async function initPageContent() {
     const currentTab = await chrome.tabs.getCurrent()
-    console.log('currentTab:', currentTab)
+    console.log('currentTab:', currentTab, "activeTab:", await getActiveTab())
     let lang = await getLang();
 
     let searchParams = new URLSearchParams(document.location.search);
     let threatType = searchParams.get("threatType");
-    console.log('threatType:', threatType)
-    threatType = getPrettyThreatType(threatType, lang); // [!] add description for all threat types
 
+    threatType = getPrettyThreatType(threatType, lang); // [!] add description for all threat types
+    console.log('threatType:', threatType)
+    
     let pendingUrl = await getPendingTabUrl(currentTab.id)
     let prevUrl = await getPrevTabUrl(currentTab.id)
 

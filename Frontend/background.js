@@ -6,40 +6,23 @@ import {
     getWhiteList, setLang, updateBlockHistory
 } from "./scripts/storageWorker.js"
 import { checkURL } from "./scripts/checkURL.js"
-// import { notify, traceHosts } from "./scripts/notify.js"
 import { hostFromUrl } from "./scripts/utility.js"
 import { openWindow } from "./scripts/utility.js"
 
 (async () => {await initDB()})()
 
-// ----------------- debug only -----------------
-function randomThreatType() {
-    let rawThreatTypes = ["MALWARE", "UNWANTED_SOFTWARE", "POTENTIALLY_HARMFUL_APPLICATION", "SOCIAL_ENGINEERING", "VIRUSTOTAL"];
-    let ind = Math.floor(Math.random() * (3 - 0 + 1))
-    return rawThreatTypes[ind];
-}
-// ------------------------------------------------
-
 
 async function redirectBadSite(pendingDetails, flagAct) {
     console.log('checking...', pendingDetails.url, pendingDetails.tabId)
-    if (flagAct === undefined) // ???
-        return
-    if (!flagAct)
-        return
-
-    if (pendingDetails.tabId === -1)
+    if (!flagAct || pendingDetails.tabId === -1)
         return
 
     let hostInWhiteList = (await getWhiteList()).includes(hostFromUrl(pendingDetails.url))
     if (hostInWhiteList)
         return
 
-    let res = await checkURL(pendingDetails.url)
-    let [verdict, threatType] = res;
+    let [verdict, threatType] = await checkURL(pendingDetails.url)
         
-        // threatType = randomThreatType(); // debug only
-
     if (verdict !== "UNSAFE")
         return
     
@@ -61,8 +44,6 @@ async function redirectBadSite(pendingDetails, flagAct) {
             
     let tab = await chrome.tabs.update(pendingDetails.tabId, { url: redirectPageURL.href })
     await setPrevTabUrl(pendingDetails.tabId, (tab.url === "") ? "https://www.google.com" : tab.url)
-    
-    // traceHosts(pendingDetails.tabId, hostFromUrl(previousPendingUrl), pendingHost)
 }
 
 
