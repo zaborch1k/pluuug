@@ -1,3 +1,5 @@
+import { getPrettyThreatType } from "./prettyData.js"
+
 export function setTextPopup(lang) {
     let ind = (lang == "ru") ? 0 : 1;
 
@@ -73,17 +75,50 @@ export function setTextExtWdw(lang) {
 }
 
 
-export function setTextTempRedirect(lang, pendingUrl, threatType, prevUrl) {
+export function setTextTempRedirect(lang, pendingUrl, service, threatType, prevUrl) {
     let ind = (lang == "ru" || lang == "ru-RU") ? 0 : 1;
+    console.log(threatType)
+    let descriptions = {
+        "MALWARE": [
+            "Вредоносное ПО - программы, которые нарушают нормальное функционирование конечных устройств. Вы можете столкнуться с несанкционированным доступом, утечкой Ваших данных или блокировкой устройства.", 
+            "Malware is software that disrupts the normal functioning of end devices. You may experience unauthorized access, leakage of your data, or blocking of your device."
+        ],
+
+        "UNWANTED_SOFTWARE": [
+            "Нежелательное ПО - программы, которые могут устанавливать дополнительное программное обеспечение, изменять поведение цифрового устройства, а также выполнять действия без запроса или разрешения пользователя, например: /n/n1. программы для показа рекламы/n2. программы с вводящим в заблуждение поведением/n3. программы слежки/n4. программы для майнинга криптовалют", 
+            "Unwanted software - programs that can install additional software, change the behavior of a digital device, and perform actions without the user's request or permission, such as:/n/n1. programs for displaying advertisements/n2. programs with misleading behavior/n3. surveillance programs/n4. programs for mining cryptocurrency"
+        ], 
+
+        "POTENTIALLY_HARMFUL_APPLICATION": [
+            "Потенциально опасное приложение может снижать производительность компьютера, отображать рекламные объявления или устанавливать другое, более вредоносное программное обеспечение",
+            "Potentially harmful application may slow down your computer, display advertisements, or install other, more malicious software."
+        ],
+
+        "SOCIAL_ENGINEERING": [
+            "Социальная инженерия - метод атаки без использования технических средств. Злоумышленники могут обманным путем заставить Вас раскрыть конфиденциальные данные (пароли, данные банковских счетов) или совершить потенциально опасные действия (установить вредоносную программу), выдавая себя за известный сервис.", 
+            "Social engineering is a method of attack without using technical means. Attackers can trick you into revealing confidential data (passwords, bank account details) or performing potentially dangerous actions (installing malware) by posing as a well-known service."
+        ]
+    }
+
+    let description = descriptions[threatType];
+    threatType = getPrettyThreatType(threatType, lang);
 
     let setTextContent = {
         "header" : [
-            `"${pendingUrl}" небезопасен. Дальнейшее посещение может подвергнуть Вас риску.`,
-            `"${pendingUrl}" is known to be malicious. Do you still want to proceed?`
+            `По данным сервиса ${service}, "${pendingUrl}" небезопасен. Дальнейшее посещение может подвергнуть Вас риску.`,
+            `According to ${service}, "${pendingUrl}" is known to be malicious. Do you still want to proceed?`
         ],
 
         "reason" : [
             `Тип угрозы: ${threatType}`, `Threat type: ${threatType}`
+        ],
+
+        "readMore" : [
+            "Подробнее", "Read more"
+        ],
+        
+        "description" : [
+            description[0], description[1]
         ],
 
         "returnButton" : [

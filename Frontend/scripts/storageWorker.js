@@ -121,22 +121,18 @@ export async function updateList(name, list) {
     await set({ [name] : list}); 
 }
 
-
-// ----------------------------------------- DEBUG -----------------------------------------
-
-// chrome.storage.local.remove("flagAct", function () {}); 
-
 // -----------------------------------------------------------------------------------------
 
-
 export async function initDB() { 
-    let flagAct = await getFlagAct()
+    let isDB = await get("isDB");
 
-    if (flagAct !== undefined) {
+    if (isDB !== undefined) {
         return
     }
         
     await Promise.all([
+        set({ "isDB": true }),
+
         setFlagAct(false),
             
         setLang(chrome.i18n.getUILanguage()),
@@ -149,6 +145,52 @@ export async function initDB() {
 
         set({ "blockHistory": [] })
     ])
+}
 
-    console.log("initDB completed!");
+// ######################################### SESSION DB #########################################
+
+// ------------------------------------ extWdw tab switching ------------------------------------
+
+export async function setEWTabFlag(value) {
+    await set({"EWTabFlag" : value}, "session")
+}
+
+export async function getEWTabFlag() {
+    return await get("EWTabFlag", "session")
+}
+
+// ----------------------------------------- caching -----------------------------------------
+
+async function setLC(typeLC, LC) { // LC = {url : verdict}
+    await set({[typeLC] : LC}, "session")
+}
+
+export async function getLC(typeLC) { // typeLC = LC_SB || LC_VT
+    return await get(typeLC, "session")
+}
+
+export async function pushToLC(typeLC, key, value) {
+    let LC = await getLC(typeLC);
+    LC[key] = value;
+    await setLC(typeLC, LC);
+}
+
+// -----------------------------------------------------------------------------------------
+
+export async function initSDB() {
+    let isSDB = await get("isSDB", "session")
+
+    if (isSDB !== undefined) {
+        return
+    }
+
+    await Promise.all([
+        set({ "isSDB": true }, "session"),
+
+        set({ "LC_SB": {} }, "session"),
+
+        set({ "LC_VT": {} }, "session"),
+
+        setEWTabFlag("white-list")
+    ])
 }

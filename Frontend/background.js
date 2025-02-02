@@ -1,4 +1,4 @@
-import { initDB } from "./scripts/storageWorker.js"
+import { initDB, initSDB } from "./scripts/storageWorker.js"
 import { getFlagAct } from "./scripts/storageWorker.js"
 import { 
     setPrevTabUrl, setPendingTabUrl,
@@ -9,8 +9,10 @@ import { checkURL } from "./scripts/checkURL.js"
 import { hostFromUrl } from "./scripts/utility.js"
 import { openWindow } from "./scripts/utility.js"
 
-(async () => {await initDB()})()
-
+(async () => {
+    await initDB();
+    await initSDB();
+})()
 
 async function redirectBadSite(pendingDetails, flagAct) {
     console.log('checking...', pendingDetails.url, pendingDetails.tabId)
@@ -21,8 +23,8 @@ async function redirectBadSite(pendingDetails, flagAct) {
     if (hostInWhiteList)
         return
 
-    let [verdict, threatType] = await checkURL(pendingDetails.url)
-        
+    let [verdict, threatType, service] = await checkURL(pendingDetails.url)
+
     if (verdict !== "UNSAFE")
         return
     
@@ -41,6 +43,7 @@ async function redirectBadSite(pendingDetails, flagAct) {
 
     let redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
     redirectPageURL.searchParams.set("threatType", threatType);
+    redirectPageURL.searchParams.set("service", service);
             
     let tab = await chrome.tabs.update(pendingDetails.tabId, { url: redirectPageURL.href })
     await setPrevTabUrl(pendingDetails.tabId, (tab.url === "") ? "https://www.google.com" : tab.url)

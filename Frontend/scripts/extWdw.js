@@ -1,12 +1,8 @@
 import { setTextExtWdw } from "./setText.js"
-import { getList, updateList, getLang} from "./storageWorker.js"
+import { getList, updateList, getLang, setEWTabFlag, getEWTabFlag } from "./storageWorker.js"
 import { getPrettyThreatType, getPrettyDate } from "./prettyData.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
-    let res = await getLang();
-    const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
-    setTextExtWdw(lang);
-
     const whiteListBtn = document.getElementById("white-list-btn");
     const historyBtn = document.getElementById("history-btn");
     const whiteList = document.getElementById("white-list");
@@ -14,7 +10,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     const historyTable = document.getElementById("history-table");
     const div = document.getElementById("div-white-list");
 
-    function switchToTab(windowName) {
+    // --------------------------------------- init text ----------------------------------------
+
+    let res = await getLang();
+    const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
+    setTextExtWdw(lang);
+
+    // ------------------------------------ tabs switching ---------------------------------------
+
+    async function switchToTab(windowName) {
+        await setEWTabFlag(windowName);
+        
         if (windowName === "white-list") {
             whiteList.style.display = "block";
             div.style.display = "block"
@@ -38,6 +44,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             whiteListBtn.classList.remove("active");
         }
     };
+
+    whiteListBtn.addEventListener("click", () => switchToTab("white-list"));
+    historyBtn.addEventListener("click", () => switchToTab("history"));
+
+    // ---------------------------------------- init tab ----------------------------------------
+
+    let currentTab = await getEWTabFlag();
+    await switchToTab(currentTab);
 
 
     // *************************************** white list ***************************************
@@ -366,11 +380,4 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         downloadBlockHistory(selectedOption);
     }
-    
-    // ---------------------------------- tabs switching -----------------------------------
-
-    whiteListBtn.addEventListener("click", () => switchToTab("white-list"));
-    historyBtn.addEventListener("click", () => switchToTab("history"));
-
-    switchToTab("white-list");
 });

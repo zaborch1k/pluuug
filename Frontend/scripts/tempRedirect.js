@@ -4,8 +4,9 @@ import {
     pushHostToWhiteList, getLang
 } from "./storageWorker.js"
 import { hostFromUrl } from "./utility.js"
-import { getPrettyThreatType } from "./prettyData.js"
 import { setTextTempRedirect } from "./setText.js"
+
+const lang = await getLang();
 
 await initPageContent()
 
@@ -19,6 +20,18 @@ async function getActiveTab() {
     return await chrome.tabs.query({ lastFocusedWindow: true, active: true })
 }
 
+document.getElementById("readMore").onclick = async () => {
+    let readMore = document.getElementById("readMore");
+
+    if (readMore.textContent == "Скрыть" || readMore.textContent == "Hide") {
+        document.getElementById("description").style.display = "none";
+        document.getElementById("readMore").textContent = (lang == "ru") ? "Подробнее" : "Read more";
+
+    } else {
+        document.getElementById("description").style.display = "";
+        document.getElementById("readMore").textContent = (lang == "ru") ? "Скрыть" : "Hide";
+    }
+}
 
 document.getElementById("returnButton").onclick = async () => {
     let tabs = await getActiveTab()
@@ -49,13 +62,10 @@ document.getElementById("whiteListButton").onclick = async () => {
 async function initPageContent() {
     const currentTab = await chrome.tabs.getCurrent()
     console.log('currentTab:', currentTab, "activeTab:", await getActiveTab())
-    let lang = await getLang();
 
     let searchParams = new URLSearchParams(document.location.search);
     let threatType = searchParams.get("threatType");
-
-    threatType = getPrettyThreatType(threatType, lang); // [!] add description for all threat types
-    console.log('threatType:', threatType)
+    let service = searchParams.get("service");
     
     let pendingUrl = await getPendingTabUrl(currentTab.id)
     let prevUrl = await getPrevTabUrl(currentTab.id)
@@ -63,5 +73,7 @@ async function initPageContent() {
     console.log(pendingUrl, prevUrl)
     prevUrl = (prevUrl === pendingUrl) ? "https://www.google.com" : prevUrl
 
-    setTextTempRedirect(lang, hostFromUrl(pendingUrl), threatType, hostFromUrl(prevUrl));
+    document.getElementById("description").style.display = "none";
+
+    setTextTempRedirect(lang, hostFromUrl(pendingUrl), service, threatType, hostFromUrl(prevUrl));
 }

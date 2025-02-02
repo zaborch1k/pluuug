@@ -45,7 +45,7 @@ async function realTimeCheckWithoutLTL(expressionHashes) {
     console.log(`safebrowsing response ${JSON.stringify(response)}`)
 
     if (!response || response.length != 2) {
-        return "SAFE"
+        return ["SAFE", undefined]
     }
         
 
@@ -93,6 +93,7 @@ export async function checkSafebrowsing(url) {
 
     let res = await realTimeCheckWithoutLTL(expressionHashes);
     console.log('safebrowsing scanning completed', res)
+    res.push("Safebrowsing")
 
     return res;
 }
