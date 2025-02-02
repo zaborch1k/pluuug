@@ -37,6 +37,26 @@ img {
   width: 25vh;
 }
 
+#readMore {
+  position: relative;
+  left: 3px;
+  text-decoration: underline solid;
+  color: #1b1c25;
+  cursor: pointer;
+}
+
+#description-div {
+  margin: 2px;
+}
+
+#description {
+  text-align: left;
+  width: 50%;
+  margin: 0 auto;
+  display: block;
+  color: #1b1c25;
+}
+
 button {
   font-weight: bold;
   font-size: 1.05em;
@@ -67,29 +87,6 @@ button {
   margin: auto 20px 8px;
 }
 
-
-
-/*          /////////////                           */
 .reasonBlock {
   display: inline-block;
-}
-
-#readMore {
-  position: relative;
-  left: 3px;
-  text-decoration: underline solid;
-  color: #1b1c25;
-  cursor: pointer;
-}
-
-#description-div {
-  margin: 2px;
-}
-
-#description {
-  text-align: left;
-  width: 50%;
-  margin: 0 auto;
-  display: block;
-  color: #1b1c25;
 }
