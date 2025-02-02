@@ -213,8 +213,8 @@ section button:hover {
     overflow-y: auto;
     width: 90vw;
     padding: 2vh;
-    margin-top: 4vh;
-    margin-left: 10vh;
+    margin-top: 1.7vh;
+    margin-left: 10.4vh;
     border: 5px solid #b7a56c;
     background-color: #818656;
     box-shadow: -0.4vw 0.8vh #1b1c25;
@@ -223,14 +223,14 @@ section button:hover {
 }
 
 #white-list-finder {
-    position: fixed;
     display: flex;
     align-items: flex-start;
-    margin-left: 15vw;
-    margin-top: 70vh;
-    width: 25vw;
-    height: 5vh;
-    font-size: 2.4vh;
+    padding-left: 0.5vw;
+    margin-left: 73.65vw;
+    width: 20vw;
+    height: 4.3vh;
+    font-size: 2vh;
+    margin-top: 2.65vh;
     padding-left: 0.5vw;
     background-color: #6d6866;
     border: 0.3vh solid #334251;
@@ -244,7 +244,7 @@ section button:hover {
     display: flex;
     align-items: flex-start;
     margin-left: 15vw;
-    margin-top: 77vh;
+    margin-top: 68vh;
     width: 25vw;
     height: 5vh;
     font-size: 2.4vh;
@@ -261,7 +261,7 @@ section button:hover {
     display: flex;
     padding: 1vh 2vw 1vh 2vw;
     margin-left: 42vw;
-    margin-top: 77vh;
+    margin-top: 68vh;
     font-size: 2vh;
     background-color: #818656;
     border: 0.3vh solid #334251;
@@ -330,11 +330,14 @@ section button:hover {
 #history-elements {
     margin-top: 2vh;
     margin-bottom: 1vh;
+
 }
 
 #history-sort {
     padding: 0.1vw;
+
     margin: 10px;
+    margin-left: 5vw;
     font-size: 2vh;
     cursor: pointer;
     background-color: #6d6866;
@@ -356,7 +359,7 @@ section button:hover {
     border-radius: 5px;
 }
 
-#donload-selection-sort {
+#download-selection-sort {
     position: absolute;
     display: flex;
     padding: 0.1vw;
@@ -372,12 +375,11 @@ section button:hover {
 }
 
 #history-search {
-    /* display: flex; */
     align-items: flex-start;
     padding-left: 0.5vw;
-    margin-left: 59vw;
-    width: 22vw;
-    height: 4.31vh;
+    margin-left: 40vw;
+    width: 20vw;
+    height: 4.3vh;
     font-size: 2vh;
     background-color: #6d6866;
     border: 0.3vh solid #334251;
@@ -415,20 +417,19 @@ section button:hover {
 }
 
 .history-table {
-    position: fixed;
-    display: flex;
-    /* justify-content: center; */
+    margin: auto;
     align-items: center;
     flex-direction: column;
     box-sizing: border-box;
     overflow-y: auto;
-    width: 100vw;
-    height: 65vh;
+    width: 90vw;
+    height: 64vh;
     font-size: 3vh;
-    border: 3px solid #b7a56c;
+    border: 5px solid #b7a56c;
+    border-radius: 5px;
     background-color: #818656;
     text-shadow: -0.1vw 0.1vh #1b1c25;
-    border-radius: 5px;
+    box-shadow: -0.4vw 0.8vh #1b1c25;
 }
 
 .history-table thead {

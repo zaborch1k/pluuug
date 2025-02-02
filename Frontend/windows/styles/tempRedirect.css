@@ -50,7 +50,6 @@ button {
   border-radius: 5px;
   box-shadow: -0.2vw 0.6vh #1b1c25;
   margin-right: 1vw;
-  cursor: pointer;
 }
 
 .buttons {
@@ -62,103 +61,7 @@ button {
   float: right;
 }
 
-.reasonBlock {
-  display: inline-block;
-}
-
-#readMore {
-  position: relative;
-  left: 3px;
-  text-decoration: underline solid;
-  color: #1b1c25;
-  cursor: pointer;
-}
-
-#description-div {
-  margin: 2px;
-}
-
-#description {
-  text-align: left;
-  width: 50%;
-  margin: 0 auto;
-  display: block;
-  color: #1b1c25;
-}
-
 .leftbuttons {
   float: left;
   margin: auto 20px 8px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* .warning {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-} */
-
-/* h1 {
-  color: black;
-  font-size: 2.5em;
-  font-weight: bold;
-  margin: 0 0 2.5vh;
-} */
-
-/* p {
-  font-size: 1em;
-  color: rgb(160, 160, 160);
-  margin: 0;
-} */
-
-/* #header {
-  color: black;
-  font-size: 2.5em;
-  font-weight: bold;
-  margin: 0 0 2.5vh;
-} */
-
-/* .buttons {
-  margin: 5.5vh auto 0;
-  max-width: 750px;
-
-  background-color: blue;
-} */
-
-/* .leftbuttons {
-  float: left;
-  margin: auto auto 20px 8px;
-} */
-
-/* .rightbuttons {
-  float: right;
-} */
-
-/* button {
-  color: rgb(243, 243, 243);
-  font-weight: bold;
-  font-size: 1.05em;
-  border-radius: 3px;
-  min-height: fit-content;
-  min-width: fit-content;
-  border: 0;
-  padding: 8px 16px;
-} */
-
-/* img {
-  margin: 20vh auto 0;
-  height: 20vh;
-  width: 20vh;
-} */
