@@ -26,13 +26,13 @@ body {
 }
 
 h1 {
-  font-size: 2.5vw;
+  font-size: 2vw;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
 img {
-  margin: 10vh auto 0;
+  margin: 5vh auto 0;
   height: 25vh;
   width: 25vh;
 }
@@ -55,11 +55,13 @@ img {
   margin: 0 auto;
   display: block;
   color: #1b1c25;
+  margin-bottom: 1vh;
 }
 
 button {
   font-weight: bold;
-  font-size: 1.05em;
+  margin-bottom: 2vh;
+  font-size: 1.25em;
   border-radius: 3px;
   min-height: fit-content;
   min-width: fit-content;
@@ -70,21 +72,16 @@ button {
   border-radius: 5px;
   box-shadow: -0.2vw 0.6vh #1b1c25;
   margin-right: 1vw;
+  cursor: pointer;
+}
+
+.leftbuttons {
+  white-space: nowrap;
 }
 
 .buttons {
   margin: 2vh auto 2vh auto;
   max-width: 50vw;
-  cursor: pointer;
-}
-
-.rightbuttons {
-  float: right;
-}
-
-.leftbuttons {
-  float: left;
-  margin: auto 20px 8px;
 }
 
 .reasonBlock {
