@@ -141,7 +141,7 @@ export async function initDB() {
 
         set({ "lc": [] }),
 
-        set({ "mode": "3" }),
+        set({ "mode": "2" }),
 
         set({ "blockHistory": [] })
     ])

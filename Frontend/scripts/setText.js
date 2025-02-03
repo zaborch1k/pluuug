@@ -151,18 +151,13 @@ export function setTextOptions(lang) { // [!] change this text
         "choose-mode-header" : ["Режимы защиты:", "Protection modes:"],
 
         "label1" : [
-            "Первый режим: только safebrowsing. Повышенная производительность, но может снизиться точность",
-            "First mode: safebrowsing only. Increased performance, but may decrease accuracy."
+            "Первый режим: уеби меня кирпич-1",
+            "First mode: ----."
         ],
 
         "label2" : [
-            "Второй режим: только virustotal",
-            "Second mode: virustotal only"
-        ],
-
-        "label3" : [
-            "Третий режим: safebrowsing + virustotal",
-            "Third mode: safebrowsing + virustotal"
+            "Второй режим: уеби меня кирпич-2",
+            "Second mode: ~~~~"
         ],
     }
 

@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "background.js",
   "scripts": {
-    "build": "browserify background.js -o dist/background.js -t babelify",
+    "build_background": "browserify background.js -o dist/background.js -t babelify",
+    "build_checkingPage": "browserify ./scripts/checkingPage.js -o dist/checkingPage.js -t babelify",
     "watch": "watchify background.js -o dist/background.js -t babelify --debug --verbose"
   },
   "author": "",
