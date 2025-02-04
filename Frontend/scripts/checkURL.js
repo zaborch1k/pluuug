@@ -6,6 +6,10 @@ export async function checkURL(url) {
     let functions = [checkSafebrowsing, checkVirustotal];
     let listLC = ["LC_SB", "LC_VT"];
 
+    console.log("-------------------- NEW CHECK : ", url)
+
+    await new Promise(resolve => setTimeout(resolve, 10000)); // virustotal simulator
+
     let verdict, threatType, service
     for (let i = 0; i < functions.length; i++) {
         let fn = functions[i];

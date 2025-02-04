@@ -92,8 +92,10 @@ export async function getPrevTabUrl(tabId) {
 }
 
 export async function setPrevTabUrl(tabId, url) {
-    if (url.startsWith("chrome-extension"))
-        return
+    if (url.startsWith("chrome-extension")) { 
+        // return;  // <----------------- [?]
+        url = "https://www.google.com";
+    }
     
     await set({ [`${tabId}prevUrl`]: url }, 'session')
 }

@@ -61,6 +61,7 @@ document.getElementById("whiteListButton").onclick = async () => {
 
 async function initPageContent() {
     const currentTab = await chrome.tabs.getCurrent()
+    console.log("currentTab.id", currentTab.id)
     console.log('currentTab:', currentTab, "activeTab:", await getActiveTab())
 
     let searchParams = new URLSearchParams(document.location.search);

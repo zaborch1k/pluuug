@@ -29,45 +29,47 @@ _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
     }
   }, _callee);
 }))();
-function checkInLC(_x) {
-  return _checkInLC.apply(this, arguments);
+function checkInCash(_x) {
+  return _checkInCash.apply(this, arguments);
 }
-function _checkInLC() {
-  _checkInLC = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(url) {
+function _checkInCash() {
+  _checkInCash = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(url) {
     var listLC, res, _i, _listLC, typeLC, LC;
     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
           listLC = ["LC_SB", "LC_VT"];
-          res = undefined;
           _i = 0, _listLC = listLC;
-        case 3:
+        case 2:
           if (!(_i < _listLC.length)) {
-            _context7.next = 16;
+            _context7.next = 15;
             break;
           }
           typeLC = _listLC[_i];
-          _context7.next = 7;
+          _context7.next = 6;
           return (0, _storageWorker.getLC)(typeLC);
-        case 7:
+        case 6:
           LC = _context7.sent;
           res = LC[url];
           if (!(res === undefined)) {
-            _context7.next = 11;
+            _context7.next = 10;
             break;
           }
-          return _context7.abrupt("continue", 13);
-        case 11:
+          return _context7.abrupt("continue", 12);
+        case 10:
           if (!(res[0] == "UNSAFE")) {
-            _context7.next = 13;
+            _context7.next = 12;
             break;
           }
           return _context7.abrupt("return", res);
-        case 13:
+        case 12:
           _i++;
-          _context7.next = 3;
+          _context7.next = 2;
           break;
-        case 16:
+        case 15:
+          if (res === undefined) {
+            res = [undefined, undefined, undefined];
+          }
           return _context7.abrupt("return", res);
         case 17:
         case "end":
@@ -75,7 +77,7 @@ function _checkInLC() {
       }
     }, _callee7);
   }));
-  return _checkInLC.apply(this, arguments);
+  return _checkInCash.apply(this, arguments);
 }
 function syncRedirectMode(_x2) {
   return _syncRedirectMode.apply(this, arguments);
@@ -105,7 +107,7 @@ function asyncRedirectMode(_x3) {
 }
 function _asyncRedirectMode() {
   _asyncRedirectMode = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(pendingDetails) {
-    var _yield$checkURL, _yield$checkURL2, verdict, threatType, service, previousPendingUrl, pendingHost, redirectPageURL, tab;
+    var _yield$checkURL, _yield$checkURL2, verdict, threatType, service, redirectPageURL, tab;
     return _regeneratorRuntime().wrap(function _callee9$(_context9) {
       while (1) switch (_context9.prev = _context9.next) {
         case 0:
@@ -124,46 +126,182 @@ function _asyncRedirectMode() {
           return _context9.abrupt("return");
         case 9:
           _context9.next = 11;
-          return (0, _storageWorker.getPendingTabUrl)(pendingDetails.tabId);
-        case 11:
-          previousPendingUrl = _context9.sent;
-          pendingHost = (0, _utility.hostFromUrl)(pendingDetails.url);
-          if (!(pendingHost === "")) {
-            _context9.next = 15;
-            break;
-          }
-          return _context9.abrupt("return");
-        case 15:
-          if (!((0, _utility.hostFromUrl)(previousPendingUrl) === pendingHost)) {
-            _context9.next = 17;
-            break;
-          }
-          return _context9.abrupt("return");
-        case 17:
-          _context9.next = 19;
-          return (0, _storageWorker.setPendingTabUrl)(pendingDetails.tabId, pendingDetails.url);
-        case 19:
-          _context9.next = 21;
           return (0, _storageWorker.updateBlockHistory)(pendingDetails.url, threatType);
-        case 21:
+        case 11:
           redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
           redirectPageURL.searchParams.set("threatType", threatType);
           redirectPageURL.searchParams.set("service", service);
-          _context9.next = 26;
+          _context9.next = 16;
           return chrome.tabs.update(pendingDetails.tabId, {
             url: redirectPageURL.href
           });
-        case 26:
+        case 16:
           tab = _context9.sent;
-          _context9.next = 29;
-          return (0, _storageWorker.setPrevTabUrl)(pendingDetails.tabId, tab.url === "" ? "https://www.google.com" : tab.url);
-        case 29:
+        case 17:
         case "end":
           return _context9.stop();
       }
     }, _callee9);
   }));
   return _asyncRedirectMode.apply(this, arguments);
+}
+function redirect() {
+  return _redirect.apply(this, arguments);
+}
+function _redirect() {
+  _redirect = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
+    var redirectPageURL;
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
+        case 0:
+          redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
+          redirectPageURL.searchParams.set("threatType", resLC[1]);
+          redirectPageURL.searchParams.set("service", resLC[2]);
+          _context10.next = 5;
+          return chrome.tabs.update(pendingDetails.tabId, {
+            url: redirectPageURL.href
+          });
+        case 5:
+        case "end":
+          return _context10.stop();
+      }
+    }, _callee10);
+  }));
+  return _redirect.apply(this, arguments);
+}
+function checkAndRedirect(_x4) {
+  return _checkAndRedirect.apply(this, arguments);
+}
+function _checkAndRedirect() {
+  _checkAndRedirect = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(pendingDetails) {
+    var pendingURL, hostInWhiteList, _yield$checkInCash, _yield$checkInCash2, verdict, threatType, service, previousPendingUrl, pendingHost, mode, curTabID, tabURL, checkingPageURL, checkingPage, _yield$checkURL3, _yield$checkURL4, tempRedirectURL, tab;
+    return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+      while (1) switch (_context11.prev = _context11.next) {
+        case 0:
+          pendingURL = pendingDetails.url;
+          _context11.next = 3;
+          return (0, _storageWorker.getWhiteList)();
+        case 3:
+          hostInWhiteList = _context11.sent.includes((0, _utility.hostFromUrl)(pendingDetails.url));
+          if (!hostInWhiteList) {
+            _context11.next = 6;
+            break;
+          }
+          return _context11.abrupt("return");
+        case 6:
+          _context11.next = 8;
+          return checkInCash(pendingDetails.url);
+        case 8:
+          _yield$checkInCash = _context11.sent;
+          _yield$checkInCash2 = _slicedToArray(_yield$checkInCash, 3);
+          verdict = _yield$checkInCash2[0];
+          threatType = _yield$checkInCash2[1];
+          service = _yield$checkInCash2[2];
+          if (!(verdict === "SAFE")) {
+            _context11.next = 15;
+            break;
+          }
+          return _context11.abrupt("return");
+        case 15:
+          _context11.next = 17;
+          return (0, _storageWorker.getPendingTabUrl)(pendingDetails.tabId);
+        case 17:
+          previousPendingUrl = _context11.sent;
+          pendingHost = (0, _utility.hostFromUrl)(pendingDetails.url);
+          if (!(pendingHost === "")) {
+            _context11.next = 21;
+            break;
+          }
+          return _context11.abrupt("return");
+        case 21:
+          if (!((0, _utility.hostFromUrl)(previousPendingUrl) === pendingHost)) {
+            _context11.next = 23;
+            break;
+          }
+          return _context11.abrupt("return");
+        case 23:
+          _context11.next = 25;
+          return (0, _storageWorker.getMode)();
+        case 25:
+          mode = _context11.sent;
+          curTabID = pendingDetails.tabId;
+          if (!(mode == "1")) {
+            _context11.next = 35;
+            break;
+          }
+          // redirect to checkingPage
+          console.log('redirect...');
+          checkingPageURL = new URL(chrome.runtime.getURL("windows/checkingPage.html"));
+          _context11.next = 32;
+          return chrome.tabs.update(pendingDetails.tabId, {
+            url: checkingPageURL.href
+          });
+        case 32:
+          checkingPage = _context11.sent;
+          tabURL = checkingPage.url;
+          curTabID = checkingPage.id;
+        case 35:
+          if (!(verdict === undefined)) {
+            _context11.next = 43;
+            break;
+          }
+          _context11.next = 38;
+          return (0, _checkURL.checkURL)(pendingDetails.url);
+        case 38:
+          _yield$checkURL3 = _context11.sent;
+          _yield$checkURL4 = _slicedToArray(_yield$checkURL3, 3);
+          verdict = _yield$checkURL4[0];
+          threatType = _yield$checkURL4[1];
+          service = _yield$checkURL4[2];
+        case 43:
+          if (!(verdict !== "UNSAFE")) {
+            _context11.next = 48;
+            break;
+          }
+          if (!(mode == "1")) {
+            _context11.next = 47;
+            break;
+          }
+          _context11.next = 47;
+          return chrome.tabs.update(curTabID, {
+            url: pendingDetails.url
+          });
+        case 47:
+          return _context11.abrupt("return");
+        case 48:
+          _context11.next = 50;
+          return (0, _storageWorker.setPendingTabUrl)(curTabID, pendingURL);
+        case 50:
+          // for proceed button
+
+          console.log("curTabID", curTabID);
+          console.log("pendingDetails.tabID", pendingDetails.tabID);
+          _context11.next = 54;
+          return (0, _storageWorker.updateBlockHistory)(pendingURL, threatType);
+        case 54:
+          // redirect to tempRedirect
+          tempRedirectURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
+          tempRedirectURL.searchParams.set("threatType", threatType);
+          tempRedirectURL.searchParams.set("service", service);
+          _context11.next = 59;
+          return chrome.tabs.update(curTabID, {
+            url: tempRedirectURL.href
+          });
+        case 59:
+          tab = _context11.sent;
+          console.log("tab", tab);
+          if (mode != "1") {
+            tabURL = tab.url;
+          }
+          _context11.next = 64;
+          return (0, _storageWorker.setPrevTabUrl)(curTabID, tabURL === "" ? "https://www.google.com" : tabURL);
+        case 64:
+        case "end":
+          return _context11.stop();
+      }
+    }, _callee11);
+  }));
+  return _checkAndRedirect.apply(this, arguments);
 }
 chrome.runtime.onInstalled.addListener(/*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(object) {
@@ -182,13 +320,13 @@ chrome.runtime.onInstalled.addListener(/*#__PURE__*/function () {
       }
     }, _callee2);
   }));
-  return function (_x4) {
+  return function (_x5) {
     return _ref2.apply(this, arguments);
   };
 }());
 chrome.webRequest.onBeforeRequest.addListener(/*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(pendingDetails) {
-    var flagAct, resLC, redirectPageURL, hostInWhiteList, mode;
+    var flagAct;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
@@ -203,61 +341,14 @@ chrome.webRequest.onBeforeRequest.addListener(/*#__PURE__*/function () {
           return _context3.abrupt("return");
         case 5:
           _context3.next = 7;
-          return checkInLC(pendingDetails.url);
+          return checkAndRedirect(pendingDetails);
         case 7:
-          resLC = _context3.sent;
-          if (!(resLC !== undefined)) {
-            _context3.next = 19;
-            break;
-          }
-          console.log("in cash");
-          if (!(resLC[0] === "SAFE")) {
-            _context3.next = 14;
-            break;
-          }
-          return _context3.abrupt("return");
-        case 14:
-          redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
-          redirectPageURL.searchParams.set("threatType", resLC[1]);
-          redirectPageURL.searchParams.set("service", resLC[2]);
-          _context3.next = 19;
-          return chrome.tabs.update(pendingDetails.tabId, {
-            url: redirectPageURL.href
-          });
-        case 19:
-          _context3.next = 21;
-          return (0, _storageWorker.getWhiteList)();
-        case 21:
-          hostInWhiteList = _context3.sent.includes((0, _utility.hostFromUrl)(pendingDetails.url));
-          if (!hostInWhiteList) {
-            _context3.next = 24;
-            break;
-          }
-          return _context3.abrupt("return");
-        case 24:
-          _context3.next = 26;
-          return (0, _storageWorker.getMode)();
-        case 26:
-          mode = _context3.sent;
-          if (!(mode == "1")) {
-            _context3.next = 32;
-            break;
-          }
-          _context3.next = 30;
-          return syncRedirectMode(pendingDetails);
-        case 30:
-          _context3.next = 34;
-          break;
-        case 32:
-          _context3.next = 34;
-          return asyncRedirectMode(pendingDetails);
-        case 34:
         case "end":
           return _context3.stop();
       }
     }, _callee3);
   }));
-  return function (_x5) {
+  return function (_x6) {
     return _ref3.apply(this, arguments);
   };
 }(), {
@@ -277,7 +368,7 @@ chrome.tabs.onRemoved.addListener(/*#__PURE__*/function () {
       }
     }, _callee4);
   }));
-  return function (_x6, _x7) {
+  return function (_x7, _x8) {
     return _ref4.apply(this, arguments);
   };
 }());
@@ -331,7 +422,7 @@ chrome.webRequest.onCompleted.addListener(/*#__PURE__*/function () {
       }
     }, _callee6);
   }));
-  return function (_x8) {
+  return function (_x9) {
     return _ref6.apply(this, arguments);
   };
 }(), {
@@ -38503,37 +38594,43 @@ function _checkURL() {
         case 0:
           functions = [_checkSafebrowsing.checkSafebrowsing, _checkVirustotal.checkVirustotal];
           listLC = ["LC_SB", "LC_VT"];
+          console.log("-------------------- NEW CHECK : ", url);
+          _context.next = 5;
+          return new Promise(function (resolve) {
+            return setTimeout(resolve, 10000);
+          });
+        case 5:
           i = 0;
-        case 3:
+        case 6:
           if (!(i < functions.length)) {
-            _context.next = 20;
+            _context.next = 23;
             break;
           }
           fn = functions[i];
           typeLC = listLC[i];
-          _context.next = 8;
+          _context.next = 11;
           return fn(url);
-        case 8:
+        case 11:
           _yield$fn = _context.sent;
           _yield$fn2 = _slicedToArray(_yield$fn, 3);
           verdict = _yield$fn2[0];
           threatType = _yield$fn2[1];
           service = _yield$fn2[2];
-          _context.next = 15;
+          _context.next = 18;
           return (0, _storageWorker.pushToLC)(typeLC, url, [verdict, threatType, service]);
-        case 15:
+        case 18:
           if (!(verdict == 'UNSAFE')) {
-            _context.next = 17;
+            _context.next = 20;
             break;
           }
           return _context.abrupt("return", ['UNSAFE', threatType, service]);
-        case 17:
-          i++;
-          _context.next = 3;
-          break;
         case 20:
+          i++;
+          _context.next = 6;
+          break;
+        case 23:
           return _context.abrupt("return", ["SAFE", undefined, service]);
-        case 21:
+        case 24:
         case "end":
           return _context.stop();
       }
@@ -40754,15 +40851,13 @@ function _setPrevTabUrl() {
     return _regeneratorRuntime().wrap(function _callee16$(_context16) {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
-          if (!url.startsWith("chrome-extension")) {
-            _context16.next = 2;
-            break;
+          if (url.startsWith("chrome-extension")) {
+            // return;  // <----------------- [?]
+            url = "https://www.google.com";
           }
-          return _context16.abrupt("return");
-        case 2:
-          _context16.next = 4;
+          _context16.next = 3;
           return set(_defineProperty({}, "".concat(tabId, "prevUrl"), url), 'session');
-        case 4:
+        case 3:
         case "end":
           return _context16.stop();
       }

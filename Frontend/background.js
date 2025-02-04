@@ -14,62 +14,98 @@ import { openWindow } from "./scripts/utility.js"
     await initSDB();
 })()
 
-async function checkInLC(url) {
+async function checkInCash(url) {
     let listLC = ["LC_SB", "LC_VT"];
 
-    let res = undefined;
+    let res;
 
     for (let typeLC of listLC) {
-        let LC = await getLC(typeLC)
-        res = LC[url]
+        let LC = await getLC(typeLC);
+        res = LC[url];
 
         if (res === undefined) {
-            continue
+            continue;
         }
 
         if (res[0] == "UNSAFE") {
-            return res
+            return res;
         }
     }
 
-    return res
+    if (res === undefined) {
+        res = [undefined, undefined, undefined];
+    }
+
+    return res;
 }
 
-async function syncRedirectMode(pendingDetails) {
-    let redirectPageURL = new URL(chrome.runtime.getURL("windows/checkingPage.html"));
-    redirectPageURL.searchParams.set("pendingURL", pendingDetails.url);
-
-    await chrome.tabs.update(pendingDetails.tabId, { url: redirectPageURL.href })
-}
-
-async function asyncRedirectMode(pendingDetails) {
-    let [verdict, threatType, service] = await checkURL(pendingDetails.url)
-
-    if (verdict !== "UNSAFE")
+async function checkAndRedirect(pendingDetails) {
+    let pendingURL = pendingDetails.url;
+    let hostInWhiteList = (await getWhiteList()).includes(hostFromUrl(pendingDetails.url));
+    if (hostInWhiteList) {
         return;
-    
-    // one host navigation check
+    }
+
+    let [verdict, threatType, service] = await checkInCash(pendingDetails.url);
+    if (verdict === "SAFE" ) {
+        return;
+    }
+
+    // one host navigation check [?]
     let previousPendingUrl = await getPendingTabUrl(pendingDetails.tabId)
     let pendingHost = hostFromUrl(pendingDetails.url)
     
     if (pendingHost === "")
         return
     
-    if (hostFromUrl(previousPendingUrl) === pendingHost)
-        return
+    if (hostFromUrl(previousPendingUrl) === pendingHost) {
+        return;
+    }
+        
 
-    await setPendingTabUrl(pendingDetails.tabId, pendingDetails.url)
+    let mode = await getMode();
+    let curTabID = pendingDetails.tabId;
+    let tabURL;
+    if (mode == "1") { 
+        // redirect to checkingPage
+        console.log('redirect...')
+        let checkingPageURL = new URL(chrome.runtime.getURL("windows/checkingPage.html"));
+        let checkingPage = await chrome.tabs.update(pendingDetails.tabId, { url: checkingPageURL.href });
+        tabURL = checkingPage.url;
+        curTabID = checkingPage.id;
+    }
 
-    await updateBlockHistory(pendingDetails.url, threatType);
+    if (verdict === undefined) {
+        [verdict, threatType, service] = await checkURL(pendingDetails.url);
+    }
 
-    let redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
-    redirectPageURL.searchParams.set("threatType", threatType);
-    redirectPageURL.searchParams.set("service", service);
-            
-    let tab = await chrome.tabs.update(pendingDetails.tabId, { url: redirectPageURL.href })
-    await setPrevTabUrl(pendingDetails.tabId, (tab.url === "") ? "https://www.google.com" : tab.url)
+    if (verdict !== "UNSAFE") {
+        if (mode == "1") { 
+            // redirect to checkingPage
+            await chrome.tabs.update(curTabID, { url: pendingDetails.url });
+        }
+        return;
+    }
+
+    await setPendingTabUrl(curTabID, pendingURL); // for proceed button
+
+    console.log("curTabID", curTabID);
+    console.log("pendingDetails.tabID", pendingDetails.tabID);
+
+    await updateBlockHistory(pendingURL, threatType);
+
+    // redirect to tempRedirect
+    let tempRedirectURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
+    tempRedirectURL.searchParams.set("threatType", threatType);
+    tempRedirectURL.searchParams.set("service", service);
+
+    let tab = await chrome.tabs.update(curTabID, { url: tempRedirectURL.href });   
+    console.log("tab", tab);     
+    if (mode != "1") {
+        tabURL = tab.url;
+    } 
+    await setPrevTabUrl(curTabID, (tabURL === "") ? "https://www.google.com" : tabURL);  // for return button
 }
-
 
 chrome.runtime.onInstalled.addListener(async (object) => {
     if (object.reason === chrome.runtime.OnInstalledReason.INSTALL) {
@@ -83,39 +119,12 @@ chrome.webRequest.onBeforeRequest.addListener(async (pendingDetails) => {
         return;
     }
 
-    let resLC = await checkInLC(pendingDetails.url);
-    if (resLC !== undefined) {
-        console.log("in cash");
-        if (resLC[0] === "SAFE") {
-            return;
-
-        } else {
-            let redirectPageURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
-            redirectPageURL.searchParams.set("threatType", resLC[1]);
-            redirectPageURL.searchParams.set("service", resLC[2]);
-
-            await chrome.tabs.update(pendingDetails.tabId, { url: redirectPageURL.href })
-        }
-    }
-
-    let hostInWhiteList = (await getWhiteList()).includes(hostFromUrl(pendingDetails.url));
-    if (hostInWhiteList) {
-        return;
-    }
-
-    let mode = await getMode();
-    if (mode == "1") { 
-        await syncRedirectMode(pendingDetails);
-
-    } else {
-        await asyncRedirectMode(pendingDetails);
-    }
+    await checkAndRedirect(pendingDetails);
 },
 {
     urls: ["https://*/*", "http://*/*"],
     types: ["main_frame"]
-}
-);
+});
 
 chrome.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     await removeTabUrls(tabId)
