@@ -126,6 +126,7 @@ export async function updateList(name, list) {
 // -----------------------------------------------------------------------------------------
 
 export async function initDB() { 
+    console.log('initDB...')
     let isDB = await get("isDB");
 
     if (isDB !== undefined) {
@@ -153,12 +154,12 @@ export async function initDB() {
 
 // ------------------------------------ extWdw tab switching ------------------------------------
 
-export async function setEWTabFlag(value) {
-    await set({"EWTabFlag" : value}, "session")
+export async function setEWCurrentTab(value) {
+    await set({"EWCurrentTab" : value}, "session")
 }
 
-export async function getEWTabFlag() {
-    return await get("EWTabFlag", "session")
+export async function getEWCurrentTab() {
+    return await get("EWCurrentTab", "session")
 }
 
 // ----------------------------------------- caching -----------------------------------------
@@ -193,6 +194,6 @@ export async function initSDB() {
 
         set({ "LC_VT": {} }, "session"),
 
-        setEWTabFlag("white-list")
+        setEWCurrentTab("white-list")
     ])
 }

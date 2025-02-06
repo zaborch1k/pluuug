@@ -26,7 +26,7 @@ export function setTextExtWdw(lang) {
         "history-btn" : ["История блокировок", "Block history"],
         "white-list-adder-save-btn" : ["Сохранить", "Save"],
         "history-clear-btn" : ["Очистить историю", "Clear history"],
-        "history-donload-btn" : ["Скачать историю", "Download block history"],
+        "history-download-btn" : ["Скачать историю", "Download block history"],
     }
 
     for (let id in setTextContent) {

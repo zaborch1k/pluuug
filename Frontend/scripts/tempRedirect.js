@@ -38,7 +38,7 @@ document.getElementById("returnButton").onclick = async () => {
     await makeReturnWork(tabs[0].id)
 
     let url = await getPrevTabUrl(tabs[0].id)
-    await chrome.tabs.update(tabs[0].id, { url })
+    window.location.replace(url);
 }
 
 document.getElementById("proceedButton").onclick = async () => {
@@ -46,7 +46,7 @@ document.getElementById("proceedButton").onclick = async () => {
     await makeProceedWork(tabs[0].id)
 
     let url = await getPendingTabUrl(tabs[0].id)
-    await chrome.tabs.update(tabs[0].id, { url })
+    window.location.replace(url);
 }
 
 document.getElementById("whiteListButton").onclick = async () => {
@@ -55,7 +55,7 @@ document.getElementById("whiteListButton").onclick = async () => {
 
     let url = await getPendingTabUrl(tabs[0].id)
     await pushHostToWhiteList(hostFromUrl(url))
-    await chrome.tabs.update(tabs[0].id, { url })
+    window.location.replace(url);
 }
 
 

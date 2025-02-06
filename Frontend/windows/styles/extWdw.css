@@ -402,7 +402,7 @@ section button:hover {
     border-radius: 5px;
 }
 
-#history-donload-btn {
+#history-download-btn {
     position: absolute;
     display: flex;
     padding: 2vh 2vw 2vh 2vw;

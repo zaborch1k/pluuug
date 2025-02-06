@@ -23,7 +23,7 @@ async function realTimeCheckWithoutLTL(expressionHashes) {
                 let expiration = new Date(arr[0]);
                 if (currentTime > expiration) {
                     lc.splice(j, 1);
-                    updateList("lc", lc);
+                    await updateList("lc", lc);
                     
                 } else {
                     expressionHashPrefixes.splice(i, 1);
@@ -66,7 +66,7 @@ async function realTimeCheckWithoutLTL(expressionHashes) {
         lc.push([dt, hexHash, threatType]);
     }
         
-    updateList("lc", lc);
+    await updateList("lc", lc);
         
     for (let fullHashObj of fullHashes) { 
         let threatType = fullHashObj.fullHashDetails[0].threatType;

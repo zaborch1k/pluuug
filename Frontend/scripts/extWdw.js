@@ -1,8 +1,10 @@
 import { setTextExtWdw } from "./setText.js"
-import { getList, updateList, getLang, setEWTabFlag, getEWTabFlag } from "./storageWorker.js"
+import { getList, updateList, getLang, setEWCurrentTab, getEWCurrentTab } from "./storageWorker.js"
 import { getPrettyThreatType, getPrettyDate } from "./prettyData.js";
 
-document.addEventListener("DOMContentLoaded", async function () {
+console.log('tut')
+
+document.addEventListener("DOMContentLoaded", async () => {
     const whiteListBtn = document.getElementById("white-list-btn");
     const historyBtn = document.getElementById("history-btn");
     const whiteList = document.getElementById("white-list");
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // ------------------------------------ tabs switching ---------------------------------------
 
     async function switchToTab(windowName) {
-        await setEWTabFlag(windowName);
+        await setEWCurrentTab(windowName);
         
         if (windowName === "white-list") {
             whiteList.style.display = "block";
@@ -45,14 +47,12 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     };
 
-    whiteListBtn.addEventListener("click", () => switchToTab("white-list"));
-    historyBtn.addEventListener("click", () => switchToTab("history"));
+    whiteListBtn.addEventListener("click", async () => await switchToTab("white-list"));
+    historyBtn.addEventListener("click", async () => await switchToTab("history"));
 
     // ---------------------------------------- init tab ----------------------------------------
 
-    let currentTab = await getEWTabFlag();
-    await switchToTab(currentTab);
-
+    await switchToTab(await getEWCurrentTab());
 
     // *************************************** white list ***************************************
 
@@ -82,48 +82,52 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    let list = await getList("whiteList")
-    displayWhiteList(list)
+    displayWhiteList(await getList("whiteList"));
 
     // ------------------------------------------ add ------------------------------------------
 
     function checkIfDomain(str) {
         try {
-            let url = new URL("https://" + str);
+            new URL("https://" + str);
             return true;
 
-        } catch (e) {
+        } catch (err) {
             return false;
         }
     }
 
     async function addToWhiteList(elem) {
-        getList("whiteList").then((list) => {
-            list.push(elem);
-            updateList("whiteList", list);
-        });
+        let list = await getList("whiteList");
+
+        list.push(elem);
+        await updateList("whiteList", list);
     }
 
-    document.getElementById("white-list-adder-save-btn").onclick = () => {
+    document.getElementById("white-list-adder-save-btn").onclick = async () => {
         let ntext;
-        let input = document.getElementById("white-list-adder").value.trim();
+        let input = document.getElementById("white-list-adder")
+        let input_value = input.value.trim();
 
-        if (!checkIfDomain(input)) {
+        console.log('tut1')
+        if (!checkIfDomain(input_value)) {
             // notification
             ntext = (lang == "ru") ? "Введен некорректный домен" : "Invalid domain entered";
             alert("\n" + ntext);
             return;
         }
 
-        let spans = whiteList.querySelectorAll('ul li span');
+        console.log('tut2')
+        let whiteListItems = whiteList.querySelectorAll('ul li span');
         let isUnique = true;
+        console.log(whiteListItems)
 
-        for (let elem of spans) {
-            if (elem.textContent == input) {
+        for (let item of whiteListItems) {
+            if (item.textContent == input_value) {
                 isUnique = false;
                 break;
             }
         }
+        console.log('tut3')
 
         if (!isUnique) {
             // notification
@@ -131,11 +135,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             alert("\n" + ntext);
             return;
         }
+        console.log('tut4')
 
-        addToWhiteList(input);
+        await addToWhiteList(input_value);
 
-        displayNewItemWL(input, whiteList.length + 1);
-        location.reload();
+        displayNewItemWL(input_value, whiteList.childElementCount + 1);
+        input.value = "";
+        // location.reload();
     }
 
     // ------------------------------------------ search ------------------------------------------
@@ -143,14 +149,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     document.getElementById("white-list-finder").onkeyup = () => {
         let li = whiteList.querySelectorAll("ul li");
 
-        let input = document.getElementById("white-list-finder").value.toLowerCase().trim();
+        let input_value = document.getElementById("white-list-finder").value.toLowerCase().trim();
         let cntNotHidden = 0;
 
         for (let i = 0; i < li.length; i++ ) {
             let cur = li[i];
             let txtValue = cur.getElementsByTagName("span")[0].textContent;
             
-            if (txtValue.toLowerCase().indexOf(input) > -1) {
+            if (txtValue.toLowerCase().indexOf(input_value) > -1) {
                 cur.style.display = "";
                 cntNotHidden++;
 
@@ -163,37 +169,35 @@ document.addEventListener("DOMContentLoaded", async function () {
     // ------------------------------------------ rm ------------------------------------------
 
     async function delFromWhiteList(elem) {
-        getList("whiteList").then((list) => {
-            let i = 0;
-            for (i; i < list.length; i++) {
-                if (list[i] == elem) {
-                    break;
-                }
+        let list = await getList("whiteList")
+        let i = 0;
+        for (i; i < list.length; i++) {
+            if (list[i] == elem) {
+                break;
             }
-            list.splice(i, 1);
-            updateList("whiteList", list);
-        });
+        }
+        list.splice(i, 1);
+        await updateList("whiteList", list);
     }
 
-    document.addEventListener('click', function(e) {
-        if (!e.target.classList.contains('delete-btn')) { return }
-
-        let id = e.target.id;
+    document.addEventListener('click', async (ev) => {
+        if (!ev.target.classList.contains('delete-btn')) 
+            return;
+        let id = ev.target.id;
         let elem = document.getElementById(id);
         let parent = elem.parentElement;
-
+        
         let txtValue = parent.getElementsByTagName("span")[0].textContent;
 
         // notification
         let ntext = (lang == "ru") ? "Вы уверены, что хотите удалить домен" : "Are you sure you want to delete domain";
         let isSure = confirm(`\n ${ntext}: ${txtValue}?`);
-        if (!isSure) {
+        if (!isSure)
             return;
-        }
 
         parent.remove();
-        delFromWhiteList(txtValue);
-      });
+        await delFromWhiteList(txtValue);
+    });
 
 
     // *************************************** block history ***************************************
@@ -214,8 +218,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         let res = (yA != yB) ? yA < yB :
                   (mA != mB) ? mA < mB :
                   (dA != dB) ? dA < dB :
-                  (minA != minB) ? minA < minB :
-                  (hA != hB) ? hA < hB : 0;
+                  (hA != hB) ? hA < hB :
+                  (minA != minB) ? minA < minB : 0;
 
         return res;
     }
@@ -236,7 +240,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         let select = document.getElementById("history-sort");
         let selectedOption = select.options[select.selectedIndex].value;
 
-        let sortedRows = Array.from(historyTable.rows)
+        let sortedRows = Array
+            .from(historyTable.rows)
             .slice(1)
             .sort((rowA, rowB) => rowsCmp(rowA, rowB, selectedOption));
 
@@ -276,13 +281,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         sortByDate();
     }
 
-    getList("blockHistory").then((list) => {
-        displayBlockHistory(list);
-    });
+    displayBlockHistory(await getList("blockHistory"))
 
     // ------------------------------------------ clear ------------------------------------------
 
-    document.getElementById("history-clear-btn").onclick = () => {
+    document.getElementById("history-clear-btn").onclick = async () => {
         // notification
         let ntext = (lang == "ru") ? "Вы уверены, что хотите очистить историю блокировки?" : "Are you sure you want to clear block history?";
         let isSure = confirm(`\n` + ntext);
@@ -293,7 +296,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         let tableElems = historyTable.querySelectorAll("table tbody")[0];
         tableElems.innerHTML = '';
 
-        updateList("blockHistory", []);
+        await updateList("blockHistory", []);
     }
     
     // ------------------------------------------ filter ------------------------------------------
@@ -325,7 +328,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // ---------------------------------- download blockHistory -----------------------------------
 
     function dataToCSV(data) {
-        return "url,date,reason\n" + data.map(e => e.join(",")).join("\n");
+        return "date,url,reason\n" + data.map(e => e.join(",")).join("\n");
     }
     
     function dataToJSON(data) {
@@ -334,50 +337,49 @@ document.addEventListener("DOMContentLoaded", async function () {
         for (let i = 0; i < data.length; i++) {
             let arr = data[i];
     
-            result[i] = {};
-    
-            result[i]["url"] = arr[0];
-            result[i]["date"] = arr[1];
-            result[i]["reason"] = arr[2];
+            result[i] = {
+                date: arr[0],
+                url: arr[1],
+                reason: arr[2]
+            };
         }
-    
+
         return JSON.stringify(result);
     }
     
-    function downloadBlockHistory(type) {
-        getList("blockHistory").then((blockHistory) => {
-            // notification
-            if (blockHistory.length == 0) {
-                let ntext = (lang == "ru") ? "История блокировок пуста" : "Block history is empty";
-                alert("\n" + ntext)
-                return;
-            }
+    async function downloadBlockHistory(type) {
+        let blockHistory = await getList("blockHistory");
+        // notification
+        if (blockHistory.length == 0) {
+            let ntext = (lang == "ru") ? "История блокировок пуста" : "Block history is empty";
+            alert("\n" + ntext)
+            return;
+        }
 
-            let data;
+        let data;
             
-            if (type == "csv") {
-                data = dataToCSV(blockHistory);
+        if (type == "csv") {
+            data = dataToCSV(blockHistory);
                 
-            } else {
-                data = dataToJSON(blockHistory);
-            }
+        } else {
+            data = dataToJSON(blockHistory);
+        }
     
-            const blob = new Blob([data], {type: type});
+        const blob = new Blob([data], {type: type});
     
-            const link = document.createElement('a');
+        const link = document.createElement('a');
     
-            link.href = URL.createObjectURL(blob);
-            link.download = 'blockingReport.' + type;
-            link.click();
+        link.href = URL.createObjectURL(blob);
+        link.download = 'blockingReport.' + type;
+        link.click();
     
-            URL.revokeObjectURL(link.href);
-        });
+        URL.revokeObjectURL(link.href);
     }
 
-    document.getElementById("history-donload-btn").onclick = () => {
+    document.getElementById("history-download-btn").onclick = async () => {
         let select = document.getElementById("download-selection-sort");
         let selectedOption = select.options[select.selectedIndex].id;
 
-        downloadBlockHistory(selectedOption);
+        await downloadBlockHistory(selectedOption);
     }
 });

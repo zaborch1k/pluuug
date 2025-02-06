@@ -8,7 +8,7 @@ export async function checkURL(url) {
 
     console.log("-------------------- NEW CHECK : ", url)
 
-    await new Promise(resolve => setTimeout(resolve, 10000)); // virustotal simulator
+    // await new Promise(resolve => setTimeout(resolve, 10000)); // virustotal simulator
 
     let verdict, threatType, service
     for (let i = 0; i < functions.length; i++) {

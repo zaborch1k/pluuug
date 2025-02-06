@@ -15,7 +15,7 @@ import { openWindow } from "./scripts/utility.js"
 })()
 
 async function checkInCash(url) {
-    let listLC = ["LC_SB", "LC_VT"];
+    let listLC = ["LC_SB", "LC_VT"]; // LC_SB - safebrowsing local cache; LC_VT - virustotal local cache
 
     let res;
 
@@ -141,7 +141,7 @@ chrome.runtime.onStartup.addListener(async () => {
 })
 
 chrome.webRequest.onCompleted.addListener(async (details) => {
-    await chrome.history.deleteUrl({ url: chrome.runtime.getURL("windows/tempRedirect.html") })
+    await chrome.history.deleteUrl({ url: chrome.runtime.getURL("windows/checkingPage.html") })
 },
 {
     urls: ["https://*/*", "http://*/*"],
