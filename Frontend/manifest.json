@@ -1,8 +1,13 @@
 {
     "manifest_version": 3,
-    "name": "test",
-    "description": "Base Level Extension",
+    "name": "oldPhish",
+    "description": "Anti-phishing extension",
     "version": "1.0",
+
+    "icons" : {
+      "64": "./images/icon1.png",
+      "128": "./images/icon1.png"
+    },
 
     "action": {
       "default_icon": "images/icon1.png",

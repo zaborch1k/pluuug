@@ -34,15 +34,17 @@ h2 {
 h3 {
     font-size: 0.8vw;
     margin-left: 1vw;
+    margin-right: 1vw;
     padding: 0.02vw;
+    white-space: pre-wrap;
 }
 
 .header-h2 {
-    width: 30vw;
+    width: 40vw;
 }
 
 .text-h3 {
-    width: 50vw;
+    width: 80vw;
     margin-left: 4vw;
     margin-bottom: 5vh;
     box-sizing: border-box;
