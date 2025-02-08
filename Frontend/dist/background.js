@@ -21,9 +21,8 @@ _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         _context.next = 2;
         return (0, _storageWorker.initDB)();
       case 2:
-        _context.next = 4;
-        return (0, _storageWorker.initSDB)();
-      case 4:
+        return _context.abrupt("return", _context.sent);
+      case 3:
       case "end":
         return _context.stop();
     }
@@ -34,44 +33,23 @@ function checkInCash(_x) {
 }
 function _checkInCash() {
   _checkInCash = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7(url) {
-    var listLC, res, _i, _listLC, typeLC, LC;
+    var LCres;
     return _regeneratorRuntime().wrap(function _callee7$(_context7) {
       while (1) switch (_context7.prev = _context7.next) {
         case 0:
-          listLC = ["LC_SB", "LC_VT"]; // LC_SB - safebrowsing local cache; LC_VT - virustotal local cache
-          _i = 0, _listLC = listLC;
-        case 2:
-          if (!(_i < _listLC.length)) {
-            _context7.next = 15;
-            break;
-          }
-          typeLC = _listLC[_i];
-          _context7.next = 6;
-          return (0, _storageWorker.getLC)(typeLC);
-        case 6:
-          LC = _context7.sent;
-          res = LC[url];
-          if (!(res === undefined)) {
-            _context7.next = 10;
-            break;
-          }
-          return _context7.abrupt("continue", 12);
-        case 10:
-          if (!(res[0] == "UNSAFE")) {
-            _context7.next = 12;
-            break;
-          }
-          return _context7.abrupt("return", res);
-        case 12:
-          _i++;
           _context7.next = 2;
-          break;
-        case 15:
-          if (res === undefined) {
-            res = [undefined, undefined, undefined];
+          return (0, _storageWorker.getSLC)();
+        case 2:
+          _context7.t0 = url;
+          LCres = _context7.sent[_context7.t0];
+          if (!(LCres === undefined)) {
+            _context7.next = 6;
+            break;
           }
-          return _context7.abrupt("return", res);
-        case 17:
+          return _context7.abrupt("return", [undefined, undefined, undefined]);
+        case 6:
+          return _context7.abrupt("return", LCres);
+        case 7:
         case "end":
           return _context7.stop();
       }
@@ -79,164 +57,261 @@ function _checkInCash() {
   }));
   return _checkInCash.apply(this, arguments);
 }
-function checkAndRedirect(_x2) {
-  return _checkAndRedirect.apply(this, arguments);
+function checkURLIsSecure(_x2, _x3) {
+  return _checkURLIsSecure.apply(this, arguments);
 }
-function _checkAndRedirect() {
-  _checkAndRedirect = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(pendingDetails) {
-    var pendingURL, hostInWhiteList, _yield$checkInCash, _yield$checkInCash2, verdict, threatType, service, previousPendingUrl, pendingHost, mode, curTabID, tabURL, checkingPageURL, checkingPage, _yield$checkURL, _yield$checkURL2, tempRedirectURL, tab;
+function _checkURLIsSecure() {
+  _checkURLIsSecure = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(penURL, penTabID) {
+    var previousPendingUrl, prevURL, hostInWhiteList, urlInfo;
     return _regeneratorRuntime().wrap(function _callee8$(_context8) {
       while (1) switch (_context8.prev = _context8.next) {
         case 0:
-          pendingURL = pendingDetails.url;
-          _context8.next = 3;
-          return (0, _storageWorker.getWhiteList)();
-        case 3:
-          hostInWhiteList = _context8.sent.includes((0, _utility.hostFromUrl)(pendingDetails.url));
-          if (!hostInWhiteList) {
-            _context8.next = 6;
-            break;
-          }
-          return _context8.abrupt("return");
-        case 6:
-          _context8.next = 8;
-          return checkInCash(pendingDetails.url);
-        case 8:
-          _yield$checkInCash = _context8.sent;
-          _yield$checkInCash2 = _slicedToArray(_yield$checkInCash, 3);
-          verdict = _yield$checkInCash2[0];
-          threatType = _yield$checkInCash2[1];
-          service = _yield$checkInCash2[2];
-          if (!(verdict === "SAFE")) {
-            _context8.next = 15;
-            break;
-          }
-          return _context8.abrupt("return");
-        case 15:
-          _context8.next = 17;
-          return (0, _storageWorker.getPendingTabUrl)(pendingDetails.tabId);
-        case 17:
+          _context8.next = 2;
+          return (0, _storageWorker.getPendingTabUrl)(penTabID);
+        case 2:
           previousPendingUrl = _context8.sent;
-          pendingHost = (0, _utility.hostFromUrl)(pendingDetails.url);
-          if (!(pendingHost === "")) {
-            _context8.next = 21;
+          if (!((0, _utility.hostFromUrl)(previousPendingUrl) === (0, _utility.hostFromUrl)(penURL))) {
+            _context8.next = 5;
             break;
           }
-          return _context8.abrupt("return");
-        case 21:
-          if (!((0, _utility.hostFromUrl)(previousPendingUrl) === pendingHost)) {
+          return _context8.abrupt("return", true);
+        case 5:
+          _context8.next = 7;
+          return (0, _storageWorker.getPendingTabUrl)(penTabID);
+        case 7:
+          prevURL = _context8.sent;
+          if (!prevURL) {
+            _context8.next = 11;
+            break;
+          }
+          _context8.next = 11;
+          return (0, _storageWorker.setPrevTabUrl)(penTabID, prevURL);
+        case 11:
+          _context8.next = 13;
+          return (0, _storageWorker.setPendingTabUrl)(penTabID, penURL);
+        case 13:
+          _context8.next = 15;
+          return (0, _storageWorker.getWhiteList)();
+        case 15:
+          hostInWhiteList = _context8.sent.includes((0, _utility.hostFromUrl)(penURL));
+          if (!hostInWhiteList) {
+            _context8.next = 18;
+            break;
+          }
+          return _context8.abrupt("return", true);
+        case 18:
+          _context8.next = 20;
+          return checkInCash(penURL);
+        case 20:
+          urlInfo = _context8.sent;
+          if (!(urlInfo[0] === "SAFE")) {
             _context8.next = 23;
             break;
           }
-          return _context8.abrupt("return");
+          return _context8.abrupt("return", true);
         case 23:
-          _context8.next = 25;
-          return (0, _storageWorker.getMode)();
-        case 25:
-          mode = _context8.sent;
-          curTabID = pendingDetails.tabId;
-          if (!(mode == "1")) {
-            _context8.next = 35;
-            break;
-          }
-          // redirect to checkingPage
-          console.log('redirect...');
-          checkingPageURL = new URL(chrome.runtime.getURL("windows/checkingPage.html"));
-          _context8.next = 32;
-          return chrome.tabs.update(pendingDetails.tabId, {
-            url: checkingPageURL.href
-          });
-        case 32:
-          checkingPage = _context8.sent;
-          tabURL = checkingPage.url;
-          curTabID = checkingPage.id;
-        case 35:
-          if (!(verdict === undefined)) {
-            _context8.next = 43;
-            break;
-          }
-          _context8.next = 38;
-          return (0, _checkURL.checkURL)(pendingDetails.url);
-        case 38:
-          _yield$checkURL = _context8.sent;
-          _yield$checkURL2 = _slicedToArray(_yield$checkURL, 3);
-          verdict = _yield$checkURL2[0];
-          threatType = _yield$checkURL2[1];
-          service = _yield$checkURL2[2];
-        case 43:
-          if (!(verdict !== "UNSAFE")) {
-            _context8.next = 48;
-            break;
-          }
-          if (!(mode == "1")) {
-            _context8.next = 47;
-            break;
-          }
-          _context8.next = 47;
-          return chrome.tabs.update(curTabID, {
-            url: pendingDetails.url
-          });
-        case 47:
-          return _context8.abrupt("return");
-        case 48:
-          _context8.next = 50;
-          return (0, _storageWorker.setPendingTabUrl)(curTabID, pendingURL);
-        case 50:
-          // for proceed button
-
-          console.log("curTabID", curTabID);
-          console.log("pendingDetails.tabID", pendingDetails.tabID);
-          _context8.next = 54;
-          return (0, _storageWorker.updateBlockHistory)(pendingURL, threatType);
-        case 54:
-          // redirect to tempRedirect
-          tempRedirectURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
-          tempRedirectURL.searchParams.set("threatType", threatType);
-          tempRedirectURL.searchParams.set("service", service);
-          _context8.next = 59;
-          return chrome.tabs.update(curTabID, {
-            url: tempRedirectURL.href
-          });
-        case 59:
-          tab = _context8.sent;
-          console.log("tab", tab);
-          if (mode != "1") {
-            tabURL = tab.url;
-          }
-          _context8.next = 64;
-          return (0, _storageWorker.setPrevTabUrl)(curTabID, tabURL === "" ? "https://www.google.com" : tabURL);
-        case 64:
+          return _context8.abrupt("return", urlInfo);
+        case 24:
         case "end":
           return _context8.stop();
       }
     }, _callee8);
   }));
-  return _checkAndRedirect.apply(this, arguments);
+  return _checkURLIsSecure.apply(this, arguments);
 }
-chrome.runtime.onInstalled.addListener(/*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(object) {
+function goToTempRedirect(_x4, _x5, _x6, _x7) {
+  return _goToTempRedirect.apply(this, arguments);
+}
+function _goToTempRedirect() {
+  _goToTempRedirect = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9(penURL, penTabID, threatType, service) {
+    var tempRedirectURL;
+    return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+      while (1) switch (_context9.prev = _context9.next) {
+        case 0:
+          _context9.next = 2;
+          return (0, _storageWorker.updateBlockHistory)(penURL, threatType);
+        case 2:
+          // redirect to tempRedirect
+          tempRedirectURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
+          tempRedirectURL.searchParams.set("threatType", threatType);
+          tempRedirectURL.searchParams.set("service", service);
+          _context9.prev = 5;
+          _context9.next = 8;
+          return chrome.tabs.update(penTabID, {
+            url: tempRedirectURL.href
+          });
+        case 8:
+          _context9.next = 13;
+          break;
+        case 10:
+          _context9.prev = 10;
+          _context9.t0 = _context9["catch"](5);
+          console.log('tab was closed before checking was completed');
+        case 13:
+        case "end":
+          return _context9.stop();
+      }
+    }, _callee9, null, [[5, 10]]);
+  }));
+  return _goToTempRedirect.apply(this, arguments);
+}
+function checkFirstMode(_x8) {
+  return _checkFirstMode.apply(this, arguments);
+}
+function _checkFirstMode() {
+  _checkFirstMode = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10(pendingDetails) {
+    var penURL, penTabID, res, _res, verdict, threatType, service, url, _yield$checkURL, _yield$checkURL2;
+    return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+      while (1) switch (_context10.prev = _context10.next) {
+        case 0:
+          penURL = pendingDetails.url;
+          penTabID = pendingDetails.tabId;
+          _context10.next = 4;
+          return checkURLIsSecure(penURL, penTabID);
+        case 4:
+          res = _context10.sent;
+          if (!(res === true)) {
+            _context10.next = 7;
+            break;
+          }
+          return _context10.abrupt("return");
+        case 7:
+          _res = _slicedToArray(res, 3), verdict = _res[0], threatType = _res[1], service = _res[2];
+          url = chrome.runtime.getURL("windows/checkingPage.html");
+          _context10.next = 11;
+          return chrome.tabs.update(penTabID, {
+            url: url
+          });
+        case 11:
+          _context10.next = 13;
+          return chrome.history.deleteUrl({
+            url: url
+          });
+        case 13:
+          if (!(verdict === undefined)) {
+            _context10.next = 21;
+            break;
+          }
+          _context10.next = 16;
+          return (0, _checkURL.checkURL)(penURL);
+        case 16:
+          _yield$checkURL = _context10.sent;
+          _yield$checkURL2 = _slicedToArray(_yield$checkURL, 3);
+          verdict = _yield$checkURL2[0];
+          threatType = _yield$checkURL2[1];
+          service = _yield$checkURL2[2];
+        case 21:
+          if (!(verdict == "SAFE")) {
+            _context10.next = 25;
+            break;
+          }
+          _context10.next = 24;
+          return chrome.tabs.update(penTabID, {
+            url: penURL
+          });
+        case 24:
+          return _context10.abrupt("return");
+        case 25:
+          _context10.next = 27;
+          return goToTempRedirect(penURL, penTabID, threatType, service);
+        case 27:
+        case "end":
+          return _context10.stop();
+      }
+    }, _callee10);
+  }));
+  return _checkFirstMode.apply(this, arguments);
+}
+chrome.webRequest.onBeforeRequest.addListener(/*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(pendingDetails) {
+    var flagAct, mode;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          if (!(object.reason === chrome.runtime.OnInstalledReason.INSTALL)) {
-            _context2.next = 3;
+          _context2.next = 2;
+          return (0, _storageWorker.getFlagAct)();
+        case 2:
+          flagAct = _context2.sent;
+          _context2.next = 5;
+          return (0, _storageWorker.getMode)();
+        case 5:
+          mode = _context2.sent;
+          if (!(!flagAct || pendingDetails.tabId === -1 || mode != '1')) {
+            _context2.next = 8;
             break;
           }
-          _context2.next = 3;
-          return (0, _utility.openWindow)("faq");
-        case 3:
+          return _context2.abrupt("return");
+        case 8:
+          console.log('first mode');
+          _context2.next = 11;
+          return checkFirstMode(pendingDetails);
+        case 11:
         case "end":
           return _context2.stop();
       }
     }, _callee2);
   }));
-  return function (_x3) {
+  return function (_x9) {
     return _ref2.apply(this, arguments);
   };
-}());
-chrome.webRequest.onBeforeRequest.addListener(/*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(pendingDetails) {
-    var flagAct;
+}(), {
+  urls: ["https://*/*", "http://*/*"],
+  types: ["main_frame"]
+});
+function checkSecondMode(_x10) {
+  return _checkSecondMode.apply(this, arguments);
+}
+function _checkSecondMode() {
+  _checkSecondMode = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11(tab) {
+    var penURL, penTabID, res, _res2, verdict, threatType, service, _yield$checkURL3, _yield$checkURL4;
+    return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+      while (1) switch (_context11.prev = _context11.next) {
+        case 0:
+          penURL = tab.url;
+          penTabID = tab.id;
+          _context11.next = 4;
+          return checkURLIsSecure(penURL, penTabID);
+        case 4:
+          res = _context11.sent;
+          if (!(res === true)) {
+            _context11.next = 7;
+            break;
+          }
+          return _context11.abrupt("return");
+        case 7:
+          _res2 = _slicedToArray(res, 3), verdict = _res2[0], threatType = _res2[1], service = _res2[2];
+          if (!(verdict === undefined)) {
+            _context11.next = 16;
+            break;
+          }
+          _context11.next = 11;
+          return (0, _checkURL.checkURL)(penURL);
+        case 11:
+          _yield$checkURL3 = _context11.sent;
+          _yield$checkURL4 = _slicedToArray(_yield$checkURL3, 3);
+          verdict = _yield$checkURL4[0];
+          threatType = _yield$checkURL4[1];
+          service = _yield$checkURL4[2];
+        case 16:
+          if (!(verdict == "SAFE")) {
+            _context11.next = 18;
+            break;
+          }
+          return _context11.abrupt("return");
+        case 18:
+          _context11.next = 20;
+          return goToTempRedirect(penURL, penTabID, threatType, service);
+        case 20:
+        case "end":
+          return _context11.stop();
+      }
+    }, _callee11);
+  }));
+  return _checkSecondMode.apply(this, arguments);
+}
+chrome.tabs.onUpdated.addListener(/*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(tabId, changeInfo, tab) {
+    var flagAct, mode;
     return _regeneratorRuntime().wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
@@ -244,27 +319,35 @@ chrome.webRequest.onBeforeRequest.addListener(/*#__PURE__*/function () {
           return (0, _storageWorker.getFlagAct)();
         case 2:
           flagAct = _context3.sent;
-          if (!(!flagAct || pendingDetails.tabId === -1)) {
-            _context3.next = 5;
+          _context3.next = 5;
+          return (0, _storageWorker.getMode)();
+        case 5:
+          mode = _context3.sent;
+          if (!(!flagAct || mode != '2' || changeInfo.status != 'loading')) {
+            _context3.next = 8;
             break;
           }
           return _context3.abrupt("return");
-        case 5:
-          _context3.next = 7;
-          return checkAndRedirect(pendingDetails);
-        case 7:
+        case 8:
+          if (/https?:\/\/(?:[\0-\t\x0B\f\x0E-\u2027\u202A-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF])*/.test(tab.url)) {
+            _context3.next = 10;
+            break;
+          }
+          return _context3.abrupt("return");
+        case 10:
+          console.log('second mode');
+          _context3.next = 13;
+          return checkSecondMode(tab);
+        case 13:
         case "end":
           return _context3.stop();
       }
     }, _callee3);
   }));
-  return function (_x4) {
+  return function (_x11, _x12, _x13) {
     return _ref3.apply(this, arguments);
   };
-}(), {
-  urls: ["https://*/*", "http://*/*"],
-  types: ["main_frame"]
-});
+}());
 chrome.tabs.onRemoved.addListener(/*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(tabId, removeInfo) {
     return _regeneratorRuntime().wrap(function _callee4$(_context4) {
@@ -278,7 +361,7 @@ chrome.tabs.onRemoved.addListener(/*#__PURE__*/function () {
       }
     }, _callee4);
   }));
-  return function (_x5, _x6) {
+  return function (_x14, _x15) {
     return _ref4.apply(this, arguments);
   };
 }());
@@ -317,28 +400,27 @@ chrome.runtime.onStartup.addListener(/*#__PURE__*/_asyncToGenerator(/*#__PURE__*
     }
   }, _callee5);
 })));
-chrome.webRequest.onCompleted.addListener(/*#__PURE__*/function () {
-  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(details) {
+chrome.runtime.onInstalled.addListener(/*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(object) {
     return _regeneratorRuntime().wrap(function _callee6$(_context6) {
       while (1) switch (_context6.prev = _context6.next) {
         case 0:
-          _context6.next = 2;
-          return chrome.history.deleteUrl({
-            url: chrome.runtime.getURL("windows/checkingPage.html")
-          });
-        case 2:
+          if (!(object.reason === chrome.runtime.OnInstalledReason.INSTALL)) {
+            _context6.next = 3;
+            break;
+          }
+          _context6.next = 3;
+          return (0, _utility.openWindow)("faq");
+        case 3:
         case "end":
           return _context6.stop();
       }
     }, _callee6);
   }));
-  return function (_x7) {
+  return function (_x16) {
     return _ref6.apply(this, arguments);
   };
-}(), {
-  urls: ["https://*/*", "http://*/*"],
-  types: ["main_frame"]
-});
+}());
 
 },{"./scripts/checkURL.js":217,"./scripts/storageWorker.js":225,"./scripts/utility.js":226}],2:[function(require,module,exports){
 "use strict";
@@ -38498,46 +38580,42 @@ function checkURL(_x) {
 }
 function _checkURL() {
   _checkURL = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(url) {
-    var functions, listLC, verdict, threatType, service, i, fn, typeLC, _yield$fn, _yield$fn2;
+    var functions, verdict, threatType, service, _i, _functions, fn, _yield$fn, _yield$fn2;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
-          functions = [_checkSafebrowsing.checkSafebrowsing, _checkVirustotal.checkVirustotal];
-          listLC = ["LC_SB", "LC_VT"];
           console.log("-------------------- NEW CHECK : ", url);
-
-          // await new Promise(resolve => setTimeout(resolve, 10000)); // virustotal simulator
-          i = 0;
-        case 4:
-          if (!(i < functions.length)) {
-            _context.next = 21;
+          functions = [_checkSafebrowsing.checkSafebrowsing, _checkVirustotal.checkVirustotal];
+          _i = 0, _functions = functions;
+        case 3:
+          if (!(_i < _functions.length)) {
+            _context.next = 19;
             break;
           }
-          fn = functions[i];
-          typeLC = listLC[i];
-          _context.next = 9;
+          fn = _functions[_i];
+          _context.next = 7;
           return fn(url);
-        case 9:
+        case 7:
           _yield$fn = _context.sent;
           _yield$fn2 = _slicedToArray(_yield$fn, 3);
           verdict = _yield$fn2[0];
           threatType = _yield$fn2[1];
           service = _yield$fn2[2];
-          _context.next = 16;
-          return (0, _storageWorker.pushToLC)(typeLC, url, [verdict, threatType, service]);
-        case 16:
+          _context.next = 14;
+          return (0, _storageWorker.pushToSLC)(url, [verdict, threatType, service]);
+        case 14:
           if (!(verdict == 'UNSAFE')) {
-            _context.next = 18;
+            _context.next = 16;
             break;
           }
           return _context.abrupt("return", ['UNSAFE', threatType, service]);
-        case 18:
-          i++;
-          _context.next = 4;
+        case 16:
+          _i++;
+          _context.next = 3;
           break;
-        case 21:
+        case 19:
           return _context.abrupt("return", ["SAFE", undefined, service]);
-        case 22:
+        case 20:
         case "end":
           return _context.stop();
       }
@@ -40404,23 +40482,22 @@ var safe_browsing = exports.safe_browsing = $root.safe_browsing = function () {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getEWCurrentTab = getEWCurrentTab;
+exports.getControlCurrentTab = getControlCurrentTab;
 exports.getFlagAct = getFlagAct;
-exports.getLC = getLC;
 exports.getLang = getLang;
 exports.getList = getList;
 exports.getMode = getMode;
 exports.getPendingTabUrl = getPendingTabUrl;
 exports.getPrevTabUrl = getPrevTabUrl;
+exports.getSLC = getSLC;
 exports.getWhiteList = getWhiteList;
 exports.initDB = initDB;
-exports.initSDB = initSDB;
 exports.makeProceedWork = makeProceedWork;
 exports.makeReturnWork = makeReturnWork;
 exports.pushHostToWhiteList = pushHostToWhiteList;
-exports.pushToLC = pushToLC;
+exports.pushToSLC = pushToSLC;
 exports.removeTabUrls = removeTabUrls;
-exports.setEWCurrentTab = setEWCurrentTab;
+exports.setControlCurrentTab = setControlCurrentTab;
 exports.setFlagAct = setFlagAct;
 exports.setLang = setLang;
 exports.setMode = setMode;
@@ -40844,7 +40921,7 @@ function _getList() {
 }
 function updateList(_x19, _x20) {
   return _updateList.apply(this, arguments);
-} // -----------------------------------------------------------------------------------------
+} // ------------------------------------ control tab switching ------------------------------------
 function _updateList() {
   _updateList = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee20(name, list) {
     return _regeneratorRuntime().wrap(function _callee20$(_context20) {
@@ -40860,31 +40937,121 @@ function _updateList() {
   }));
   return _updateList.apply(this, arguments);
 }
-function initDB() {
-  return _initDB.apply(this, arguments);
-} // ######################################### SESSION DB #########################################
-// ------------------------------------ extWdw tab switching ------------------------------------
-function _initDB() {
-  _initDB = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee21() {
-    var isDB;
+function setControlCurrentTab(_x21) {
+  return _setControlCurrentTab.apply(this, arguments);
+}
+function _setControlCurrentTab() {
+  _setControlCurrentTab = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee21(value) {
     return _regeneratorRuntime().wrap(function _callee21$(_context21) {
       while (1) switch (_context21.prev = _context21.next) {
         case 0:
-          console.log('initDB...');
-          _context21.next = 3;
-          return get("isDB");
+          _context21.next = 2;
+          return set({
+            "controlCurrentTab": value
+          }, "session");
+        case 2:
+        case "end":
+          return _context21.stop();
+      }
+    }, _callee21);
+  }));
+  return _setControlCurrentTab.apply(this, arguments);
+}
+function getControlCurrentTab() {
+  return _getControlCurrentTab.apply(this, arguments);
+} // ----------------------------------------- caching -----------------------------------------
+function _getControlCurrentTab() {
+  _getControlCurrentTab = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee22() {
+    return _regeneratorRuntime().wrap(function _callee22$(_context22) {
+      while (1) switch (_context22.prev = _context22.next) {
+        case 0:
+          _context22.next = 2;
+          return get("controlCurrentTab", "session");
+        case 2:
+          return _context22.abrupt("return", _context22.sent);
         case 3:
-          isDB = _context21.sent;
-          if (!(isDB !== undefined)) {
-            _context21.next = 6;
-            break;
-          }
-          return _context21.abrupt("return");
+        case "end":
+          return _context22.stop();
+      }
+    }, _callee22);
+  }));
+  return _getControlCurrentTab.apply(this, arguments);
+}
+function setSLC(_x22) {
+  return _setSLC.apply(this, arguments);
+}
+function _setSLC() {
+  _setSLC = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee23(sLC) {
+    return _regeneratorRuntime().wrap(function _callee23$(_context23) {
+      while (1) switch (_context23.prev = _context23.next) {
+        case 0:
+          _context23.next = 2;
+          return set({
+            'sLC': sLC
+          }, "session");
+        case 2:
+        case "end":
+          return _context23.stop();
+      }
+    }, _callee23);
+  }));
+  return _setSLC.apply(this, arguments);
+}
+function getSLC() {
+  return _getSLC.apply(this, arguments);
+}
+function _getSLC() {
+  _getSLC = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee24() {
+    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
+      while (1) switch (_context24.prev = _context24.next) {
+        case 0:
+          _context24.next = 2;
+          return get('sLC', "session");
+        case 2:
+          return _context24.abrupt("return", _context24.sent);
+        case 3:
+        case "end":
+          return _context24.stop();
+      }
+    }, _callee24);
+  }));
+  return _getSLC.apply(this, arguments);
+}
+function pushToSLC(_x23, _x24) {
+  return _pushToSLC.apply(this, arguments);
+} // -----------------------------------------------------------------------------------------
+function _pushToSLC() {
+  _pushToSLC = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee25(url, urlInfo) {
+    var sLC;
+    return _regeneratorRuntime().wrap(function _callee25$(_context25) {
+      while (1) switch (_context25.prev = _context25.next) {
+        case 0:
+          _context25.next = 2;
+          return getSLC();
+        case 2:
+          sLC = _context25.sent;
+          sLC[url] = urlInfo;
+          _context25.next = 6;
+          return setSLC(sLC);
         case 6:
-          _context21.next = 8;
-          return Promise.all([set({
-            "isDB": true
-          }), setFlagAct(false), setLang(chrome.i18n.getUILanguage()), set({
+        case "end":
+          return _context25.stop();
+      }
+    }, _callee25);
+  }));
+  return _pushToSLC.apply(this, arguments);
+}
+function initDB() {
+  return _initDB.apply(this, arguments);
+}
+function _initDB() {
+  _initDB = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee26() {
+    return _regeneratorRuntime().wrap(function _callee26$(_context26) {
+      while (1) switch (_context26.prev = _context26.next) {
+        case 0:
+          console.log('initDB...');
+          _context26.next = 3;
+          return Promise.all([setFlagAct(false), setLang(chrome.i18n.getUILanguage()), set({
             "whiteList": []
           }), set({
             "lc": []
@@ -40892,151 +41059,16 @@ function _initDB() {
             "mode": "2"
           }), set({
             "blockHistory": []
-          })]);
-        case 8:
-        case "end":
-          return _context21.stop();
-      }
-    }, _callee21);
-  }));
-  return _initDB.apply(this, arguments);
-}
-function setEWCurrentTab(_x21) {
-  return _setEWCurrentTab.apply(this, arguments);
-}
-function _setEWCurrentTab() {
-  _setEWCurrentTab = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee22(value) {
-    return _regeneratorRuntime().wrap(function _callee22$(_context22) {
-      while (1) switch (_context22.prev = _context22.next) {
-        case 0:
-          _context22.next = 2;
-          return set({
-            "EWCurrentTab": value
-          }, "session");
-        case 2:
-        case "end":
-          return _context22.stop();
-      }
-    }, _callee22);
-  }));
-  return _setEWCurrentTab.apply(this, arguments);
-}
-function getEWCurrentTab() {
-  return _getEWCurrentTab.apply(this, arguments);
-} // ----------------------------------------- caching -----------------------------------------
-function _getEWCurrentTab() {
-  _getEWCurrentTab = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee23() {
-    return _regeneratorRuntime().wrap(function _callee23$(_context23) {
-      while (1) switch (_context23.prev = _context23.next) {
-        case 0:
-          _context23.next = 2;
-          return get("EWCurrentTab", "session");
-        case 2:
-          return _context23.abrupt("return", _context23.sent);
+          }), set({
+            "sLC": {}
+          }, "session"), setControlCurrentTab("white-list")]);
         case 3:
-        case "end":
-          return _context23.stop();
-      }
-    }, _callee23);
-  }));
-  return _getEWCurrentTab.apply(this, arguments);
-}
-function setLC(_x22, _x23) {
-  return _setLC.apply(this, arguments);
-}
-function _setLC() {
-  _setLC = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee24(typeLC, LC) {
-    return _regeneratorRuntime().wrap(function _callee24$(_context24) {
-      while (1) switch (_context24.prev = _context24.next) {
-        case 0:
-          _context24.next = 2;
-          return set(_defineProperty({}, typeLC, LC), "session");
-        case 2:
-        case "end":
-          return _context24.stop();
-      }
-    }, _callee24);
-  }));
-  return _setLC.apply(this, arguments);
-}
-function getLC(_x24) {
-  return _getLC.apply(this, arguments);
-}
-function _getLC() {
-  _getLC = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee25(typeLC) {
-    return _regeneratorRuntime().wrap(function _callee25$(_context25) {
-      while (1) switch (_context25.prev = _context25.next) {
-        case 0:
-          _context25.next = 2;
-          return get(typeLC, "session");
-        case 2:
-          return _context25.abrupt("return", _context25.sent);
-        case 3:
-        case "end":
-          return _context25.stop();
-      }
-    }, _callee25);
-  }));
-  return _getLC.apply(this, arguments);
-}
-function pushToLC(_x25, _x26, _x27) {
-  return _pushToLC.apply(this, arguments);
-} // -----------------------------------------------------------------------------------------
-function _pushToLC() {
-  _pushToLC = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee26(typeLC, key, value) {
-    var LC;
-    return _regeneratorRuntime().wrap(function _callee26$(_context26) {
-      while (1) switch (_context26.prev = _context26.next) {
-        case 0:
-          _context26.next = 2;
-          return getLC(typeLC);
-        case 2:
-          LC = _context26.sent;
-          LC[key] = value;
-          _context26.next = 6;
-          return setLC(typeLC, LC);
-        case 6:
         case "end":
           return _context26.stop();
       }
     }, _callee26);
   }));
-  return _pushToLC.apply(this, arguments);
-}
-function initSDB() {
-  return _initSDB.apply(this, arguments);
-}
-function _initSDB() {
-  _initSDB = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee27() {
-    var isSDB;
-    return _regeneratorRuntime().wrap(function _callee27$(_context27) {
-      while (1) switch (_context27.prev = _context27.next) {
-        case 0:
-          _context27.next = 2;
-          return get("isSDB", "session");
-        case 2:
-          isSDB = _context27.sent;
-          if (!(isSDB !== undefined)) {
-            _context27.next = 5;
-            break;
-          }
-          return _context27.abrupt("return");
-        case 5:
-          _context27.next = 7;
-          return Promise.all([set({
-            "isSDB": true
-          }, "session"), set({
-            "LC_SB": {}
-          }, "session"), set({
-            "LC_VT": {}
-          }, "session"), setEWCurrentTab("white-list")]);
-        case 7:
-        case "end":
-          return _context27.stop();
-      }
-    }, _callee27);
-  }));
-  return _initSDB.apply(this, arguments);
+  return _initDB.apply(this, arguments);
 }
 
 },{}],226:[function(require,module,exports){
@@ -41236,7 +41268,7 @@ function _scanURL() {
           });
         case 2:
           response = _context2.sent;
-          console.log('virustotal scaning status:', response.status);
+          console.log('virustotal scanning status:', response.status);
           if (!(response.status !== 200)) {
             _context2.next = 6;
             break;

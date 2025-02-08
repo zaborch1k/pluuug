@@ -27,7 +27,7 @@ export async function scanURL(url) {
         'body': new URLSearchParams({ url })
     })
 
-    console.log('virustotal scaning status:', response.status)
+    console.log('virustotal scanning status:', response.status)
     if (response.status !== 200) {
         return
     }

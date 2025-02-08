@@ -1,5 +1,5 @@
 import { setTextExtWdw } from "./setText.js"
-import { getList, updateList, getLang, setEWCurrentTab, getEWCurrentTab } from "./storageWorker.js"
+import { getList, updateList, getLang, setControlCurrentTab, getControlCurrentTab } from "./storageWorker.js"
 import { getPrettyThreatType, getPrettyDate } from "./prettyData.js";
 
 console.log('tut')
@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ------------------------------------ tabs switching ---------------------------------------
 
     async function switchToTab(windowName) {
-        await setEWCurrentTab(windowName);
+        await setControlCurrentTab(windowName);
         
         if (windowName === "white-list") {
             whiteList.style.display = "block";
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ---------------------------------------- init tab ----------------------------------------
 
-    await switchToTab(await getEWCurrentTab());
+    await switchToTab(await getControlCurrentTab());
 
     // *************************************** white list ***************************************
 
@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         let input = document.getElementById("white-list-adder")
         let input_value = input.value.trim();
 
-        console.log('tut1')
         if (!checkIfDomain(input_value)) {
             // notification
             ntext = (lang == "ru") ? "Введен некорректный домен" : "Invalid domain entered";
@@ -116,7 +115,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        console.log('tut2')
         let whiteListItems = whiteList.querySelectorAll('ul li span');
         let isUnique = true;
         console.log(whiteListItems)
@@ -127,7 +125,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 break;
             }
         }
-        console.log('tut3')
 
         if (!isUnique) {
             // notification
@@ -135,13 +132,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("\n" + ntext);
             return;
         }
-        console.log('tut4')
 
         await addToWhiteList(input_value);
 
         displayNewItemWL(input_value, whiteList.childElementCount + 1);
         input.value = "";
-        // location.reload();
     }
 
     // ------------------------------------------ search ------------------------------------------

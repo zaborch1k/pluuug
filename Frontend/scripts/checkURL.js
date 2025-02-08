@@ -1,22 +1,15 @@
 import { checkSafebrowsing } from "./safebrowsing/checkSafebrowsing.js";
 import { checkVirustotal } from "./virus_total/checkVirustotal.js";
-import { pushToLC } from "./storageWorker.js";
+import { pushToSLC } from "./storageWorker.js";
 
 export async function checkURL(url) {
-    let functions = [checkSafebrowsing, checkVirustotal];
-    let listLC = ["LC_SB", "LC_VT"];
-
     console.log("-------------------- NEW CHECK : ", url)
-
-    // await new Promise(resolve => setTimeout(resolve, 10000)); // virustotal simulator
+    let functions = [checkSafebrowsing, checkVirustotal];
 
     let verdict, threatType, service
-    for (let i = 0; i < functions.length; i++) {
-        let fn = functions[i];
-        let typeLC = listLC[i];
-        
+    for (let fn of functions) {
         [verdict, threatType, service] = await fn(url)
-        await pushToLC(typeLC, url, [verdict, threatType, service])
+        await pushToSLC(url, [verdict, threatType, service])
 
         if (verdict == 'UNSAFE') {
             return ['UNSAFE', threatType, service]

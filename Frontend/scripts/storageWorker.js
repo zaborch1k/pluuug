@@ -102,7 +102,7 @@ export async function setPrevTabUrl(tabId, url) {
 
 // ------------------------------------ Logic to be executed after either proceeding or returning ------------------------------------
 
-export async function makeProceedWork(tabId) {
+export async function makeProceedWork(tabId) { // FIXME: possible code duplication
     let url = await getPendingTabUrl(tabId)
     await setPrevTabUrl(tabId, url)
 }
@@ -123,19 +123,39 @@ export async function updateList(name, list) {
     await set({ [name] : list}); 
 }
 
+
+// ------------------------------------ control tab switching ------------------------------------
+
+export async function setControlCurrentTab(value) {
+    await set({"controlCurrentTab" : value}, "session")
+}
+
+export async function getControlCurrentTab() {
+    return await get("controlCurrentTab", "session")
+}
+
+// ----------------------------------------- caching -----------------------------------------
+
+async function setSLC(sLC) {
+    await set({'sLC' : sLC}, "session")
+}
+
+export async function getSLC() {
+    return await get('sLC', "session")
+}
+
+export async function pushToSLC(url, urlInfo) {
+    let sLC = await getSLC();
+    sLC[url] = urlInfo;
+    await setSLC(sLC);
+}
+
 // -----------------------------------------------------------------------------------------
 
 export async function initDB() { 
     console.log('initDB...')
-    let isDB = await get("isDB");
-
-    if (isDB !== undefined) {
-        return
-    }
-        
+    
     await Promise.all([
-        set({ "isDB": true }),
-
         setFlagAct(false),
             
         setLang(chrome.i18n.getUILanguage()),
@@ -146,54 +166,11 @@ export async function initDB() {
 
         set({ "mode": "2" }),
 
-        set({ "blockHistory": [] })
+        set({ "blockHistory": [] }),
+
+        set({ "sLC": {} }, "session"),
+
+        setControlCurrentTab("white-list")
     ])
 }
 
-// ######################################### SESSION DB #########################################
-
-// ------------------------------------ extWdw tab switching ------------------------------------
-
-export async function setEWCurrentTab(value) {
-    await set({"EWCurrentTab" : value}, "session")
-}
-
-export async function getEWCurrentTab() {
-    return await get("EWCurrentTab", "session")
-}
-
-// ----------------------------------------- caching -----------------------------------------
-
-async function setLC(typeLC, LC) { // LC = {url : verdict}
-    await set({[typeLC] : LC}, "session")
-}
-
-export async function getLC(typeLC) { // typeLC = LC_SB || LC_VT
-    return await get(typeLC, "session")
-}
-
-export async function pushToLC(typeLC, key, value) {
-    let LC = await getLC(typeLC);
-    LC[key] = value;
-    await setLC(typeLC, LC);
-}
-
-// -----------------------------------------------------------------------------------------
-
-export async function initSDB() {
-    let isSDB = await get("isSDB", "session")
-
-    if (isSDB !== undefined) {
-        return
-    }
-
-    await Promise.all([
-        set({ "isSDB": true }, "session"),
-
-        set({ "LC_SB": {} }, "session"),
-
-        set({ "LC_VT": {} }, "session"),
-
-        setEWCurrentTab("white-list")
-    ])
-}

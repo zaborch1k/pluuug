@@ -8,17 +8,13 @@ import { setTextTempRedirect } from "./setText.js"
 
 const lang = await getLang();
 
-await initPageContent()
+await initPageContent();
 
 // async function httpGet(server, urlToCheck) {
 //     const response = await fetch(`${server}/neuralnetwork?url=${urlToCheck}`)
 //     const data = await response.text()
 //     return data
 // }
-
-async function getActiveTab() {
-    return await chrome.tabs.query({ lastFocusedWindow: true, active: true })
-}
 
 document.getElementById("readMore").onclick = async () => {
     let readMore = document.getElementById("readMore");
@@ -33,36 +29,38 @@ document.getElementById("readMore").onclick = async () => {
     }
 }
 
-document.getElementById("returnButton").onclick = async () => {
-    let tabs = await getActiveTab()
-    await makeReturnWork(tabs[0].id)
+async function getActiveTab() {
+    return (await chrome.tabs.query({ active: true }))[0]
+}
 
-    let url = await getPrevTabUrl(tabs[0].id)
+document.getElementById("returnButton").onclick = async () => {
+    let tab = await getActiveTab()
+    await makeReturnWork(tab.id)
+
+    let url = await getPrevTabUrl(tab.id)
     window.location.replace(url);
 }
 
 document.getElementById("proceedButton").onclick = async () => {
-    let tabs = await getActiveTab()
-    await makeProceedWork(tabs[0].id)
+    let tab = await getActiveTab()
+    await makeProceedWork(tab.id)
 
-    let url = await getPendingTabUrl(tabs[0].id)
+    let url = await getPendingTabUrl(tab.id)
     window.location.replace(url);
 }
 
 document.getElementById("whiteListButton").onclick = async () => {
-    let tabs = await getActiveTab()
-    await makeProceedWork(tabs[0].id)
+    let tab = await getActiveTab()
+    await makeProceedWork(tab.id)
 
-    let url = await getPendingTabUrl(tabs[0].id)
+    let url = await getPendingTabUrl(tab.id)
     await pushHostToWhiteList(hostFromUrl(url))
     window.location.replace(url);
 }
 
 
 async function initPageContent() {
-    const currentTab = await chrome.tabs.getCurrent()
-    console.log("currentTab.id", currentTab.id)
-    console.log('currentTab:', currentTab, "activeTab:", await getActiveTab())
+    const currentTab = await getActiveTab();
 
     let searchParams = new URLSearchParams(document.location.search);
     let threatType = searchParams.get("threatType");
@@ -71,10 +69,8 @@ async function initPageContent() {
     let pendingUrl = await getPendingTabUrl(currentTab.id)
     let prevUrl = await getPrevTabUrl(currentTab.id)
 
-    console.log(pendingUrl, prevUrl)
-    prevUrl = (prevUrl === pendingUrl) ? "https://www.google.com" : prevUrl
+    prevUrl = !prevUrl ? "https://www.google.com" : prevUrl
 
     document.getElementById("description").style.display = "none";
-
     setTextTempRedirect(lang, hostFromUrl(pendingUrl), service, threatType, hostFromUrl(prevUrl));
 }
