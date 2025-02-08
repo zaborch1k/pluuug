@@ -1,4 +1,4 @@
-import { initDB} from "./scripts/storageWorker.js"
+import { initDB, initSDB } from "./scripts/storageWorker.js"
 import { getFlagAct } from "./scripts/storageWorker.js"
 import { 
     setPrevTabUrl, setPendingTabUrl,
@@ -9,7 +9,10 @@ import { checkURL } from "./scripts/checkURL.js"
 import { hostFromUrl } from "./scripts/utility.js"
 import { openWindow } from "./scripts/utility.js"
 
-(async () => await initDB())()
+(async () => {
+    await initDB()
+    await initSDB()
+})()
 
 async function checkInCash(url) {
     let LCres = (await getSLC())[url];

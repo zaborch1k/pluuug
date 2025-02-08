@@ -79,24 +79,18 @@ export async function getPendingTabUrl(tabId) {
 }
 
 export async function setPendingTabUrl(tabId, url) {
-    if (url.startsWith("chrome-extension"))
-        return
-    
     await set({ [`${tabId}pendingUrl`]: url }, 'session')
 }
 
 // ------------------------------------ Work with previous urls for a specified tab ------------------------------------
 
 export async function getPrevTabUrl(tabId) {
-    return await get(`${tabId}prevUrl`, 'session')
+    let prevUrl = await get(`${tabId}prevUrl`, 'session')
+    prevUrl = !prevUrl ? "https://www.google.com" : prevUrl
+    return prevUrl
 }
 
 export async function setPrevTabUrl(tabId, url) {
-    if (url.startsWith("chrome-extension")) { 
-        // return;  // <----------------- [?]
-        url = "https://www.google.com";
-    }
-    
     await set({ [`${tabId}prevUrl`]: url }, 'session')
 }
 
@@ -153,9 +147,15 @@ export async function pushToSLC(url, urlInfo) {
 // -----------------------------------------------------------------------------------------
 
 export async function initDB() { 
-    console.log('initDB...')
+    let isDB = await get("isDB");
+
+    if (isDB !== undefined) {
+        return
+    }
     
     await Promise.all([
+        set({ "isDB": true }),
+
         setFlagAct(false),
             
         setLang(chrome.i18n.getUILanguage()),
@@ -166,11 +166,24 @@ export async function initDB() {
 
         set({ "mode": "2" }),
 
-        set({ "blockHistory": [] }),
+        set({ "blockHistory": [] })
+    ])
+
+    console.log('init completed!')
+}
+
+export async function initSDB() {
+    let isSDB = await get("isSDB", "session")
+
+    if (isSDB !== undefined) {
+        return
+    }
+
+    await Promise.all([
+        set({ "isSDB": true }, "session"),
 
         set({ "sLC": {} }, "session"),
 
         setControlCurrentTab("white-list")
     ])
 }
-

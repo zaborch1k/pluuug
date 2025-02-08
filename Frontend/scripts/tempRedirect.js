@@ -29,48 +29,43 @@ document.getElementById("readMore").onclick = async () => {
     }
 }
 
-async function getActiveTab() {
-    return (await chrome.tabs.query({ active: true }))[0]
-}
-
 document.getElementById("returnButton").onclick = async () => {
-    let tab = await getActiveTab()
+    let tab = await chrome.tabs.getCurrent();
     await makeReturnWork(tab.id)
 
     let url = await getPrevTabUrl(tab.id)
-    window.location.replace(url);
+    window.location.replace(!url ? "https://www.google.com" : url);
 }
 
 document.getElementById("proceedButton").onclick = async () => {
-    let tab = await getActiveTab()
-    await makeProceedWork(tab.id)
+    let tab = await chrome.tabs.getCurrent();
+    await makeProceedWork(tab.id);
 
-    let url = await getPendingTabUrl(tab.id)
+    let url = await getPendingTabUrl(tab.id);
     window.location.replace(url);
 }
 
 document.getElementById("whiteListButton").onclick = async () => {
-    let tab = await getActiveTab()
-    await makeProceedWork(tab.id)
+    let tab = await chrome.tabs.getCurrent();
+    await makeProceedWork(tab.id);
 
-    let url = await getPendingTabUrl(tab.id)
-    await pushHostToWhiteList(hostFromUrl(url))
+    let url = await getPendingTabUrl(tab.id);
+    await pushHostToWhiteList(hostFromUrl(url));
     window.location.replace(url);
 }
 
 
 async function initPageContent() {
-    const currentTab = await getActiveTab();
+    const currentTab = await chrome.tabs.getCurrent();
 
     let searchParams = new URLSearchParams(document.location.search);
     let threatType = searchParams.get("threatType");
     let service = searchParams.get("service");
     
-    let pendingUrl = await getPendingTabUrl(currentTab.id)
-    let prevUrl = await getPrevTabUrl(currentTab.id)
+    let pendingUrl = await getPendingTabUrl(currentTab.id);
+    let prevUrl = await getPrevTabUrl(currentTab.id);
 
-    prevUrl = !prevUrl ? "https://www.google.com" : prevUrl
-
-    document.getElementById("description").style.display = "none";
+    document.getElementById("description").style.display = "none"; // add to css [?]
+    console.log('!!!!!!!!!', lang, hostFromUrl(pendingUrl), service, threatType, hostFromUrl(prevUrl));
     setTextTempRedirect(lang, hostFromUrl(pendingUrl), service, threatType, hostFromUrl(prevUrl));
 }

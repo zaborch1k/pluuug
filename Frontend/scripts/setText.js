@@ -7,7 +7,7 @@ export function setTextPopup(lang) {
         "title" : ["Защита от фишинга", "Phishing Protection"],
         "name" : ["Защита от фишинга", "Phishing Protection"],
         "actButton" : ["включить проверку", "enable check"],
-        "extButton" : ["контроль", "control"],
+        "controlButton" : ["контроль", "control"],
     }
 
     for (let id in setTextContent) {

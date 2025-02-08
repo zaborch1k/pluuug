@@ -8,11 +8,11 @@ function changeButtonsText(flag) {
     if (flag) {
         text = (lang == "ru") ? "отключить проверку" : "disable check";
         document.getElementById("actButton").textContent = text;
-        document.getElementById("extButton").style.visibility = 'visible';
+        document.getElementById("controlButton").style.visibility = 'visible';
     } else {
         text = (lang == "ru") ? "включить проверку" : "enable check";
         document.getElementById("actButton").textContent = text;
-        document.getElementById("extButton").style.visibility = 'hidden';
+        document.getElementById("controlButton").style.visibility = 'hidden';
     }
 }
 
@@ -38,7 +38,7 @@ document.getElementById("actButton").onclick = async () => {
     }
 }
 
-document.getElementById("extButton").addEventListener("click", async () => await openWindow("extWdw"))
+document.getElementById("controlButton").addEventListener("click", async () => await openWindow("control"))
 
 document.getElementById("faqButton").addEventListener("click", async () => await openWindow("faq"))
 

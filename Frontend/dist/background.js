@@ -21,8 +21,9 @@ _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         _context.next = 2;
         return (0, _storageWorker.initDB)();
       case 2:
-        return _context.abrupt("return", _context.sent);
-      case 3:
+        _context.next = 4;
+        return (0, _storageWorker.initSDB)();
+      case 4:
       case "end":
         return _context.stop();
     }
@@ -40492,6 +40493,7 @@ exports.getPrevTabUrl = getPrevTabUrl;
 exports.getSLC = getSLC;
 exports.getWhiteList = getWhiteList;
 exports.initDB = initDB;
+exports.initSDB = initSDB;
 exports.makeProceedWork = makeProceedWork;
 exports.makeReturnWork = makeReturnWork;
 exports.pushHostToWhiteList = pushHostToWhiteList;
@@ -40795,15 +40797,9 @@ function _setPendingTabUrl() {
     return _regeneratorRuntime().wrap(function _callee14$(_context14) {
       while (1) switch (_context14.prev = _context14.next) {
         case 0:
-          if (!url.startsWith("chrome-extension")) {
-            _context14.next = 2;
-            break;
-          }
-          return _context14.abrupt("return");
-        case 2:
-          _context14.next = 4;
+          _context14.next = 2;
           return set(_defineProperty({}, "".concat(tabId, "pendingUrl"), url), 'session');
-        case 4:
+        case 2:
         case "end":
           return _context14.stop();
       }
@@ -40816,14 +40812,17 @@ function getPrevTabUrl(_x13) {
 }
 function _getPrevTabUrl() {
   _getPrevTabUrl = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15(tabId) {
+    var prevUrl;
     return _regeneratorRuntime().wrap(function _callee15$(_context15) {
       while (1) switch (_context15.prev = _context15.next) {
         case 0:
           _context15.next = 2;
           return get("".concat(tabId, "prevUrl"), 'session');
         case 2:
-          return _context15.abrupt("return", _context15.sent);
-        case 3:
+          prevUrl = _context15.sent;
+          prevUrl = !prevUrl ? "https://www.google.com" : prevUrl;
+          return _context15.abrupt("return", prevUrl);
+        case 5:
         case "end":
           return _context15.stop();
       }
@@ -40839,13 +40838,9 @@ function _setPrevTabUrl() {
     return _regeneratorRuntime().wrap(function _callee16$(_context16) {
       while (1) switch (_context16.prev = _context16.next) {
         case 0:
-          if (url.startsWith("chrome-extension")) {
-            // return;  // <----------------- [?]
-            url = "https://www.google.com";
-          }
-          _context16.next = 3;
+          _context16.next = 2;
           return set(_defineProperty({}, "".concat(tabId, "prevUrl"), url), 'session');
-        case 3:
+        case 2:
         case "end":
           return _context16.stop();
       }
@@ -41046,12 +41041,24 @@ function initDB() {
 }
 function _initDB() {
   _initDB = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee26() {
+    var isDB;
     return _regeneratorRuntime().wrap(function _callee26$(_context26) {
       while (1) switch (_context26.prev = _context26.next) {
         case 0:
-          console.log('initDB...');
-          _context26.next = 3;
-          return Promise.all([setFlagAct(false), setLang(chrome.i18n.getUILanguage()), set({
+          _context26.next = 2;
+          return get("isDB");
+        case 2:
+          isDB = _context26.sent;
+          if (!(isDB !== undefined)) {
+            _context26.next = 5;
+            break;
+          }
+          return _context26.abrupt("return");
+        case 5:
+          _context26.next = 7;
+          return Promise.all([set({
+            "isDB": true
+          }), setFlagAct(false), setLang(chrome.i18n.getUILanguage()), set({
             "whiteList": []
           }), set({
             "lc": []
@@ -41059,16 +41066,49 @@ function _initDB() {
             "mode": "2"
           }), set({
             "blockHistory": []
-          }), set({
-            "sLC": {}
-          }, "session"), setControlCurrentTab("white-list")]);
-        case 3:
+          })]);
+        case 7:
+          console.log('init completed!');
+        case 8:
         case "end":
           return _context26.stop();
       }
     }, _callee26);
   }));
   return _initDB.apply(this, arguments);
+}
+function initSDB() {
+  return _initSDB.apply(this, arguments);
+}
+function _initSDB() {
+  _initSDB = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee27() {
+    var isSDB;
+    return _regeneratorRuntime().wrap(function _callee27$(_context27) {
+      while (1) switch (_context27.prev = _context27.next) {
+        case 0:
+          _context27.next = 2;
+          return get("isSDB", "session");
+        case 2:
+          isSDB = _context27.sent;
+          if (!(isSDB !== undefined)) {
+            _context27.next = 5;
+            break;
+          }
+          return _context27.abrupt("return");
+        case 5:
+          _context27.next = 7;
+          return Promise.all([set({
+            "isSDB": true
+          }, "session"), set({
+            "sLC": {}
+          }, "session"), setControlCurrentTab("white-list")]);
+        case 7:
+        case "end":
+          return _context27.stop();
+      }
+    }, _callee27);
+  }));
+  return _initSDB.apply(this, arguments);
 }
 
 },{}],226:[function(require,module,exports){
