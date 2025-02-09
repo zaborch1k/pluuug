@@ -5,10 +5,10 @@ html {
 body {
     margin: auto;
     box-sizing: border-box;
-    margin-top: 5vh;
-    height: 80vh;
+    margin-top: 15vh;
+    height: 67vh;
     width: 60vw;
-    background-color: #b7a56c;
+    background-color: #818656;
     border: 0.3vh solid #334251;
     border-radius: 5px;
     box-shadow: -0.2vw 0.6vh #1b1c25;
@@ -19,64 +19,116 @@ body {
     font-size: 4vh;
 }
 
-#lang-div {
+#setting-style {
+    margin: auto;
     box-sizing: border-box;
-    text-align: center;
-    margin: auto;
     width: 50vw;
-    height: 30vh;
-    padding: 0.2rem;
-    background-color: #6d6866;
-    border: 0.3vh solid #334251;
-    border-radius: 5px;
-    box-shadow: -0.2vw 0.6vh #1b1c25;
-}
-
-#choose-div {
-    box-sizing: border-box;
-    text-align: left;
-    margin: auto;
-    width: 50vw;
-    height: 30vh;
-    margin-top: 2vh;
-    background-color: #6d6866;
-    border: 0.3vh solid #334251;
-    border-radius: 5px;
-    box-shadow: -0.2vw 0.6vh #1b1c25;
-}
-
-#choose-mode-header-div {
-    text-align: center;
-}
-
-#chooseLang {
-    text-align: center;
-    font-size: 1.5vw;
-}
-
-#choose-mode-header {
-    font-size: 1.5vw;
-}
-
-#lang-select {
-    margin: auto;
-    margin-top: 5vh;
-    font-size: 1.5vw;
-    background-color: #818656;
+    height: 45vh;
+    background-color: #b7a56c;
     border: 0.3vh solid #334251;
     border-radius: 5px;
     box-shadow: -0.1vw 0.3vh #1b1c25;
 }
 
-.choose {
-    position: relative;
-    height: 5vh;
-    width: auto;
-    font-size: 1vw;
-    font-weight: 400;
+#lang-div {
+    padding: 0.2rem;
+}
+
+#chooseLang {
+    display: flex;
+    float: inline-start;
+    font-size: 3vh;
+    margin: 5vh 0vw 5vh 3vw;
+}
+
+#lang-select {
+    display: flex;
+    float: inline-start;
+    margin: 5.5vh 3vw 5vh 3vw;
+    font-size: 2.5vh;
+    background-color: #818656;
+    border: 0.3vh solid #334251;
+    border-radius: 5px;
+    box-shadow: -0.1vw 0.3vh #1b1c25;
+    cursor: pointer;
+}
+
+#langDescription {
+    font-size: 2.4vh;
+    margin: 5.5vh 0 5vh 0;
+}
+
+
+#choose-div {
+    display: flex;
+    /* float: inline-start; */
+    padding: 0.2rem;
+    margin-top: 10vh;
+}
+
+#choose-mode-header {
+    display: flex;
+    float: inline-start;
+    font-size: 2vh;
+    margin: 5.5vh 0vw 5vh 1vw;
+    white-space: pre;
+    font-size: 1.5vw;
+}
+
+.labels {
+    font-weight: bold;
+    font-size: 2vh;
+}
+
+.spans {
+    margin-left: 1rem;
+    font-weight: bold;
+    font-size: 1.5vh;
 }
 
 .choose-lang-input {
     width: 2vh;
     height: 2vh;
+}
+
+.choose {
+    display: flex;
+    align-items: center;
+    margin: 2vh;
+    cursor: pointer;
+}
+
+.choose input[type=radio] {
+    display: none;
+}
+
+.choose label {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    padding-left: 2rem;
+    line-height: normal;
+    user-select: none;
+}
+
+.choose label:before {
+    top: 40%;
+    content: "";
+    display: inline-block;
+    width: 2vh;
+    height: 2vh;
+    position: absolute;
+    left: 0;
+    background: url(../../images/radio-1.png) 0 0 no-repeat;
+}
+
+/* Checked */
+.choose input[type=radio]:checked+.labels:before {
+    background: url(../../images/radio-2.png) 0 0 no-repeat;
+}
+
+/* Hover */
+.choose label:hover:before {
+    filter: brightness(120%);
 }

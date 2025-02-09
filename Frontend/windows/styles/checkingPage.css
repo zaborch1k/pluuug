@@ -1,19 +1,40 @@
+html {
+    text-align: center;
+    margin: auto;
+    background-color: #4f745e;
+}
+
+#loader-id {
+    margin: auto;
+    margin-top: 25vh;
+    box-sizing: border-box;
+    padding: 10vh;
+    width: 32vw;
+    height: 50vh;
+    background-color: #818656;
+    border: 0.3vh solid #334251;
+    border-radius: 5px;
+    box-shadow: -0.2vw 0.6vh #1b1c25;
+}
+
 .loader {
+    margin: auto;
     align-self: center;
-    border: 10px solid #f3f3f3;
-    border-top: 10px solid #000000;
+    border: 20px solid #c0af76;
+    border-top: 20px solid #6f7445;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 2s linear infinite;
+    width: 20vh;
+    height: 20vh;
+    animation: spin 1.5s linear infinite, blink 0.8s steps(2, start) infinite;
 }
 
 p {
+    font-family: Roboto, sans-serif;
     align-self: center;
+    font-size: 3vh;
+    color: #1b1c25;
 }
-  
- 
-  
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);

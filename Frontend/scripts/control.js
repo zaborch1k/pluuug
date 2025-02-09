@@ -1,4 +1,4 @@
-import { setTextExtWdw } from "./setText.js"
+import { setTextControlWdw } from "./setText.js"
 import { getList, updateList, getLang, setControlCurrentTab, getControlCurrentTab } from "./storageWorker.js"
 import { getPrettyThreatType, getPrettyDate } from "./prettyData.js";
 
@@ -16,13 +16,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let res = await getLang();
     const lang = (res == "ru-RU" || res == "ru") ? "ru" : "eng";
-    setTextExtWdw(lang);
+    setTextControlWdw(lang);
 
     // ------------------------------------ tabs switching ---------------------------------------
 
     async function switchToTab(windowName) {
         await setControlCurrentTab(windowName);
-        
+
         if (windowName === "white-list") {
             whiteList.style.display = "block";
             div.style.display = "block"
@@ -147,10 +147,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         let input_value = document.getElementById("white-list-finder").value.toLowerCase().trim();
         let cntNotHidden = 0;
 
-        for (let i = 0; i < li.length; i++ ) {
+        for (let i = 0; i < li.length; i++) {
             let cur = li[i];
             let txtValue = cur.getElementsByTagName("span")[0].textContent;
-            
+
             if (txtValue.toLowerCase().indexOf(input_value) > -1) {
                 cur.style.display = "";
                 cntNotHidden++;
@@ -176,12 +176,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     document.addEventListener('click', async (ev) => {
-        if (!ev.target.classList.contains('delete-btn')) 
+        if (!ev.target.classList.contains('delete-btn'))
             return;
         let id = ev.target.id;
         let elem = document.getElementById(id);
         let parent = elem.parentElement;
-        
+
         let txtValue = parent.getElementsByTagName("span")[0].textContent;
 
         // notification
@@ -211,10 +211,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         let [dB, mB, yB] = dateArrB.split('.');
 
         let res = (yA != yB) ? yA < yB :
-                  (mA != mB) ? mA < mB :
-                  (dA != dB) ? dA < dB :
-                  (hA != hB) ? hA < hB :
-                  (minA != minB) ? minA < minB : 0;
+            (mA != mB) ? mA < mB :
+                (dA != dB) ? dA < dB :
+                    (hA != hB) ? hA < hB :
+                        (minA != minB) ? minA < minB : 0;
 
         return res;
     }
@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let tdDate = document.createElement('td');
             tdDate.setAttribute("class", "history-table-data");
             tdDate.textContent = getPrettyDate(list[i][0]);
-            
+
             let tdURL = document.createElement('td');
             tdURL.setAttribute("class", "history-table-url");
             tdURL.textContent = list[i][1];
@@ -287,13 +287,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!isSure) {
             return;
         }
-        
+
         let tableElems = historyTable.querySelectorAll("table tbody")[0];
         tableElems.innerHTML = '';
 
         await updateList("blockHistory", []);
     }
-    
+
     // ------------------------------------------ filter ------------------------------------------
 
     function filterBlockHistory() {
@@ -325,13 +325,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     function dataToCSV(data) {
         return "date,url,reason\n" + data.map(e => e.join(",")).join("\n");
     }
-    
+
     function dataToJSON(data) {
         let result = {};
-    
+
         for (let i = 0; i < data.length; i++) {
             let arr = data[i];
-    
+
             result[i] = {
                 date: arr[0],
                 url: arr[1],
@@ -341,7 +341,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         return JSON.stringify(result);
     }
-    
+
     async function downloadBlockHistory(type) {
         let blockHistory = await getList("blockHistory");
         // notification
@@ -352,22 +352,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         let data;
-            
+
         if (type == "csv") {
             data = dataToCSV(blockHistory);
-                
+
         } else {
             data = dataToJSON(blockHistory);
         }
-    
-        const blob = new Blob([data], {type: type});
-    
+
+        const blob = new Blob([data], { type: type });
+
         const link = document.createElement('a');
-    
+
         link.href = URL.createObjectURL(blob);
         link.download = 'blockingReport.' + type;
         link.click();
-    
+
         URL.revokeObjectURL(link.href);
     }
 

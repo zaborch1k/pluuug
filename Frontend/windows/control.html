@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Security-Policy" />
     <title id="title"></title>
     <link rel="stylesheet" href="styles/control.css">
-    <link rel="icon" href="../images/icon1.png"> 
+    <link rel="icon" href="../images/icon1.png">
     <script src="../scripts/control.js" type="module" defer></script>
 </head>
 
@@ -37,29 +37,27 @@
         </div>
 
         <div id="history" style="display: none;">
-            <div id="history-elements">
-                <select name="sort" id="history-sort">
-                    <option value="newer-date" selected="selected"></option>
-                    <option value="older-date"></option>
-                </select>
+            <select name="sort" id="history-sort">
+                <option value="newer-date" selected="selected"></option>
+                <option value="older-date"></option>
+            </select>
 
-                <select name="history-reason" id="history-reason-sort">
-                    <option id="reason0"></option>
-                    <option id="reason1"></option>
-                    <option id="reason2"></option>
-                    <option id="reason3"></option>
-                    <option id="reason4"></option>
-                </select>
+            <select name="history-reason" id="history-reason-sort">
+                <option id="reason0"></option>
+                <option id="reason1"></option>
+                <option id="reason2"></option>
+                <option id="reason3"></option>
+                <option id="reason4"></option>
+            </select>
 
-                <select name="download-selection" id="download-selection-sort">
-                    <option id="csv">.csv</option>
-                    <option id="json">.json</option>
-                </select>
+            <select name="download-selection" id="download-selection-sort">
+                <option id="csv">.csv</option>
+                <option id="json">.json</option>
+            </select>
 
-                <input type="text" id="history-search" autocomplete="off">
-                <button id="history-clear-btn"></button>
-                <button id="history-download-btn"></button>
-            </div>
+            <input type="text" id="history-search" autocomplete="off">
+            <button id="history-clear-btn"></button>
+            <button id="history-download-btn"></button>
 
             <table id="history-table" class="history-table">
                 <thead>

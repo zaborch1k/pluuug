@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title id="title"></title>
     <link rel="stylesheet" href="styles/options.css">
-    <link rel="icon" href="../images/icon1.png"> 
+    <link rel="icon" href="../images/icon1.png">
 </head>
 
 <body>
@@ -13,28 +13,32 @@
         <h1 id="header"></h1>
     </header>
 
-    <div id="lang-div">
-        <h2 id="chooseLang"></h2>
-        <select id="lang-select">
-            <option id="ru">ru</option>
-            <option id="eng">eng</option>
-        </select>
-    </div>
-
-    <div id="choose-div">
-        <div id="choose-mode-header-div">
-            <h2 id="choose-mode-header"></h2>
+    <div id="setting-style">
+        <div id="lang-div">
+            <h2 id="chooseLang"></h2>
+            <select id="lang-select">
+                <option id="ru">ru</option>
+                <option id="eng">eng</option>
+            </select>
+            <h2 id="langDescription"></h2>
         </div>
 
-        <div id="choose-options-div">
-            <div class="choose">
-                <input id="choose-lang-mode1" class="choose-lang-input" type="radio" name="choose-lang" value="1" />
-                <label class="labels" id="label1"></label>
-            </div>
+        <div id="choose-div">
+            <h2 id="choose-mode-header"></h2>
 
-            <div class="choose">
-                <input id="choose-lang-mode2" class="choose-lang-input" type="radio" name="choose-lang" value="2" />
-                <label class="labels" id="label2"></label>
+            <div id="choose-options-div">
+                <div class="choose">
+                    <input id="choose-lang-mode1" class="choose-lang-input" type="radio" name="choose-lang" value="1" />
+                    <label class="labels" id="label1" for="choose-lang-mode1"></label>
+                    <span class="spans" id="label1-desk"></span>
+                </div>
+
+                <div class="choose">
+                    <input id="choose-lang-mode2" class="choose-lang-input" type="radio" name="choose-lang" value="2"
+                        checked />
+                    <label class="labels" id="label2" for="choose-lang-mode2"></label>
+                    <span class="spans" id="label2-desk"></span>
+                </div>
             </div>
         </div>
     </div>
