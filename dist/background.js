@@ -136,23 +136,24 @@ function _goToTempRedirect() {
           tempRedirectURL = new URL(chrome.runtime.getURL("windows/tempRedirect.html"));
           tempRedirectURL.searchParams.set("threatType", threatType);
           tempRedirectURL.searchParams.set("service", service);
-          _context9.prev = 5;
-          _context9.next = 8;
+          console.log("Staying alive");
+          _context9.prev = 6;
+          _context9.next = 9;
           return chrome.tabs.update(penTabID, {
             url: tempRedirectURL.href
           });
-        case 8:
-          _context9.next = 13;
+        case 9:
+          _context9.next = 14;
           break;
-        case 10:
-          _context9.prev = 10;
-          _context9.t0 = _context9["catch"](5);
+        case 11:
+          _context9.prev = 11;
+          _context9.t0 = _context9["catch"](6);
           console.log('tab was closed before checking was completed');
-        case 13:
+        case 14:
         case "end":
           return _context9.stop();
       }
-    }, _callee9, null, [[5, 10]]);
+    }, _callee9, null, [[6, 11]]);
   }));
   return _goToTempRedirect.apply(this, arguments);
 }
@@ -179,74 +180,98 @@ function _checkFirstMode() {
         case 7:
           _res = _slicedToArray(res, 3), verdict = _res[0], threatType = _res[1], service = _res[2];
           url = chrome.runtime.getURL("windows/checkingPage.html");
-          _context10.next = 11;
+          _context10.prev = 9;
+          _context10.next = 12;
           return chrome.tabs.update(penTabID, {
             url: url
           });
-        case 11:
-          _context10.next = 13;
+        case 12:
+          _context10.next = 17;
+          break;
+        case 14:
+          _context10.prev = 14;
+          _context10.t0 = _context10["catch"](9);
+          console.log('tab was closed before checking was completed');
+        case 17:
+          _context10.next = 19;
           return chrome.history.deleteUrl({
             url: url
           });
-        case 13:
+        case 19:
           if (!(verdict === undefined)) {
-            _context10.next = 21;
+            _context10.next = 27;
             break;
           }
-          _context10.next = 16;
+          _context10.next = 22;
           return (0, _checkURL.checkURL)(penURL);
-        case 16:
+        case 22:
           _yield$checkURL = _context10.sent;
           _yield$checkURL2 = _slicedToArray(_yield$checkURL, 3);
           verdict = _yield$checkURL2[0];
           threatType = _yield$checkURL2[1];
           service = _yield$checkURL2[2];
-        case 21:
+        case 27:
           if (!(verdict == "SAFE")) {
-            _context10.next = 25;
+            _context10.next = 37;
             break;
           }
-          _context10.next = 24;
+          _context10.prev = 28;
+          _context10.next = 31;
           return chrome.tabs.update(penTabID, {
             url: penURL
           });
-        case 24:
+        case 31:
+          _context10.next = 36;
+          break;
+        case 33:
+          _context10.prev = 33;
+          _context10.t1 = _context10["catch"](28);
+          console.log('tab was closed before checking was completed');
+        case 36:
           return _context10.abrupt("return");
-        case 25:
-          _context10.next = 27;
+        case 37:
+          _context10.next = 39;
           return goToTempRedirect(penURL, penTabID, threatType, service);
-        case 27:
+        case 39:
         case "end":
           return _context10.stop();
       }
-    }, _callee10);
+    }, _callee10, null, [[9, 14], [28, 33]]);
   }));
   return _checkFirstMode.apply(this, arguments);
 }
 chrome.webRequest.onBeforeRequest.addListener(/*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(pendingDetails) {
-    var flagAct, mode;
+    var host, goodHosts, flagAct, mode;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.next = 2;
-          return (0, _storageWorker.getFlagAct)();
-        case 2:
-          flagAct = _context2.sent;
-          _context2.next = 5;
-          return (0, _storageWorker.getMode)();
-        case 5:
-          mode = _context2.sent;
-          if (!(!flagAct || pendingDetails.tabId === -1 || mode != '1')) {
-            _context2.next = 8;
+          host = new URL(pendingDetails.url).host;
+          goodHosts = ["www.google.com", "yandex.ru"];
+          if (!goodHosts.includes(host)) {
+            _context2.next = 4;
             break;
           }
           return _context2.abrupt("return");
-        case 8:
+        case 4:
+          _context2.next = 6;
+          return (0, _storageWorker.getFlagAct)();
+        case 6:
+          flagAct = _context2.sent;
+          _context2.next = 9;
+          return (0, _storageWorker.getMode)();
+        case 9:
+          mode = _context2.sent;
+          if (!(!flagAct || pendingDetails.tabId === -1 || mode != '1')) {
+            _context2.next = 12;
+            break;
+          }
+          return _context2.abrupt("return");
+        case 12:
           console.log('first mode');
-          _context2.next = 11;
+          _context2.next = 15;
           return checkFirstMode(pendingDetails);
-        case 11:
+        case 15:
         case "end":
           return _context2.stop();
       }

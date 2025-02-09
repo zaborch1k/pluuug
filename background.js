@@ -53,6 +53,8 @@ async function goToTempRedirect(penURL, penTabID, threatType, service) {
     tempRedirectURL.searchParams.set("threatType", threatType);
     tempRedirectURL.searchParams.set("service", service);
 
+    console.log("Staying alive")
+
     try {
         await chrome.tabs.update(penTabID, { url: tempRedirectURL.href });
     } catch (err) {
@@ -71,7 +73,11 @@ async function checkFirstMode(pendingDetails) {
     let [verdict, threatType, service] = res;
 
     let url = chrome.runtime.getURL("windows/checkingPage.html");
-    await chrome.tabs.update(penTabID, { url });
+    try {
+        await chrome.tabs.update(penTabID, { url });
+    } catch (err) {
+        console.log('tab was closed before checking was completed')
+    }
     await chrome.history.deleteUrl({ url });
 
     if (verdict === undefined) {
@@ -80,7 +86,11 @@ async function checkFirstMode(pendingDetails) {
 
     if (verdict == "SAFE") {
         // redirect back to the website
-        await chrome.tabs.update(penTabID, { url: penURL });
+        try {
+            await chrome.tabs.update(penTabID, { url: penURL });
+        } catch (err) {
+            console.log('tab was closed before checking was completed')
+        }
         return;
     }
 
@@ -88,6 +98,12 @@ async function checkFirstMode(pendingDetails) {
 }
 
 chrome.webRequest.onBeforeRequest.addListener(async (pendingDetails) => {
+    let host = new URL(pendingDetails.url).host;
+    let goodHosts = ["www.google.com", "yandex.ru"];
+
+    if (goodHosts.includes(host)) 
+        return;
+    
     let flagAct = await getFlagAct();
     let mode = await getMode();
     if (!flagAct || pendingDetails.tabId === -1 || mode != '1')

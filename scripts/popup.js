@@ -8,11 +8,9 @@ function changeButtonsText(flag) {
     if (flag) {
         text = (lang == "ru") ? "отключить проверку" : "disable check";
         document.getElementById("actButton").textContent = text;
-        document.getElementById("controlButton").style.visibility = 'visible';
     } else {
         text = (lang == "ru") ? "включить проверку" : "enable check";
         document.getElementById("actButton").textContent = text;
-        document.getElementById("controlButton").style.visibility = 'hidden';
     }
 }
 
