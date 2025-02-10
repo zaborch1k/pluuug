@@ -88,6 +88,8 @@ async function checkFirstMode(pendingDetails) {
 }
 
 chrome.webRequest.onBeforeRequest.addListener(async (pendingDetails) => {
+    if (pendingDetails.url === "https://yandex.ru/search/pre") return;
+    
     let flagAct = await getFlagAct();
     let mode = await getMode();
     if (!flagAct || pendingDetails.tabId === -1 || mode != '1')

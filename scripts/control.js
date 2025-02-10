@@ -88,7 +88,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function checkIfDomain(str) {
         try {
-            new URL("https://" + str);
+            let url = new URL("https://" + str);
+            if (!(url.host === str)) {
+                return false;
+            }
             return true;
 
         } catch (err) {
