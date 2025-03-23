@@ -1,89 +1,96 @@
 html {
-  background-color: #4f745e;
-}
+    background-color: #912f19;
+  }
+  
+  body {
+    margin: auto;
+  }
+  
+  .content {
+    text-align: center;
+  }
+  
+  #div-content {
+    margin: auto;
+    box-sizing: border-box;
+    width: 50vw;
+    height: auto;
+    background-color: #912f19;
+    border-radius: 5px;
+    color: #E9ECEF;
+    text-shadow: -0.1px -0.1px #1b1c25;
+  }
+  
+  #header {
+    margin: 0 1vw 0 1vw;
+  }
+  
+  h1 {
+    font-size: 2vw;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-shadow: -1px 1px #1b1c25;
+  }
+  
+  img {
+    margin: 5vh auto 0;
+    height: 25vh;
+    width: 25vh;
+  }
+  
+  #readMore {
+    position: relative;
+    left: 3px;
+    text-decoration: underline solid;
+    color: #E9ECEF;
+    cursor: pointer;
+  }
+  
+  #description-div {
+    margin: 2px;
+  }
+  
+  #description {
+    text-align: left;
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+    color: #E9ECEF;
+    margin-bottom: 1vh;
+  }
+  
+  button {
+    font-weight: bold;
+    margin-bottom: 2vh;
+    font-size: 1.25em;
+    border-radius: 3px;
+    min-height: fit-content;
+    min-width: fit-content;
+    border: 0;
+    padding: 8px 16px;
+    background-color: #E9ECEF;
+    border: 0.3vh solid #E9ECEF;
+    border-radius: 5px;
+    box-shadow: -0.2vw 0.6vh #1b1c25;
+    margin-right: 1vw;
+    cursor: pointer;
+  }
 
-body {
-  margin: auto;
-}
-
-.content {
-  text-align: center;
-}
-
-#div-content {
-  margin: auto;
-  box-sizing: border-box;
-  width: 50vw;
-  height: auto;
-  background-color: #818656;
-  border: 0.3vh solid #334251;
-  border-radius: 5px;
-  box-shadow: -0.2vw 0.6vh #1b1c25;
-}
-
-#header {
-  margin: 0 1vw 0 1vw;
-}
-
-h1 {
-  font-size: 2vw;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-img {
-  margin: 5vh auto 0;
-  height: 25vh;
-  width: 25vh;
-}
-
-#readMore {
-  position: relative;
-  left: 3px;
-  text-decoration: underline solid;
-  color: #1b1c25;
-  cursor: pointer;
-}
-
-#description-div {
-  margin: 2px;
-}
-
-#description {
-  text-align: left;
-  width: 50%;
-  margin: 0 auto;
-  display: block;
-  color: #1b1c25;
-  margin-bottom: 1vh;
-}
-
-button {
-  font-weight: bold;
-  margin-bottom: 2vh;
-  font-size: 1.25em;
-  border-radius: 3px;
-  min-height: fit-content;
-  min-width: fit-content;
-  border: 0;
-  padding: 8px 16px;
-  background-color: #b7a56c;
-  border: 0.3vh solid #334251;
-  border-radius: 5px;
-  box-shadow: -0.2vw 0.6vh #1b1c25;
-  margin-right: 1vw;
-  cursor: pointer;
-}
-
-.leftbuttons {
-  white-space: nowrap;
-}
-
-.buttons {
-  margin: 2vh auto 2vh auto;
-  max-width: 50vw;
-}
-
-.reasonBlock {
-  display: inline-block;
-}
+  
+  button:hover {
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .leftbuttons {
+    white-space: nowrap;
+  }
+  
+  .buttons {
+    margin: 2vh auto 2vh auto;
+    max-width: 50vw;
+  }
+  
+  .reasonBlock {
+    display: inline-block;
+  }

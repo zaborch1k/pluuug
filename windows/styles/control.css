@@ -59,7 +59,7 @@ main {
 }
 
 ::placeholder {
-    color: white;
+    color: #E9ECEF;
     padding-left: 0.3vh;
 }
 
@@ -132,6 +132,10 @@ button::-moz-focus-inner {
     border: 0;
 }
 
+#header {
+    color: #343A40;
+}
+
 label {
     cursor: pointer;
 }
@@ -142,10 +146,10 @@ legend {
 
 body {
     font-family: Roboto, sans-serif;
-    color: #ffffff;
+    color: #E9ECEF;
     font-weight: 500;
     text-transform: uppercase;
-    background-color: #4f745e;
+    background-color: #E9ECEF;
     height: 100vh;
 }
 
@@ -160,7 +164,7 @@ header {
 }
 
 header a {
-    color: #ffffff;
+    color: #E9ECEF;
 }
 
 .access-tabs-list {
@@ -168,7 +172,7 @@ header a {
     justify-content: space-between;
     align-items: center;
     height: 50px;
-    background-color: #4f745e;
+    background-color: #E9ECEF;
     width: 100%;
 }
 
@@ -183,11 +187,16 @@ section button {
 }
 
 section button:hover {
-    color: #6d6866;
+    cursor: pointer;
+
+    color: rgba(255, 255, 255, 0.74);
+
+    box-shadow: inset 0 0 0 0.3px #1b1c25;
+    transition: all 0.2s;
 }
 
 .active {
-    color: white;
+    color: #E9ECEF;
 }
 
 #name {
@@ -209,8 +218,8 @@ section button:hover {
     padding: 2vh;
     margin-top: 1.7vh;
     margin-left: 10.4vh;
-    border: 5px solid #b7a56c;
-    background-color: #818656;
+    border: 5px solid #6C757D;
+    background-color: #6C757D;
     box-shadow: -0.4vw 0.8vh #1b1c25;
     border-radius: 5px;
     max-width: 90vw;
@@ -243,11 +252,19 @@ section button:hover {
     height: 5vh;
     font-size: 2.4vh;
     padding-left: 0.5vw;
-    background-color: #818656;
+    background-color: #6d6866;
     border: 0.1vh solid #334251;
     box-shadow: inset -0.2vw 0.4vh #1b1c25;
     text-shadow: -0.12vw 0.1vh #1b1c25;
     border-radius: 5px;
+}
+
+#white-list-adder-save-btn:hover, #history-clear-btn:hover, #history-download-btn:hover {
+    cursor: pointer;
+
+    color: rgba(255, 255, 255, 0.74);
+
+    transition: all 0.2s;
 }
 
 #white-list-adder-save-btn {
@@ -257,7 +274,7 @@ section button:hover {
     margin-left: 42vw;
     margin-top: 68vh;
     font-size: 2vh;
-    background-color: #818656;
+    background-color: #6d6866;
     border: 0.3vh solid #334251;
     box-shadow: -0.15vw 0.4vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
@@ -273,7 +290,7 @@ section button:hover {
     align-items: center;
     text-transform: none;
     font-size: 2.4vh;
-    border: 3px solid #b7a56c;
+    border: 3px solid #343A40;
     box-shadow: -0.2vw 0.6vh #1b1c25;
     border-radius: 5px;
     max-width: 100%;
@@ -299,25 +316,13 @@ section button:hover {
 }
 
 /* Кнопки Белый лист и истроия блокировок */
-#white-list-btn {
+#white-list-btn, #history-btn {
     display: flex;
     padding: 2vh;
     margin-left: 1vh;
     font-size: 3vh;
-    background-color: #b7a56c;
-    border: 3px solid #C2C3C5;
-    box-shadow: -0.2vw 0.6vh #1b1c25;
-    text-shadow: -0.1vw 0.1vh #1b1c25;
-    border-radius: 5px;
-}
-
-#history-btn {
-    display: flex;
-    padding: 2vh;
-    font-size: 3vh;
-    background-color: #b7a56c;
-    box-shadow: -0.2vw 0.6vh #1b1c25;
-    text-shadow: -0.1vw 0.1vh #1b1c25;
+    background-color: #343A40;
+    border: 3px solid #1b1c25;
     border-radius: 5px;
 }
 
@@ -336,8 +341,8 @@ section button:hover {
     font-size: 3vh;
     margin-top: 1.7vh;
     margin-left: 10.4vh;
-    border: 5px solid #b7a56c;
-    background-color: #818656;
+    border: 5px solid #6C757D;
+    background-color: #6C757D;
     box-shadow: -0.4vw 0.8vh #1b1c25;
     border-radius: 5px;
     max-width: 90vw;
@@ -395,7 +400,7 @@ section button:hover {
     margin-left: 50vw;
     font-size: 3vh;
     cursor: pointer;
-    background-color: #818656;
+    background-color: #6d6866;
     border: 0.3vh solid #334251;
     box-shadow: -0.15vw 0.4vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
@@ -428,7 +433,7 @@ button:active {
     margin-left: 56.5vw;
     font-size: 2vh;
     border: 0.3vh solid #334251;
-    background-color: #818656;
+    background-color: #6d6866;
     box-shadow: -0.15vw 0.4vh #1b1c25;
     text-shadow: -0.1vw 0.1vh #1b1c25;
     border-radius: 5px;
@@ -454,7 +459,7 @@ button:active {
     width: 100%;
     min-height: 8vh;
     height: auto;
-    background-color: #818656;
+    background-color: #6C757D;
 }
 
 .history-table thead tr th {
@@ -472,7 +477,7 @@ button:active {
 
 .history-table tbody {
     width: 100%;
-    background-color: #818656;
+    background-color: #6C757D;
 }
 
 .history-table td {

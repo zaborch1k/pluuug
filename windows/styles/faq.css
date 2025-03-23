@@ -1,34 +1,23 @@
 html {
-    background-color: #4f745e;
+    background-color: #E9ECEF;
 }
 
 #header {
     text-align: center;
-    font-size: 3vw;
-}
-
-h1 {
-    font-size: 2.5vw;
-    margin-left: 1vw;
-    padding: 1vw;
-    box-sizing: border-box;
-    text-align: left;
-    background-color: #6d6866;
-    border: 0.3vh solid #334251;
-    border-radius: 5px;
-    box-shadow: -0.2vw 0.6vh #1b1c25;
+    font-size: 2vw;
 }
 
 h2 {
-    font-size: 1.5vw;
+    font-size: 1.2vw;
     margin-left: 1vw;
     padding: 0.5vw;
     box-sizing: border-box;
     text-align: left;
-    background-color: #818656;
-    border: 0.3vh solid #334251;
+    background-color: #6C757D;
+    border: 0.3vh solid #6C757D;
     border-radius: 5px;
     box-shadow: -0.2vw 0.6vh #1b1c25;
+    color: #E9ECEF;
 }
 
 h3 {
@@ -48,7 +37,7 @@ h3 {
     margin-left: 4vw;
     margin-bottom: 5vh;
     box-sizing: border-box;
-    background-color: #b7a56c;
+    background-color: #E9ECEF;
     border: 0.3vh solid #334251;
     border-radius: 5px;
     box-shadow: -0.2vw 0.6vh #1b1c25;

@@ -8,9 +8,11 @@ function changeButtonsText(flag) {
     if (flag) {
         text = (lang == "ru") ? "отключить проверку" : "disable check";
         document.getElementById("actButton").textContent = text;
+        document.getElementById("actButton").style.backgroundColor = "#31660f";
     } else {
         text = (lang == "ru") ? "включить проверку" : "enable check";
         document.getElementById("actButton").textContent = text;
+        document.getElementById("actButton").style.backgroundColor = "#343A40";
     }
 }
 
