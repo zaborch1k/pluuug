@@ -1,10 +1,11 @@
 import { checkSafebrowsing } from "./safebrowsing/checkSafebrowsing.js";
 import { checkVirustotal } from "./virus_total/checkVirustotal.js";
+import { checkYSafeBrowsing } from "./checkYSafeBrowsing.js";
 import { pushToSLC } from "./storageWorker.js";
 
 export async function checkURL(url) {
     console.log("-------------------- NEW CHECK : ", url)
-    let functions = [checkSafebrowsing, checkVirustotal];
+    let functions = [checkYSafeBrowsing, checkSafebrowsing, checkVirustotal];
 
     let verdict, threatType, service
     for (let fn of functions) {
